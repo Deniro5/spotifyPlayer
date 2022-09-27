@@ -36,8 +36,8 @@ const PlaylistsList = () => {
     id: string
   ) => {
     e.preventDefault();
-    setContextMenuX(e.clientX);
-    setContextMenuY(e.clientY);
+    setContextMenuX(Math.min(e.clientX, window.innerWidth));
+    setContextMenuY(Math.min(e.clientY, window.innerHeight));
     setContextMenuId(id);
   };
 
@@ -88,8 +88,7 @@ const Title = styled.div`
 `;
 
 const PlaylistList = styled.div`
-  height: 445px;
-
+  height: calc(85vh - 280px);
   overflow-y: scroll;
 `;
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
+import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
 
 export type IPlaylistContextMenuProps = {
@@ -16,6 +17,8 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   contextMenuX,
   contextMenuY,
 }) => {
+  const { handlePlaylistDelete, handleRenamePlaylist } =
+    usePlaylistActions(contextMenuId);
   //contentPosition is not working so use this for now instead
   const getContainerStyle = () => {
     return {
@@ -24,19 +27,19 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
     };
   };
 
-  const handleRenameClick = () => {
+  const handleEditClick = () => {
     alert("renamed playlist");
     setContextMenuId(null);
   };
 
   const handleDeleteClick = () => {
-    alert("deleted playlist");
+    handlePlaylistDelete();
     setContextMenuId(null);
   };
 
   const content = (
     <PopoverContentWrapper>
-      <MenuItem onClick={handleRenameClick}> Rename Playlist </MenuItem>
+      <MenuItem onClick={handleEditClick}> Edit Playlist Details </MenuItem>
       <MenuItem onClick={handleDeleteClick}> Delete Playlist </MenuItem>
     </PopoverContentWrapper>
   );

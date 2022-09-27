@@ -33,3 +33,9 @@ export interface User {
   uri: string;
   id: string;
 }
+
+export interface PlaylistDetails {
+  name: string;
+  description: string;
+  isPublic: boolean;
+}
