@@ -53,7 +53,12 @@ const playerSlice = createSlice({
         (playlist) => playlist.id !== action.payload
       );
     },
-
+    updatePlaylist(state, action: PayloadAction<Playlist>) {
+      const idToUpdate = action.payload.id;
+      state.playlists = state.playlists.map((playlist) =>
+        playlist.id === idToUpdate ? action.payload : playlist
+      );
+    },
     setCurrentView(state, action: PayloadAction<View>) {
       state.currentView = action.payload;
     },
@@ -84,6 +89,7 @@ export const {
   setPlaylists,
   addPlaylist,
   deletePlaylist,
+  updatePlaylist,
   setCurrentView,
   setCurrentDisplayTracks,
   setPlayingTrack,

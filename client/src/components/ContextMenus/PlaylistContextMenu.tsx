@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
+import { EditPlaylistModal } from "../Sidebar/PlaylistModals/EditPlaylistModal";
 
 export type IPlaylistContextMenuProps = {
   contextMenuId: string | null;
@@ -17,6 +18,9 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   contextMenuX,
   contextMenuY,
 }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editPlaylistId, setEditPlaylistId] = useState<string | null>(null);
+
   const { handlePlaylistDelete, handleRenamePlaylist } =
     usePlaylistActions(contextMenuId);
   //contentPosition is not working so use this for now instead
@@ -28,13 +32,18 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   };
 
   const handleEditClick = () => {
-    alert("renamed playlist");
+    setIsEditModalOpen(true);
+    setEditPlaylistId(contextMenuId);
     setContextMenuId(null);
   };
 
   const handleDeleteClick = () => {
     handlePlaylistDelete();
     setContextMenuId(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
   };
 
   const content = (
@@ -45,14 +54,23 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   );
 
   return (
-    <Popover
-      onClickOutside={() => setContextMenuId(null)}
-      isOpen={!!contextMenuId}
-      content={content}
-      containerStyle={getContainerStyle()}
-    >
-      <></>
-    </Popover>
+    <>
+      <Popover
+        onClickOutside={() => setContextMenuId(null)}
+        isOpen={!!contextMenuId}
+        content={content}
+        containerStyle={getContainerStyle()}
+      >
+        <></>
+      </Popover>
+      {isEditModalOpen && (
+        <EditPlaylistModal
+          isOpen
+          handleClose={handleCloseEditModal}
+          playlistId={editPlaylistId}
+        />
+      )}
+    </>
   );
 };
 

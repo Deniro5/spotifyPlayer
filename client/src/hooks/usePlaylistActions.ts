@@ -29,13 +29,13 @@ const usePlaylistActions = (playlistId: string | null) => {
   const handleRenamePlaylist = (playlistDetails: PlaylistDetails) => {
     if (!playlistId) return;
 
-    const { name, description, isPublic } = playlistDetails;
+    const { name, description } = playlistDetails;
     fetch(`	https://api.spotify.com/v1/playlists/${playlistId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ name, description, public: isPublic }),
+      body: JSON.stringify({ name, description }),
     })
       .then((res) => res.json())
       .then((data) => {

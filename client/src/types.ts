@@ -9,6 +9,7 @@ export enum View {
 export interface Playlist {
   id: string;
   name: string;
+  description: string;
   tracks: { href: string; total: string };
 }
 
@@ -37,5 +38,4 @@ export interface User {
 export interface PlaylistDetails {
   name: string;
   description: string;
-  isPublic: boolean;
 }

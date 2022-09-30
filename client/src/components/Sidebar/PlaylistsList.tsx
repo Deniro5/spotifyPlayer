@@ -4,7 +4,7 @@ import { MenuItem } from "./Menu";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
 import { View } from "../../types";
-import { NewPlaylistModal } from "./NewPlaylistModal";
+import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
 
 export type PlaylistsProps = {};
@@ -63,7 +63,7 @@ const PlaylistsList = () => {
           </MenuItem>
         ))}
       </PlaylistList>
-      <NewPlaylistModal isOpen={isModalOpen} handleClose={handleModalClose} />
+      {isModalOpen && <NewPlaylistModal isOpen handleClose={handleModalClose} />}
       <PlaylistContextMenu
         contextMenuId={contextMenuId}
         setContextMenuId={setContextMenuId}
