@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import fakeSrc from "../../assets/profile.jpeg";
@@ -8,9 +8,13 @@ import { setPlayingTrack } from "../../redux/slices/playerSlice";
 
 interface TrackSearchResultProps {
   track: Track;
+  handleRightClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => void;
 }
 
-export const TrackSearchResult = ({ track }: TrackSearchResultProps) => {
+export const TrackSearchResult = ({
+  track,
+  handleRightClick,
+}: TrackSearchResultProps) => {
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
   const dispatch = useAppDispatch();
 
@@ -19,7 +23,7 @@ export const TrackSearchResult = ({ track }: TrackSearchResultProps) => {
   };
 
   return (
-    <Container onClick={handlePlay}>
+    <Container onClick={handlePlay} onContextMenu={(e) => handleRightClick(e, track.uri)}>
       <ImageAndNameContainer>
         <TrackImage src={track.albumUrl} />
         <TrackTitle>{track.title}</TrackTitle>

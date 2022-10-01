@@ -64,12 +64,14 @@ const PlaylistsList = () => {
         ))}
       </PlaylistList>
       {isModalOpen && <NewPlaylistModal isOpen handleClose={handleModalClose} />}
-      <PlaylistContextMenu
-        contextMenuId={contextMenuId}
-        setContextMenuId={setContextMenuId}
-        contextMenuX={contextMenuX}
-        contextMenuY={contextMenuY}
-      />
+      {!!contextMenuId && (
+        <PlaylistContextMenu
+          contextMenuId={contextMenuId}
+          setContextMenuId={setContextMenuId}
+          contextMenuX={contextMenuX}
+          contextMenuY={contextMenuY}
+        />
+      )}
     </Container>
   );
 };

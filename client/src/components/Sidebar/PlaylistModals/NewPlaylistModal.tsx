@@ -47,7 +47,7 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
       })
       .catch((err) => {
         console.log(err);
-        // we should display the error on the modal
+        // FIX we should display the error on the modal
       });
   };
 
