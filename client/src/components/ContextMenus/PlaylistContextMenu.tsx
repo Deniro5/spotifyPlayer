@@ -4,6 +4,7 @@ import styled from "styled-components";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
 import { EditPlaylistModal } from "../Sidebar/PlaylistModals/EditPlaylistModal";
+import Dropdown from "react-multilevel-dropdown";
 
 export type IPlaylistContextMenuProps = {
   contextMenuId: string | null;
@@ -48,8 +49,8 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
 
   const content = (
     <PopoverContentWrapper>
-      <MenuItem onClick={handleEditClick}> Edit Playlist Details </MenuItem>
-      <MenuItem onClick={handleDeleteClick}> Delete Playlist </MenuItem>
+      <Dropdown.Item onClick={handleEditClick}> Edit Playlist Details </Dropdown.Item>
+      <Dropdown.Item onClick={handleDeleteClick}> Delete Playlist </Dropdown.Item>
     </PopoverContentWrapper>
   );
 
@@ -73,14 +74,5 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
     </>
   );
 };
-
-const MenuItem = styled.div`
-  padding: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  &:hover {
-    background: whitesmoke;
-  }
-`;
 
 export { PlaylistContextMenu };

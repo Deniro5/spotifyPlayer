@@ -13,6 +13,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   const currentDisplayTracks = useAppSelector(
     (state) => state.player.currentDisplayTracks
   );
+  const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [contextMenuX, setContextMenuX] = useState<number | null>(null);
   const [contextMenuY, setContextMenuY] = useState<number | null>(null);
@@ -41,6 +42,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
           handleRightClick={handleRightClick}
           track={track}
           key={track.uri}
+          isSelected={selectedTracksHash[track.uri]}
         />
       ))}
       <Waypoint onEnter={handleLoadMoreTracks} />

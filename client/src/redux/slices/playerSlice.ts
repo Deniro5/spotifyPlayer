@@ -13,6 +13,7 @@ export interface PlayerState {
   currentDisplayTracks: Track[];
   playingTrack: Track | null;
   currentUser: User | null;
+  selectedTracksHash: Record<string, boolean>;
 }
 
 // Define an initial state
@@ -25,6 +26,7 @@ const initialState: PlayerState = {
   currentDisplayTracks: [],
   playingTrack: null,
   currentUser: null,
+  selectedTracksHash: {},
 };
 
 // Create a slice containing the configuration of the state
@@ -83,6 +85,15 @@ const playerSlice = createSlice({
     setCurrentUser(state, action: PayloadAction<User | null>) {
       state.currentUser = action.payload;
     },
+    setSelectedTracksHash(state, action: PayloadAction<Record<string, boolean>>) {
+      state.selectedTracksHash = action.payload;
+    },
+    addSelectedTrack(state, action: PayloadAction<string>) {
+      state.selectedTracksHash[action.payload] = true;
+    },
+    removeSelectedTrack(state, action: PayloadAction<string>) {
+      delete state.selectedTracksHash[action.payload];
+    },
   },
 });
 
@@ -100,6 +111,9 @@ export const {
   removeTrackFromDisplay,
   setPlayingTrack,
   setCurrentUser,
+  setSelectedTracksHash,
+  addSelectedTrack,
+  removeSelectedTrack,
 } = playerSlice.actions;
 
 // Export default the slice reducer

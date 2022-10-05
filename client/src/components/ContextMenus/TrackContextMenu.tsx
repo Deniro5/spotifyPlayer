@@ -3,6 +3,8 @@ import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
 import useTrackActions from "../../hooks/useTrackActions";
+import { useAppSelector } from "../../hooks";
+import Dropdown from "react-multilevel-dropdown";
 
 export type ITrackContextMenuProps = {
   contextMenuId: string | null;
@@ -18,13 +20,19 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   contextMenuY,
 }) => {
   //contentPosition is not working so use this for now instead
-
-  const { removeTrack } = useTrackActions(contextMenuId);
+  const playlists = useAppSelector((state) => state.player.playlists);
+  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const { addTrack, removeTrack } = useTrackActions(contextMenuId);
   const getContainerStyle = () => {
     return {
       top: `${contextMenuY}px`,
       left: `${contextMenuX}px`,
     };
+  };
+
+  const handleAddClick = (playlistId: string) => {
+    addTrack(playlistId);
+    setContextMenuId(null);
   };
 
   const handleRemoveClick = () => {
@@ -34,7 +42,24 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
 
   const content = (
     <PopoverContentWrapper>
-      <MenuItem onClick={handleRemoveClick}> Remove From Playlist </MenuItem>
+      <div>
+        <Dropdown.Item>
+          Add To Playlist
+          <Dropdown.Submenu position='right'>
+            <PlaylistSubListContainer>
+              {playlists.map(
+                (playlist) =>
+                  selectedPlaylistId !== playlist.id && (
+                    <Dropdown.Item onClick={() => handleAddClick(playlist.id)}>
+                      {playlist.name}
+                    </Dropdown.Item>
+                  )
+              )}
+            </PlaylistSubListContainer>
+          </Dropdown.Submenu>
+        </Dropdown.Item>
+        <Dropdown.Item onClick={handleRemoveClick}> Remove From Playlist</Dropdown.Item>
+      </div>
     </PopoverContentWrapper>
   );
 
@@ -52,13 +77,9 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   );
 };
 
-const MenuItem = styled.div`
-  padding: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  &:hover {
-    background: whitesmoke;
-  }
+const PlaylistSubListContainer = styled.div`
+  height: 235px;
+  overflow-y: scroll;
 `;
 
 export { TrackContextMenu };
