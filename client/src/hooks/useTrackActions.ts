@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { removeTracksFromDisplay } from "../redux/slices/playerSlice";
+import {
+  removeTracksFromDisplay,
+  setSelectedTracksHash,
+} from "../redux/slices/playerSlice";
 
 const useTrackActions = (trackIds: (string | null)[]) => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
@@ -25,7 +28,8 @@ const useTrackActions = (trackIds: (string | null)[]) => {
       .catch((err) => {
         console.log(err);
         setErrorMessage("An unexpected error occured");
-      });
+      })
+      .finally(() => dispatch(setSelectedTracksHash({})));
   };
 
   const formatTracksForRemoveRequest = () =>
@@ -49,7 +53,8 @@ const useTrackActions = (trackIds: (string | null)[]) => {
       .catch((err) => {
         console.log(err);
         setErrorMessage("An unexpected error occured");
-      });
+      })
+      .finally(() => dispatch(setSelectedTracksHash({})));
   };
 
   return { addTracks, removeTracks, errorMessage };

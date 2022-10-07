@@ -22,7 +22,6 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   //contentPosition is not working so use this for now instead
   const playlists = useAppSelector((state) => state.player.playlists);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
-  const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedTracksArray = useAppSelector((state) =>
     Object.keys(state.player.selectedTracksHash)
   );

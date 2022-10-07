@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { MenuItem } from "./Menu";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
+import {
+  setCurrentView,
+  setSelectedPlaylistId,
+  setSelectedTracksHash,
+} from "../../redux/slices/playerSlice";
 import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
@@ -29,6 +33,7 @@ const PlaylistsList = () => {
   const handlePlaylistClick = (id: string) => {
     dispatch(setSelectedPlaylistId(id));
     dispatch(setCurrentView(View.PLAYLIST));
+    dispatch(setSelectedTracksHash({}));
   };
 
   const handleRightClick = (
