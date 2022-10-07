@@ -74,9 +74,15 @@ const playerSlice = createSlice({
         ...tracks,
       ];
     },
-    removeTrackFromDisplay(state, action: PayloadAction<string>) {
+    removeTracksFromDisplay(state, action: PayloadAction<(string | null)[]>) {
+      const tracksToDeleteHash: Record<string, boolean> = action.payload.reduce(
+        (accumulator, value) => {
+          return { ...accumulator, ...(value ? { [value]: true } : {}) };
+        },
+        {}
+      );
       state.currentDisplayTracks = state.currentDisplayTracks.filter(
-        (track) => track.uri !== action.payload
+        (track) => !tracksToDeleteHash[track.uri]
       );
     },
     setPlayingTrack(state, action: PayloadAction<Track | null>) {
@@ -108,7 +114,7 @@ export const {
   updatePlaylist,
   setCurrentView,
   setCurrentDisplayTracks,
-  removeTrackFromDisplay,
+  removeTracksFromDisplay,
   setPlayingTrack,
   setCurrentUser,
   setSelectedTracksHash,

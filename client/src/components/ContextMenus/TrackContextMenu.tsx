@@ -22,7 +22,13 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   //contentPosition is not working so use this for now instead
   const playlists = useAppSelector((state) => state.player.playlists);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
-  const { addTrack, removeTrack } = useTrackActions(contextMenuId);
+  const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
+  const selectedTracksArray = useAppSelector((state) =>
+    Object.keys(state.player.selectedTracksHash)
+  );
+  const { addTracks, removeTracks } = useTrackActions(
+    Array.from(new Set([contextMenuId, ...selectedTracksArray]))
+  );
   const getContainerStyle = () => {
     return {
       top: `${contextMenuY}px`,
@@ -31,12 +37,12 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   };
 
   const handleAddClick = (playlistId: string) => {
-    addTrack(playlistId);
+    addTracks(playlistId);
     setContextMenuId(null);
   };
 
   const handleRemoveClick = () => {
-    removeTrack();
+    removeTracks();
     setContextMenuId(null);
   };
 
@@ -44,7 +50,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     <PopoverContentWrapper>
       <div>
         <Dropdown.Item>
-          Add To Playlist
+          Add {!!selectedTracksArray.length && "Songs"} To Playlist
           <Dropdown.Submenu position='right'>
             <PlaylistSubListContainer>
               {playlists.map(
@@ -58,7 +64,10 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
             </PlaylistSubListContainer>
           </Dropdown.Submenu>
         </Dropdown.Item>
-        <Dropdown.Item onClick={handleRemoveClick}> Remove From Playlist</Dropdown.Item>
+        <Dropdown.Item onClick={handleRemoveClick}>
+          {" "}
+          Remove {!!selectedTracksArray.length && "Songs"} From Playlist
+        </Dropdown.Item>
       </div>
     </PopoverContentWrapper>
   );
