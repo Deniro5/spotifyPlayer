@@ -14,6 +14,7 @@ export interface PlayerState {
   playingTrack: Track | null;
   currentUser: User | null;
   selectedTracksHash: Record<string, boolean>;
+  lastPlaylistAddedTo: Playlist | null;
 }
 
 // Define an initial state
@@ -27,6 +28,7 @@ const initialState: PlayerState = {
   playingTrack: null,
   currentUser: null,
   selectedTracksHash: {},
+  lastPlaylistAddedTo: null,
 };
 
 // Create a slice containing the configuration of the state
@@ -100,6 +102,16 @@ const playerSlice = createSlice({
     removeSelectedTrack(state, action: PayloadAction<string>) {
       delete state.selectedTracksHash[action.payload];
     },
+    setLastPlaylistAddedTo(state, action: PayloadAction<string>) {
+      //takes an id of the last playlist added to and finds the playlist it corresponds to
+      const lastPlaylistAddedTo = state.playlists.find(
+        (playlist) => playlist.id === action.payload
+      );
+      console.log(lastPlaylistAddedTo);
+      if (!lastPlaylistAddedTo) return;
+
+      state.lastPlaylistAddedTo = lastPlaylistAddedTo;
+    },
   },
 });
 
@@ -120,6 +132,7 @@ export const {
   setSelectedTracksHash,
   addSelectedTrack,
   removeSelectedTrack,
+  setLastPlaylistAddedTo,
 } = playerSlice.actions;
 
 // Export default the slice reducer

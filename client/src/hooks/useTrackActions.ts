@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import {
   removeTracksFromDisplay,
+  setLastPlaylistAddedTo,
   setSelectedTracksHash,
 } from "../redux/slices/playerSlice";
 
@@ -23,7 +24,8 @@ const useTrackActions = (trackIds: (string | null)[]) => {
       body: JSON.stringify({ uris: trackIds }),
     })
       .then((res) => {
-        if (res.status !== 200) return;
+        if (res.status !== 201) return;
+        dispatch(setLastPlaylistAddedTo(playlistId));
       })
       .catch((err) => {
         console.log(err);

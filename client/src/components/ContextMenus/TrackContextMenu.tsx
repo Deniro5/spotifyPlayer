@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
@@ -22,6 +22,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   //contentPosition is not working so use this for now instead
   const playlists = useAppSelector((state) => state.player.playlists);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const lastPlaylistAddedTo = useAppSelector((state) => state.player.lastPlaylistAddedTo);
   const selectedTracksArray = useAppSelector((state) =>
     Object.keys(state.player.selectedTracksHash)
   );
@@ -40,14 +41,32 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     setContextMenuId(null);
   };
 
+  const addToLastPlaylistEnabled = useMemo(() => {
+    return !!lastPlaylistAddedTo && lastPlaylistAddedTo.id !== selectedPlaylistId;
+  }, [lastPlaylistAddedTo]);
+
+  const handleAddToLastPlaylist = () => {
+    if (!lastPlaylistAddedTo) return;
+    handleAddClick(lastPlaylistAddedTo.id);
+  };
+
   const handleRemoveClick = () => {
     removeTracks();
     setContextMenuId(null);
   };
 
   const content = (
-    <PopoverContentWrapper>
+    <PopoverContentWrapper width={225}>
       <div>
+        <Dropdown.Item
+          isDisabled={!addToLastPlaylistEnabled}
+          onClick={handleAddToLastPlaylist}
+        >
+          <DisableWrapper isDisabled={!addToLastPlaylistEnabled}>
+            Add To Recent:
+            {addToLastPlaylistEnabled && ` ${lastPlaylistAddedTo?.name}`}
+          </DisableWrapper>
+        </Dropdown.Item>
         <Dropdown.Item>
           Add {!!selectedTracksArray.length && "Songs"} To Playlist
           <Dropdown.Submenu position='right'>
@@ -64,7 +83,6 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
           </Dropdown.Submenu>
         </Dropdown.Item>
         <Dropdown.Item onClick={handleRemoveClick}>
-          {" "}
           Remove {!!selectedTracksArray.length && "Songs"} From Playlist
         </Dropdown.Item>
       </div>
@@ -88,6 +106,12 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
 const PlaylistSubListContainer = styled.div`
   height: 235px;
   overflow-y: scroll;
+`;
+
+const DisableWrapper = styled.div<{ isDisabled: boolean }>`
+  color: ${({ isDisabled }) => isDisabled && "grey"};
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export { TrackContextMenu };
