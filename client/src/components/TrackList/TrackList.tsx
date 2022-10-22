@@ -37,12 +37,13 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
 
   return (
     <>
-      {currentDisplayTracks.map((track) => (
+      {currentDisplayTracks.map((track, index) => (
         <TrackSearchResult
           handleRightClick={handleRightClick}
           track={track}
           key={track.uri}
           isSelected={selectedTracksHash[track.uri]}
+          index={index}
         />
       ))}
       <Waypoint onEnter={handleLoadMoreTracks} />

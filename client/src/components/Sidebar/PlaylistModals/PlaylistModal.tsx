@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import styled from "styled-components";
+import { COLORS } from "../../../constants";
 import Button from "../../Common/Button";
 
 export type IPlaylistModalProps = {
@@ -38,17 +39,30 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
       <Title>{title}</Title>
       <FieldContainer>
         <FieldLabel>Name</FieldLabel>
-        <Field value={name} onChange={handleNameChange} />
+        <NameField value={name} onChange={handleNameChange} />
       </FieldContainer>
       <FieldContainer>
         <FieldLabel>Description</FieldLabel>
         <DescriptionField value={description} onChange={handleDescriptionChange} />
       </FieldContainer>
       <ButtonContainer>
-        <Button width={120} height={40} hoverColor='mediumblue' onClick={handleConfirm}>
+        <Button
+          width={120}
+          height={40}
+          hoverColor={COLORS.darkPrimary}
+          onClick={handleConfirm}
+        >
           Confirm
         </Button>
-        <Button width={120} height={40} hoverColor='yellow' onClick={handleClose}>
+        <Button
+          width={120}
+          height={40}
+          backgroundColor={COLORS.white}
+          fontColor={COLORS.primary}
+          borderColor={COLORS.lightGrey}
+          borderWidth={1}
+          onClick={handleClose}
+        >
           Cancel
         </Button>
       </ButtonContainer>
@@ -63,20 +77,25 @@ const FieldLabel = styled.p`
   margin-bottom: 10px;
 `;
 
-const Field = styled.input`
-  width: 345px;
+const NameField = styled.input`
+  width: 328px;
   height: 23px;
   font-size: 15px;
+  padding: 2px 10px;
 `;
 
 const DescriptionField = styled.textarea`
   width: 300px;
-  outline: blue;
+  outline: none !important;
   resize: none;
-  height: 70px;
-  width: 345px;
+  height: 85px;
+  padding: 10px;
+  width: 328px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu";
   font-size: 15px;
+  &:focus {
+    border: 1px solid ${COLORS.primary};
+  }
 `;
 
 const Title = styled.h2`
@@ -90,7 +109,7 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   width: 270px;
   margin: auto;
-  margin-top: 25px;
+  margin-top: 50px;
 `;
 
 export { PlaylistModal };

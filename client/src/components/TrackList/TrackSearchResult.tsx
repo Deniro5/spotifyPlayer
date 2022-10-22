@@ -8,18 +8,22 @@ import {
   removeSelectedTrack,
   setPlayingTrack,
 } from "../../redux/slices/playerSlice";
+import { COLORS } from "../../constants";
 
 interface TrackSearchResultProps {
   track: Track;
   handleRightClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => void;
   isSelected: boolean;
+  index: number;
 }
 
 export const TrackSearchResult = ({
   track,
   handleRightClick,
   isSelected,
+  index,
 }: TrackSearchResultProps) => {
+  console.log(index);
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
   const dispatch = useAppDispatch();
 
@@ -60,7 +64,7 @@ export const TrackSearchResult = ({
 };
 
 const Container = styled.div<{ isSelected: boolean }>`
-  background: ${({ isSelected }) => (isSelected ? "lightblue" : "#fefefe")};
+  background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
   cursor: pointer;
   transition: 0.1s;
   display: flex;
@@ -70,7 +74,7 @@ const Container = styled.div<{ isSelected: boolean }>`
   margin: 2px auto;
   border: 1px solid whitesmoke;
   &:hover {
-    background: ${({ isSelected }) => (isSelected ? "lightblue" : "whitesmoke")};
+    background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "whitesmoke")};
   }
   width: 95%;
   border-radius: 4px;

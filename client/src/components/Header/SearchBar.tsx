@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { COLORS } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setSearch } from "../../redux/slices/playerSlice";
 
@@ -53,7 +54,7 @@ const Container = styled.div`
   height: 45px;
   border-radius: 40px;
   width: 400px;
-  border: 1px solid lightgrey;
+  border: 1px solid ${COLORS.lightGrey};
   position: relative;
   background: white;
 `;

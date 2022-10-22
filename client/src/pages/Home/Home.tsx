@@ -83,13 +83,11 @@ export const Home = ({ code }: HomeProps) => {
           <ViewContainer>
             <Router />
           </ViewContainer>
-          <OtherContainer>
-            <PlayerContainer>
-              <AlbumImg src={playingTrack?.albumUrl} />
-              <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-            </PlayerContainer>
-          </OtherContainer>
+          <OtherContainer></OtherContainer>
         </Body>
+        <PlayerContainer>
+          <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+        </PlayerContainer>
       </Main>
     </Container>
   );
@@ -97,12 +95,14 @@ export const Home = ({ code }: HomeProps) => {
 
 const Main = styled.div`
   padding-left: 250px;
+  overflow: hidden;
 `;
 
 //i35px is the height of the header + div
 const Body = styled.div`
   display: flex;
-  height: calc(100vh - 95px);
+  height: calc(100vh - 143px);
+  overflow-x: hidden;
 `;
 
 const ViewContainer = styled.div`
@@ -123,5 +123,5 @@ const AlbumImg = styled.img`
 `;
 
 const PlayerContainer = styled.div`
-  width: 95%;
+  width: 100%;
 `;

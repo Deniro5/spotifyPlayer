@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { COLORS } from "../../constants";
 
 const AUTH_URL =
   "https://accounts.spotify.com/authorize?client_id=5eb951bf5718469eb4f17c4a09156d75&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public";
@@ -22,7 +23,7 @@ const StyledButton = styled.a`
   width: 200px;
   height: 50px;
   background: green;
-  color: white;
+  color: ${COLORS.white};
   cursor: pointer;
   display: inline-block;
   text-decoration: none;

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
+import { COLORS } from "../../../constants";
 interface ButtonProps {
   children: React.ReactNode;
   width: number;
@@ -12,6 +12,8 @@ interface ButtonProps {
   fontWeight?: number;
   borderRadius?: number;
   fontColor?: string;
+  borderColor?: string;
+  borderWidth?: number;
 }
 
 function Button({
@@ -19,12 +21,14 @@ function Button({
   width = 110,
   height = 40,
   onClick,
-  hoverColor = "blue",
-  backgroundColor = "blue",
+  hoverColor = COLORS.primary,
+  backgroundColor = COLORS.primary,
   fontSize = 16,
   fontWeight = 600,
-  borderRadius = 2,
-  fontColor = "white",
+  borderRadius = 4,
+  fontColor = COLORS.white,
+  borderColor = "none",
+  borderWidth = 0,
 }: ButtonProps) {
   return (
     <StyledButton
@@ -36,7 +40,10 @@ function Button({
       backgroundColor={backgroundColor}
       fontWeight={fontWeight}
       borderRadius={borderRadius}
-      fontColor={fontColor}>
+      fontColor={fontColor}
+      borderColor={borderColor}
+      borderWidth={borderWidth}
+    >
       {children}
     </StyledButton>
   );
@@ -57,6 +64,7 @@ const StyledButton = styled.div<ButtonProps>`
   &:hover {
     background: ${({ hoverColor }) => hoverColor};
   }
+  border: ${({ borderWidth, borderColor }) => `${borderWidth}px solid ${borderColor} `};
 `;
 
 export { Button };

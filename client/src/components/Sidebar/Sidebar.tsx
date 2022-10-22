@@ -7,6 +7,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { Playlist } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setPlaylists } from "../../redux/slices/playerSlice";
+import { COLORS } from "../../constants";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",
@@ -57,7 +58,7 @@ const Container = styled.div`
   width: 179px;
   padding: 0 35px;
   height: 100vh;
-  background: white;
+  background: ${COLORS.white};
   position: fixed;
   border-right: 1px whitesmoke solid;
 `;
