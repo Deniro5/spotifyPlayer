@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import { Track } from "../../types";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   addSelectedTrack,
   removeSelectedTrack,
@@ -25,6 +25,8 @@ export const TrackSearchResult = ({
 }: TrackSearchResultProps) => {
   console.log(index);
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
+  const { uri, artist, title, albumUrl } = track;
+  const playingTrack = useAppSelector((state) => state.player.playingTrack);
   const dispatch = useAppDispatch();
 
   const handlePlay = () => {
@@ -34,9 +36,9 @@ export const TrackSearchResult = ({
   const handleCheckboxClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     e.stopPropagation();
     if (isSelected) {
-      dispatch(removeSelectedTrack(track.uri));
+      dispatch(removeSelectedTrack(uri));
     } else {
-      dispatch(addSelectedTrack(track.uri));
+      dispatch(addSelectedTrack(uri));
     }
   };
 
@@ -44,13 +46,15 @@ export const TrackSearchResult = ({
     <Container
       isSelected={isSelected}
       onClick={handlePlay}
-      onContextMenu={(e) => handleRightClick(e, track.uri)}
+      onContextMenu={(e) => handleRightClick(e, uri)}
     >
       <ImageAndNameContainer>
-        <TrackImage src={track.albumUrl} />
-        <TrackTitle>{track.title}</TrackTitle>
+        <TrackImage src={albumUrl} />
+        <TrackTitle isActive={!!playingTrack && playingTrack?.uri === uri}>
+          {title}
+        </TrackTitle>
       </ImageAndNameContainer>
-      <TrackArtist>{track.artist}</TrackArtist>
+      <TrackArtist>{artist}</TrackArtist>
       <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
       <LikeIconContainer>
         <StyledCheckbox
@@ -92,14 +96,14 @@ const TrackImage = styled.img`
   margin: 0px 12px;
 `;
 
-const TrackTitle = styled.div`
+const TrackTitle = styled.div<{ isActive: boolean }>`
   font-size: 14px;
   width: 250px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: 600;
-  color: black;
+  font-weight: ${({ isActive }) => (isActive ? 700 : 500)};
+  color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
 `;
 
 const TrackArtist = styled.div`

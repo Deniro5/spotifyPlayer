@@ -21,7 +21,7 @@ function Button({
   width = 110,
   height = 40,
   onClick,
-  hoverColor = COLORS.primary,
+  hoverColor = "none",
   backgroundColor = COLORS.primary,
   fontSize = 16,
   fontWeight = 600,

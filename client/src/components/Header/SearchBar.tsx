@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setSearch } from "../../redux/slices/playerSlice";
+import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 
 export type ISearchBarProps = {};
 
@@ -40,38 +41,46 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
 
   return (
     <Container>
-      {/* <SearchIcon src={Default} /> */}
       <SearchInput
         onChange={(e) => handleChange(e)}
         value={value}
         placeholder='Search for Songs, Artists Etc...'
       />
+      <SearchIconContainer>
+        <SearchIcon height={16} width={16} />
+      </SearchIconContainer>
     </Container>
   );
 };
 
 const Container = styled.div`
-  height: 45px;
-  border-radius: 40px;
-  width: 400px;
-  border: 1px solid ${COLORS.lightGrey};
   position: relative;
-  background: white;
-`;
-
-const SearchIcon = styled.img`
-  position: absolute;
-  height: 40px;
-  width: 40px;
 `;
 
 const SearchInput = styled.input`
-  border: none;
-  margin-left: 40px;
-  height: 43px;
-  width: 317px;
-  background: none;
+  height: 45px;
+  border-radius: 40px;
+  width 78%;
+  max-width: 400px;
+  border: 1px solid ${COLORS.lightGrey};
+  position: relative;
+  background: white;
+  padding-left: 40px;
   outline: none;
+  &:focus {
+    border: 1px solid ${COLORS.primary};
+  }
+`;
+
+const SearchIconContainer = styled.div`
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4px;
+  top: 5px;
 `;
 
 export { SearchBar };
