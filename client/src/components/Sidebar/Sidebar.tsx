@@ -36,6 +36,7 @@ const Sidebar = () => {
                   name: playlist.name,
                   tracks: playlist.tracks,
                   description: playlist.description,
+                  images: playlist.images,
                 };
               })
             )

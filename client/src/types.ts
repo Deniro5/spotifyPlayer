@@ -1,9 +1,16 @@
 import { Moment } from "moment";
 
 export enum View {
+  HOME = "Home",
   BROWSE = "Browse",
   LIKED_SONGS = "Liked Songs",
   PLAYLIST = "Playlist",
+}
+
+export interface Image {
+  height: number | null;
+  width: number | null;
+  url: string;
 }
 
 export interface Playlist {
@@ -11,6 +18,7 @@ export interface Playlist {
   name: string;
   description: string;
   tracks: { href: string; total: string };
+  images: Image[];
 }
 
 export interface Track {
@@ -21,16 +29,10 @@ export interface Track {
   duration: number;
 }
 
-export interface UserImage {
-  height: number | null;
-  width: number | null;
-  url: string;
-}
-
 export interface User {
   display_name: string;
   email: string;
-  images: UserImage[];
+  images: Image[];
   uri: string;
   id: string;
 }

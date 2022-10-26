@@ -15,6 +15,7 @@ export interface PlayerState {
   currentUser: User | null;
   selectedTracksHash: Record<string, boolean>;
   lastPlaylistAddedTo: Playlist | null;
+  showSuggestionSection: boolean;
 }
 
 // Define an initial state
@@ -23,12 +24,13 @@ const initialState: PlayerState = {
   search: "",
   selectedPlaylistId: null,
   playlists: [],
-  currentView: View.BROWSE,
+  currentView: View.HOME,
   currentDisplayTracks: [],
   playingTrack: null,
   currentUser: null,
   selectedTracksHash: {},
   lastPlaylistAddedTo: null,
+  showSuggestionSection: true,
 };
 
 // Create a slice containing the configuration of the state
@@ -107,10 +109,12 @@ const playerSlice = createSlice({
       const lastPlaylistAddedTo = state.playlists.find(
         (playlist) => playlist.id === action.payload
       );
-      console.log(lastPlaylistAddedTo);
       if (!lastPlaylistAddedTo) return;
 
       state.lastPlaylistAddedTo = lastPlaylistAddedTo;
+    },
+    setSuggestionSection(state, action: PayloadAction<boolean>) {
+      state.showSuggestionSection = action.payload;
     },
   },
 });
@@ -133,6 +137,7 @@ export const {
   addSelectedTrack,
   removeSelectedTrack,
   setLastPlaylistAddedTo,
+  setSuggestionSection,
 } = playerSlice.actions;
 
 // Export default the slice reducer

@@ -41,7 +41,13 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
       .then((res) => res.json())
       .then((data: Playlist) => {
         const { id, tracks, name, description } = data;
-        const newPlaylist = { id, tracks, name, description };
+        const newPlaylist = {
+          id,
+          tracks,
+          name,
+          description,
+          images: [{ url: "placeholder", height: 0, width: 0 }],
+        };
         dispatch(addPlaylist(newPlaylist));
         handleClose();
       })

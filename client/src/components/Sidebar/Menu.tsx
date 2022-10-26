@@ -19,6 +19,15 @@ const Menu = ({}) => {
   return (
     <Container>
       <MenuItem
+        onClick={() => handleMenuItemClick(View.HOME)}
+        isActive={currentView === View.HOME}
+      >
+        <IconContainer isActive={currentView === View.HOME}>
+          <SearchIcon height={16} width={16} />
+        </IconContainer>
+        {View.HOME}
+      </MenuItem>
+      <MenuItem
         onClick={() => handleMenuItemClick(View.BROWSE)}
         isActive={currentView === View.BROWSE}
       >

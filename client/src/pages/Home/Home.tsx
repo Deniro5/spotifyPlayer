@@ -24,6 +24,9 @@ export const Home = ({ code }: HomeProps) => {
   const accessToken = useAuth(code);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
   const search = useAppSelector((state) => state.player.search);
+  const showSuggestionSection = useAppSelector(
+    (state) => state.player.showSuggestionSection
+  );
   const [searchResults, setSearchResults] = useState<Track[]>([]);
   const dispatch = useAppDispatch();
 
@@ -79,11 +82,9 @@ export const Home = ({ code }: HomeProps) => {
       <Main>
         <Header />
         <Body>
-          {/* This is where the router needs to go */}
           <ViewContainer>
             <Router />
           </ViewContainer>
-          <OtherContainer></OtherContainer>
         </Body>
         <PlayerContainer>
           <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
@@ -106,21 +107,11 @@ const Body = styled.div`
 `;
 
 const ViewContainer = styled.div`
-  flex: 2;
   overflow-y: scroll;
-`;
-
-const OtherContainer = styled.div`
-  flex: 1;
-  max-width: 350px;
+  width: 100%;
 `;
 
 const Container = styled.div``;
-
-const AlbumImg = styled.img`
-  width: 100%;
-  max-height: ;
-`;
 
 const PlayerContainer = styled.div`
   width: 100%;
