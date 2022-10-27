@@ -41,3 +41,8 @@ export interface PlaylistDetails {
   name: string;
   description: string;
 }
+
+export enum PlaylistSortOptions {
+  ALPHABETICAL = "Alphabetical",
+  MOST_RECENT = "Most Recent",
+}

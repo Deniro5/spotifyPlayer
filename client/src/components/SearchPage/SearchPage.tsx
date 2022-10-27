@@ -2,6 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../hooks";
 import useFetchSearchSongs from "../../hooks/useFetchSearchSongs";
 import TrackList from "../TrackList";
+import styled from "styled-components";
 
 const SearchPage = () => {
   const {
@@ -14,9 +15,9 @@ const SearchPage = () => {
 
   const getDisplayComponent = () => {
     if (noSearchTermEntered) {
-      return <div> No search Term entered </div>;
+      return <Message> Enter a search term above </Message>;
     } else if (noResults) {
-      return <div> No results </div>;
+      return <Message> No results </Message>;
     } else {
       return <TrackList isUserTracks={false} loadMoreTracks={loadMoreTracks} />;
     }
@@ -26,5 +27,9 @@ const SearchPage = () => {
 
   return componentToReturn;
 };
+
+const Message = styled.div`
+  font-size: 14px;
+`;
 
 export { SearchPage };

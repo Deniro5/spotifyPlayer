@@ -93,7 +93,7 @@ const Title = styled.div`
 `;
 
 const PlaylistList = styled.div`
-  height: calc(85vh - 280px);
+  height: calc(85vh - 260px);
   overflow-y: scroll;
 `;
 

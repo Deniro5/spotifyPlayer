@@ -75,7 +75,7 @@ const Container = styled.div<{ isSelected: boolean }>`
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  margin: 2px auto;
+  margin: 1px auto;
   border: 1px solid whitesmoke;
   &:hover {
     background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "whitesmoke")};

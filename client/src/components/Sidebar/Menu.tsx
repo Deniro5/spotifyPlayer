@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
+import { ReactComponent as HomeIcon } from "../../assets/home.svg";
 import { View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
@@ -22,8 +23,8 @@ const Menu = ({}) => {
         onClick={() => handleMenuItemClick(View.HOME)}
         isActive={currentView === View.HOME}
       >
-        <IconContainer isActive={currentView === View.HOME}>
-          <SearchIcon height={16} width={16} />
+        <IconContainer isActive={currentView === View.HOME} style={{ marginTop: "-3px" }}>
+          <HomeIcon height={16} width={16} />
         </IconContainer>
         {View.HOME}
       </MenuItem>

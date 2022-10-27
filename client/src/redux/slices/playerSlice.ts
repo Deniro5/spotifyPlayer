@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Playlist, User, View } from "../../types";
+import { Playlist, PlaylistSortOptions, User, View } from "../../types";
 import { Track } from "../../types";
 
 // Define the state of the slice as an object
@@ -16,6 +16,7 @@ export interface PlayerState {
   selectedTracksHash: Record<string, boolean>;
   lastPlaylistAddedTo: Playlist | null;
   showSuggestionSection: boolean;
+  playlistSortOption: string;
 }
 
 // Define an initial state
@@ -31,6 +32,7 @@ const initialState: PlayerState = {
   selectedTracksHash: {},
   lastPlaylistAddedTo: null,
   showSuggestionSection: true,
+  playlistSortOption: PlaylistSortOptions.MOST_RECENT,
 };
 
 // Create a slice containing the configuration of the state
@@ -116,6 +118,9 @@ const playerSlice = createSlice({
     setSuggestionSection(state, action: PayloadAction<boolean>) {
       state.showSuggestionSection = action.payload;
     },
+    setPlaylistSortOption(state, action: PayloadAction<string>) {
+      state.playlistSortOption = action.payload;
+    },
   },
 });
 
@@ -138,6 +143,7 @@ export const {
   removeSelectedTrack,
   setLastPlaylistAddedTo,
   setSuggestionSection,
+  setPlaylistSortOption,
 } = playerSlice.actions;
 
 // Export default the slice reducer

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppDispatch } from "../../hooks";
 import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
-
+import QuestionImg from "../../assets/question.png";
 export type IPlaylistSquareProps = {
   playlist: Playlist;
 };
@@ -19,7 +19,7 @@ const PlaylistSquare: React.FC<IPlaylistSquareProps> = ({ playlist }) => {
 
   return (
     <Container onClick={handleClick}>
-      <PlaylistImage src={playlist.images[1]?.url} alt={""} />
+      <PlaylistImage src={playlist.images[1]?.url || QuestionImg} alt={"Unknown"} />
       <PlaylistName> {playlist.name} </PlaylistName>
     </Container>
   );
@@ -27,6 +27,7 @@ const PlaylistSquare: React.FC<IPlaylistSquareProps> = ({ playlist }) => {
 
 const PlaylistImage = styled.img`
   transition: 0.3s;
+  max-width: 300px;
 `;
 
 const PlaylistName = styled.p`
