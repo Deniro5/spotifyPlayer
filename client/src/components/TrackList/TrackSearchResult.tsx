@@ -27,14 +27,40 @@ export const TrackSearchResult = ({
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
   const { uri, artist, title, albumUrl } = track;
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
+  const currentDisplayTracks = useAppSelector(
+    (state) => state.player.currentDisplayTracks
+  );
   const dispatch = useAppDispatch();
 
-  const handlePlay = () => {
-    dispatch(setPlayingTrack(track));
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.metaKey) {
+      handleToggleSelected();
+    } else if (e.shiftKey) {
+      handleShiftClick();
+    } else {
+      dispatch(setPlayingTrack(track));
+    }
+  };
+
+  const handleShiftClick = () => {
+    //when shift is held down it should select the track and all tracks before it up until the nearest
+    //previous selected track
+    let currentIndex = index;
+    while (currentIndex >= 0) {
+      const currentTrack = currentDisplayTracks[currentIndex];
+      if (selectedTracksHash[currentTrack.uri]) break;
+      dispatch(addSelectedTrack(currentTrack.uri));
+      currentIndex--;
+    }
   };
 
   const handleCheckboxClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     e.stopPropagation();
+    handleToggleSelected();
+  };
+
+  const handleToggleSelected = () => {
     if (isSelected) {
       dispatch(removeSelectedTrack(uri));
     } else {
@@ -45,7 +71,7 @@ export const TrackSearchResult = ({
   return (
     <Container
       isSelected={isSelected}
-      onClick={handlePlay}
+      onClick={handleClick}
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
       <ImageAndNameContainer>
@@ -67,6 +93,16 @@ export const TrackSearchResult = ({
   );
 };
 
+const TrackTitle = styled.div<{ isActive: boolean }>`
+  font-size: 14px;
+  width: 250px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: ${({ isActive }) => (isActive ? 700 : 500)};
+  color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
+`;
+
 const Container = styled.div<{ isSelected: boolean }>`
   background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
   cursor: pointer;
@@ -75,13 +111,23 @@ const Container = styled.div<{ isSelected: boolean }>`
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  margin: 1px auto;
+  margin: 1px auto;s
   border: 1px solid whitesmoke;
+  color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
   &:hover {
     background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "whitesmoke")};
   }
   width: 95%;
   border-radius: 4px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  ${TrackTitle} {
+    color: ${({ isSelected }) => isSelected && COLORS.white};
+  }
 `;
 
 const ImageAndNameContainer = styled.div`
@@ -96,25 +142,13 @@ const TrackImage = styled.img`
   margin: 0px 12px;
 `;
 
-const TrackTitle = styled.div<{ isActive: boolean }>`
-  font-size: 14px;
-  width: 250px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: ${({ isActive }) => (isActive ? 700 : 500)};
-  color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
-`;
-
 const TrackArtist = styled.div`
   font-size: 14px;
-  color: grey;
   width: 120px;
 `;
 
 const TrackDuration = styled.div`
   font-size: 14px;
-  color: grey;
 `;
 
 const LikeIconContainer = styled.div`
