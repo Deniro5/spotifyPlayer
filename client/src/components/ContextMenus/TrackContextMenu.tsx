@@ -82,9 +82,11 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
             </PlaylistSubListContainer>
           </Dropdown.Submenu>
         </Dropdown.Item>
-        <Dropdown.Item onClick={handleRemoveClick}>
-          Remove {!!selectedTracksArray.length && "Songs"} From Playlist
-        </Dropdown.Item>
+        {selectedPlaylistId && (
+          <Dropdown.Item onClick={handleRemoveClick}>
+            Remove {!!selectedTracksArray.length && "Songs"} From Playlist
+          </Dropdown.Item>
+        )}
       </div>
     </PopoverContentWrapper>
   );

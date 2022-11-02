@@ -82,13 +82,9 @@ export const TrackSearchResult = ({
       </ImageAndNameContainer>
       <TrackArtist>{artist}</TrackArtist>
       <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
-      <LikeIconContainer>
-        <StyledCheckbox
-          type='checkbox'
-          checked={isSelected}
-          onClick={handleCheckboxClick}
-        />
-      </LikeIconContainer>
+      <CheckboxContainer onClick={handleCheckboxClick}>
+        <StyledCheckbox type='checkbox' checked={isSelected} />
+      </CheckboxContainer>
     </Container>
   );
 };
@@ -99,7 +95,7 @@ const TrackTitle = styled.div<{ isActive: boolean }>`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: ${({ isActive }) => (isActive ? 700 : 500)};
+  font-weight: 500;
   color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
 `;
 
@@ -111,13 +107,12 @@ const Container = styled.div<{ isSelected: boolean }>`
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  margin: 1px auto;s
+  margin: 1px auto;
   border: 1px solid whitesmoke;
   color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
   &:hover {
     background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "whitesmoke")};
   }
-  width: 95%;
   border-radius: 4px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -151,8 +146,12 @@ const TrackDuration = styled.div`
   font-size: 14px;
 `;
 
-const LikeIconContainer = styled.div`
+const CheckboxContainer = styled.div`
   margin-right: 20px;
+  padding: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StyledCheckbox = styled.input`

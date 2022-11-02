@@ -27,6 +27,7 @@ const Header = ({}) => {
 const Container = styled.div`
   padding: 20px;
   width: 100%;
+  position: relative;
 `;
 
 export { Header };
