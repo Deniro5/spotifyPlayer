@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TrackSearchResult } from "./TrackSearchResult";
 import { Waypoint } from "react-waypoint";
 import { TrackContextMenu } from "../ContextMenus/TrackContextMenu";
@@ -20,6 +20,13 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   );
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
+  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+
+  useEffect(() => {
+    const container = document.getElementById("scrollContainer");
+    if (container) setTimeout(() => (container.scrollTop = 0), 300);
+  }, [selectedPlaylistId]);
+
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [contextMenuX, setContextMenuX] = useState<number | null>(null);
   const [contextMenuY, setContextMenuY] = useState<number | null>(null);
@@ -53,7 +60,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
             <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
           )}
         </TrackListBatchOptions>
-        <ScrollContainer>
+        <ScrollContainer id='scrollContainer'>
           {currentDisplayTracks.map((track, index) => (
             <TrackSearchResult
               handleRightClick={handleRightClick}
@@ -79,7 +86,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
 };
 
 const BatchClear = styled.div`
-  color: ${COLORS.lightPrimary};
+  color: ${COLORS.primary};
   cursor: pointer;
   &:hover {
     color: ${COLORS.darkPrimary};

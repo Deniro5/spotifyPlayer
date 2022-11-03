@@ -39,7 +39,7 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ name, description }),
+      body: JSON.stringify({ name, ...(description.length ? { description } : {}) }),
     })
       .then((res) => {
         if (res.status !== 200) return;
