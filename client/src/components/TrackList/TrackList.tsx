@@ -28,12 +28,13 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   }, [selectedPlaylistId]);
 
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
-  const [contextMenuX, setContextMenuX] = useState<number | null>(null);
-  const [contextMenuY, setContextMenuY] = useState<number | null>(null);
+  const [contextMenuX, setContextMenuX] = useState<number>(0);
+  const [contextMenuY, setContextMenuY] = useState<number>(0);
 
   const handleLoadMoreTracks = () => {
     //We dont want to attempt to load more via waypoint if there are no songs
     if (currentDisplayTracks.length > 0) {
+      console.log("waypoint firing");
       loadMoreTracks();
     }
   };
@@ -70,8 +71,9 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
               index={index}
             />
           ))}
+          <Waypoint onEnter={handleLoadMoreTracks} />
         </ScrollContainer>
-        <Waypoint onEnter={handleLoadMoreTracks} />
+
         {contextMenuId && (
           <TrackContextMenu
             contextMenuId={contextMenuId}

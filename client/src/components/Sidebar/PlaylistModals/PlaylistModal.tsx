@@ -78,7 +78,7 @@ const FieldLabel = styled.p`
 `;
 
 const NameField = styled.input`
-  width: 328px;
+  width: 300px;
   height: 23px;
   font-size: 15px;
   padding: 2px 10px;

@@ -17,6 +17,7 @@ export interface PlayerState {
   lastPlaylistAddedTo: Playlist | null;
   showSuggestionSection: boolean;
   playlistSortOption: string;
+  shuffle: boolean;
 }
 
 // Define an initial state
@@ -33,6 +34,7 @@ const initialState: PlayerState = {
   lastPlaylistAddedTo: null,
   showSuggestionSection: true,
   playlistSortOption: PlaylistSortOptions.MOST_RECENT,
+  shuffle: false,
 };
 
 // Create a slice containing the configuration of the state
@@ -121,6 +123,9 @@ const playerSlice = createSlice({
     setPlaylistSortOption(state, action: PayloadAction<string>) {
       state.playlistSortOption = action.payload;
     },
+    setShuffle(state, action: PayloadAction<boolean>) {
+      state.shuffle = action.payload;
+    },
   },
 });
 
@@ -144,6 +149,7 @@ export const {
   setLastPlaylistAddedTo,
   setSuggestionSection,
   setPlaylistSortOption,
+  setShuffle,
 } = playerSlice.actions;
 
 // Export default the slice reducer

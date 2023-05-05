@@ -20,7 +20,7 @@ const Home = ({}) => {
   return (
     <Container>
       {sortedPlaylists.map((playlist) => (
-        <PlaylistSquare playlist={playlist} />
+        <PlaylistSquare playlist={playlist} key={playlist.id} />
       ))}
     </Container>
   );

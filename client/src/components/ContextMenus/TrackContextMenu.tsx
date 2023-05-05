@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
@@ -9,8 +9,8 @@ import Dropdown from "react-multilevel-dropdown";
 export type ITrackContextMenuProps = {
   contextMenuId: string | null;
   setContextMenuId: React.Dispatch<React.SetStateAction<string | null>>;
-  contextMenuX: number | null;
-  contextMenuY: number | null;
+  contextMenuX: number;
+  contextMenuY: number;
 };
 
 const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
@@ -29,12 +29,28 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const { addTracks, removeTracks } = useTrackActions(
     Array.from(new Set([contextMenuId, ...selectedTracksArray]))
   );
-  const getContainerStyle = () => {
+
+  const getContainerStyle = useCallback(() => {
+    const popoverWidth = 225;
+    const popoverHeight = 107;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    let adjustedX = contextMenuX;
+    let adjustedY = contextMenuY;
+
+    if (adjustedX + popoverWidth > screenWidth) {
+      adjustedX = screenWidth - popoverWidth;
+    }
+
+    if (adjustedY + popoverHeight > screenHeight) {
+      adjustedY = screenHeight - popoverHeight;
+    }
     return {
-      top: `${contextMenuY}px`,
-      left: `${contextMenuX}px`,
+      top: `${adjustedY}px`,
+      left: `${adjustedX}px`,
+      zIndex: "10",
     };
-  };
+  }, [contextMenuX, contextMenuY]);
 
   const handleAddClick = (playlistId: string) => {
     addTracks(playlistId);

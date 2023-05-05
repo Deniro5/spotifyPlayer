@@ -23,7 +23,6 @@ export const TrackSearchResult = ({
   isSelected,
   index,
 }: TrackSearchResultProps) => {
-  console.log(index);
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
   const { uri, artist, title, albumUrl } = track;
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
@@ -38,9 +37,11 @@ export const TrackSearchResult = ({
       handleToggleSelected();
     } else if (e.shiftKey) {
       handleShiftClick();
-    } else {
-      dispatch(setPlayingTrack(track));
     }
+  };
+
+  const handlePlay = () => {
+    dispatch(setPlayingTrack(track));
   };
 
   const handleShiftClick = () => {
@@ -72,6 +73,7 @@ export const TrackSearchResult = ({
     <Container
       isSelected={isSelected}
       onClick={handleClick}
+      onDoubleClick={handlePlay}
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
       <ImageAndNameContainer>
@@ -111,7 +113,7 @@ const Container = styled.div<{ isSelected: boolean }>`
   border: 1px solid whitesmoke;
   color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
   &:hover {
-    background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "whitesmoke")};
+    background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : COLORS.white)};
   }
   border-radius: 4px;
   -webkit-touch-callout: none;
