@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import { Playlist, PlaylistSortOptions, User, View } from "../../types";
 import { Track } from "../../types";
+import { RootState } from "../store";
 
 // Define the state of the slice as an object
 export interface PlayerState {
@@ -13,7 +14,7 @@ export interface PlayerState {
   currentDisplayTracks: Track[];
   playingTrack: Track | null;
   currentUser: User | null;
-  selectedTracksHash: Record<string, boolean>;
+  selectedTracksHash: Record<string, number>;
   lastPlaylistAddedTo: Playlist | null;
   showSuggestionSection: boolean;
   playlistSortOption: string;
@@ -99,11 +100,14 @@ const playerSlice = createSlice({
     setCurrentUser(state, action: PayloadAction<User | null>) {
       state.currentUser = action.payload;
     },
-    setSelectedTracksHash(state, action: PayloadAction<Record<string, boolean>>) {
+    setSelectedTracksHash(state, action: PayloadAction<Record<string, number>>) {
       state.selectedTracksHash = action.payload;
     },
-    addSelectedTrack(state, action: PayloadAction<string>) {
-      state.selectedTracksHash[action.payload] = true;
+    addSelectedTrack(
+      state,
+      action: PayloadAction<{ trackUri: string; trackIndex: number }>
+    ) {
+      state.selectedTracksHash[action.payload.trackUri] = action.payload.trackIndex;
     },
     removeSelectedTrack(state, action: PayloadAction<string>) {
       delete state.selectedTracksHash[action.payload];
@@ -154,3 +158,20 @@ export const {
 
 // Export default the slice reducer
 export default playerSlice.reducer;
+
+const selectedTracksHash = (state: RootState) => state.player.selectedTracksHash;
+
+export const getEarliestSelectedTrackIndex = createSelector(
+  [selectedTracksHash],
+  (selectedTracksHash) =>
+    Object.values(selectedTracksHash).length > 0
+      ? Object.values(selectedTracksHash).reduce((lowestPosition, position) => {
+          return Math.min(lowestPosition, position);
+        }, Number.MAX_SAFE_INTEGER)
+      : -1
+);
+
+export const getSelectedTracksHashLength = createSelector(
+  [selectedTracksHash],
+  (selectedTracksHash) => Object.keys(selectedTracksHash).length
+);

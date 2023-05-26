@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import { Track } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   addSelectedTrack,
+  getEarliestSelectedTrackIndex,
   removeSelectedTrack,
   setPlayingTrack,
+  setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
+import { ReactComponent as PlayIcon } from "../../assets/play.svg";
+import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
 
 interface TrackSearchResultProps {
   track: Track;
@@ -27,16 +31,19 @@ export const TrackSearchResult = ({
   const { uri, artist, title, albumUrl } = track;
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
+  const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
+  const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
   const currentDisplayTracks = useAppSelector(
     (state) => state.player.currentDisplayTracks
   );
   const dispatch = useAppDispatch();
-
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.metaKey) {
       handleToggleSelected();
     } else if (e.shiftKey) {
       handleShiftClick();
+    } else {
+      dispatch(setSelectedTracksHash({ [uri]: index }));
     }
   };
 
@@ -45,14 +52,27 @@ export const TrackSearchResult = ({
   };
 
   const handleShiftClick = () => {
-    //when shift is held down it should select the track and all tracks before it up until the nearest
-    //previous selected track
     let currentIndex = index;
-    while (currentIndex >= 0) {
-      const currentTrack = currentDisplayTracks[currentIndex];
-      if (selectedTracksHash[currentTrack.uri]) break;
-      dispatch(addSelectedTrack(currentTrack.uri));
-      currentIndex--;
+    //If the track we are clicking on is above all other selected tracks, select all tracks between this one and the earliest selected
+    if (earliestSelectedTrackIndex > index) {
+      while (currentIndex < earliestSelectedTrackIndex) {
+        const currentTrack = currentDisplayTracks[currentIndex];
+        dispatch(
+          addSelectedTrack({ trackUri: currentTrack.uri, trackIndex: currentIndex })
+        );
+        currentIndex++;
+      }
+    }
+    //If the track we are clicking on is below a selected track, select all tracks between this one and the one above it in the list (if it exists)
+    else {
+      while (currentIndex >= 0) {
+        const currentTrack = currentDisplayTracks[currentIndex];
+        if (selectedTracksHash[currentTrack.uri]) break;
+        dispatch(
+          addSelectedTrack({ trackUri: currentTrack.uri, trackIndex: currentIndex })
+        );
+        currentIndex--;
+      }
     }
   };
 
@@ -65,7 +85,7 @@ export const TrackSearchResult = ({
     if (isSelected) {
       dispatch(removeSelectedTrack(uri));
     } else {
-      dispatch(addSelectedTrack(uri));
+      dispatch(addSelectedTrack({ trackUri: uri, trackIndex: index }));
     }
   };
 
@@ -77,16 +97,27 @@ export const TrackSearchResult = ({
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
       <ImageAndNameContainer>
-        <TrackImage src={albumUrl} />
+        <TrackImageContainer>
+          <TrackImage src={albumUrl} />
+          <HiddenPlayButton onClick={handlePlay}>
+            <StyledPlayIcon height={20} width={20} />
+          </HiddenPlayButton>
+        </TrackImageContainer>
+
         <TrackTitle isActive={!!playingTrack && playingTrack?.uri === uri}>
           {title}
         </TrackTitle>
       </ImageAndNameContainer>
       <TrackArtist>{artist}</TrackArtist>
       <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
-      <CheckboxContainer onClick={handleCheckboxClick}>
-        <StyledCheckbox type='checkbox' checked={isSelected} />
-      </CheckboxContainer>
+      {
+        <CheckboxContainer
+          disabled={selectedTracksHashLength < 2}
+          onClick={handleCheckboxClick}
+        >
+          <StyledCheckbox type='checkbox' checked={isSelected} />
+        </CheckboxContainer>
+      }
     </Container>
   );
 };
@@ -148,16 +179,44 @@ const TrackDuration = styled.div`
   font-size: 14px;
 `;
 
-const CheckboxContainer = styled.div`
+const CheckboxContainer = styled.div<{ disabled: boolean }>`
   margin-right: 20px;
   padding: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
+  visibility: ${({ disabled }) => (disabled ? "hidden" : "visible")};
+  pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 `;
 
 const StyledCheckbox = styled.input`
   cursor: pointer;
   height: 16px;
   width: 16px;
+`;
+
+const HiddenPlayButton = styled.div`
+  position: absolute;
+  top: 0px;
+  left: 12px;
+  height: 35px;
+  width: 35px;
+  background: rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TrackImageContainer = styled.div`
+  position: relative;
+  &:hover {
+    ${HiddenPlayButton} {
+      visibility: visible;
+    }
+  }
+`;
+
+const StyledPlayIcon = styled(PlayIcon)`
+  margin-left: 2px;
 `;

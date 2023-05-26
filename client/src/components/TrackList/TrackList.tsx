@@ -5,7 +5,10 @@ import { TrackContextMenu } from "../ContextMenus/TrackContextMenu";
 import { COLORS } from "../../constants";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setSelectedTracksHash } from "../../redux/slices/playerSlice";
+import {
+  getSelectedTracksHashLength,
+  setSelectedTracksHash,
+} from "../../redux/slices/playerSlice";
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
   loadMoreTracks: () => void;
@@ -15,9 +18,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   const currentDisplayTracks = useAppSelector(
     (state) => state.player.currentDisplayTracks
   );
-  const areTracksSelected = useAppSelector(
-    (state) => Object.keys(state.player.selectedTracksHash).length
-  );
+  const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
@@ -34,7 +35,6 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   const handleLoadMoreTracks = () => {
     //We dont want to attempt to load more via waypoint if there are no songs
     if (currentDisplayTracks.length > 0) {
-      console.log("waypoint firing");
       loadMoreTracks();
     }
   };
@@ -57,7 +57,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
     <>
       <Container>
         <TrackListBatchOptions>
-          {!!areTracksSelected && (
+          {selectedTracksHashLength > 1 && (
             <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
           )}
         </TrackListBatchOptions>
@@ -67,7 +67,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
               handleRightClick={handleRightClick}
               track={track}
               key={track.uri}
-              isSelected={selectedTracksHash[track.uri]}
+              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
               index={index}
             />
           ))}
