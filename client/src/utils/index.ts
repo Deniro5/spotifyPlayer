@@ -5,3 +5,7 @@ export const MillisecondsToMinutesAndSeconds = (ms: number) => {
   const secondsString = seconds < 10 ? "0" + seconds : seconds.toString();
   return { seconds: secondsString, minutes: minutes.toString() };
 };
+
+export const uriToId = (uri: string) => {
+  return uri.substring(14);
+};

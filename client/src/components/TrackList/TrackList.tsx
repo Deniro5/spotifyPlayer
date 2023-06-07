@@ -9,6 +9,7 @@ import {
   getSelectedTracksHashLength,
   setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
+import { Recommendations } from "./Recommendations";
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
   loadMoreTracks: () => void;
@@ -22,6 +23,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const showRecommendations = useAppSelector((state) => state.player.showRecommendations);
 
   useEffect(() => {
     const container = document.getElementById("scrollContainer");
@@ -54,8 +56,8 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   };
 
   return (
-    <>
-      <Container>
+    <TrackListAndRecommendationsContainer>
+      <TrackListContainer isFullWidth={!showRecommendations}>
         <TrackListBatchOptions>
           {selectedTracksHashLength > 1 && (
             <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
@@ -82,8 +84,9 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
             contextMenuY={contextMenuY}
           />
         )}
-      </Container>
-    </>
+      </TrackListContainer>
+      {showRecommendations && <Recommendations />}
+    </TrackListAndRecommendationsContainer>
   );
 };
 
@@ -104,9 +107,19 @@ const TrackListBatchOptions = styled.div`
   padding-right: 18px;
 `;
 
-const Container = styled.div`
-  width: 95%;
+const TrackListAndRecommendationsContainer = styled.div`
+  display: flex;
+`;
+
+const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
+  width: ${({ isFullWidth }) => (isFullWidth ? "100%" : "75%")};
+  padding: 0px 10px;
+`;
+
+const RecommendationsContainer = styled.div`
+  width: 25%;
   margin: auto;
+  padding: 0px 30px;
 `;
 
 const ScrollContainer = styled.div`
