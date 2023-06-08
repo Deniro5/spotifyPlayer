@@ -1,38 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setSearch, setShowRecommendations } from "../../redux/slices/playerSlice";
+import { useAppSelector } from "../../hooks";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 import { ReactComponent as SettingIcon } from "../../assets/setting.svg";
+import { SettingsModal } from "./SettingsModal";
 
 export type ISearchBarProps = {};
 
 const SearchBar: React.FC<ISearchBarProps> = ({}) => {
-  const dispatch = useAppDispatch();
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const search = useAppSelector((state) => state.player.search);
-  const showRecommendations = useAppSelector((state) => state.player.showRecommendations);
   const [value, setValue] = useState<string>(search);
   const [typing, setTyping] = useState(false);
-  const [typingTimer, setTypingTimer] = useState<NodeJS.Timeout | null>(null);
   const searchRef = useRef("");
 
   //Use this to get the current value within the setTimeout
   useEffect(() => {
     searchRef.current = value;
   }, [value]);
-
-  useEffect(() => {
-    if (typing) {
-      const timeOut = setTimeout(() => {
-        setTyping(false);
-        dispatch(setSearch(searchRef.current));
-      }, 500);
-      setTypingTimer(timeOut);
-    }
-
-    //add clear timeOut here. Find out why TS doesnt want us to do this
-  }, [typing]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -41,10 +27,13 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
     }
   };
 
-  const handleSettingsClick = () => {
-    //open settings here. Follow the create playlist modal structure
+  const handleOpenSettingsModal = () => {
+    setIsSettingsModalOpen(true);
   };
 
+  const handleCloseSettingsModal = () => {
+    setIsSettingsModalOpen(false);
+  };
   return (
     <SearchRowContainer>
       <Container>
@@ -57,9 +46,12 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
           <SearchIcon height={16} width={16} />
         </SearchIconContainer>
       </Container>
-      <SettingIconContainer onClick={handleSettingsClick}>
+      <SettingIconContainer onClick={handleOpenSettingsModal}>
         <SettingIcon height={20} width={20} />
       </SettingIconContainer>
+      {isSettingsModalOpen && (
+        <SettingsModal isOpen handleCloseSettingsModal={handleCloseSettingsModal} />
+      )}
     </SearchRowContainer>
   );
 };
