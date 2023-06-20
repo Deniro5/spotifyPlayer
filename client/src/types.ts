@@ -46,3 +46,10 @@ export enum PlaylistSortOptions {
   ALPHABETICAL = "Alphabetical",
   MOST_RECENT = "Most Recent",
 }
+
+export interface RecommendationSettings {
+  popularity: number;
+  tempo: number;
+  instrumentalness: number;
+  valence: number;
+}

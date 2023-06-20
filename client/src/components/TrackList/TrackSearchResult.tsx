@@ -33,6 +33,7 @@ export const TrackSearchResult = ({
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
+  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
   const currentDisplayTracks = useAppSelector(
     (state) => state.player.currentDisplayTracks
   );
@@ -48,6 +49,10 @@ export const TrackSearchResult = ({
   };
 
   const handlePlay = () => {
+    if (selectedPlaylistId) {
+      alert(selectedPlaylistId);
+    }
+    //if we are on playlist view we want this to be the offset and the playlist URI. if not keep as is
     dispatch(setPlayingTrack(track));
   };
 

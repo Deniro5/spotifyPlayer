@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
-import { Playlist, PlaylistSortOptions, User, View } from "../../types";
+import {
+  Playlist,
+  PlaylistSortOptions,
+  RecommendationSettings,
+  User,
+  View,
+} from "../../types";
 import { Track } from "../../types";
 import { RootState } from "../store";
 
@@ -20,7 +26,10 @@ export interface PlayerState {
   playlistSortOption: string;
   shuffle: boolean;
   showRecommendations: boolean;
+  shouldUseRecommendationSliders: boolean;
+  recommendationSettings: RecommendationSettings;
   recommendedTracks: Track[];
+  offset: Number | undefined;
 }
 
 // Define an initial state
@@ -39,7 +48,15 @@ const initialState: PlayerState = {
   playlistSortOption: PlaylistSortOptions.MOST_RECENT,
   shuffle: false,
   showRecommendations: false,
+  shouldUseRecommendationSliders: true,
+  recommendationSettings: {
+    popularity: 50,
+    tempo: 70,
+    valence: 50,
+    instrumentalness: 50,
+  },
   recommendedTracks: [],
+  offset: undefined,
 };
 
 // Create a slice containing the configuration of the state
@@ -137,8 +154,17 @@ const playerSlice = createSlice({
     setShowRecommendations(state, action: PayloadAction<boolean>) {
       state.showRecommendations = action.payload;
     },
+    setShouldUseRecommendationSliders(state, action: PayloadAction<boolean>) {
+      state.shouldUseRecommendationSliders = action.payload;
+    },
+    setRecommendationSettings(state, action: PayloadAction<RecommendationSettings>) {
+      state.recommendationSettings = action.payload;
+    },
     setRecommendedTracks(state, action: PayloadAction<Track[]>) {
       state.recommendedTracks = action.payload;
+    },
+    setOffset(state, action: PayloadAction<Number | undefined>) {
+      state.offset = action.payload;
     },
   },
 });
@@ -165,7 +191,10 @@ export const {
   setPlaylistSortOption,
   setShuffle,
   setShowRecommendations,
+  setShouldUseRecommendationSliders,
+  setRecommendationSettings,
   setRecommendedTracks,
+  setOffset,
 } = playerSlice.actions;
 
 // Export default the slice reducer

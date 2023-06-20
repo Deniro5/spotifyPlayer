@@ -8,16 +8,32 @@ import { Track } from "../types";
 const useRecommendations = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const shouldUseRecommendationSliders = useAppSelector(
+    (state) => state.player.shouldUseRecommendationSliders
+  );
+  const recommendationSettings = useAppSelector(
+    (state) => state.player.recommendationSettings
+  );
   const [isFetching, setIsFetching] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!accessToken || !playingTrack) return;
+
     setIsFetching(true);
-    const fetchUrl = `https://api.spotify.com/v1/recommendations?limit=10&seed_tracks=${uriToId(
-      playingTrack.uri
-    )}`;
+
+    const fetchUrl = shouldUseRecommendationSliders
+      ? `https://api.spotify.com/v1/recommendations?limit=10&target_popularity=${
+          recommendationSettings.popularity
+        }&target_tempo=${recommendationSettings.tempo}&target_instrumentalness=${
+          recommendationSettings.instrumentalness / 100
+        }&target_valence=${recommendationSettings.valence / 100}&seed_tracks=${uriToId(
+          playingTrack.uri
+        )}`
+      : `https://api.spotify.com/v1/recommendations?limit=10&seed_tracks=${uriToId(
+          playingTrack.uri
+        )}`;
     fetch(fetchUrl, {
       method: "GET",
       headers: {
@@ -48,7 +64,7 @@ const useRecommendations = () => {
         setErrorMessage("An unexpected error occured");
       })
       .finally(() => setIsFetching(false));
-  }, [accessToken, playingTrack]);
+  }, [accessToken, playingTrack, shouldUseRecommendationSliders, recommendationSettings]);
 
   return {
     isFetching,

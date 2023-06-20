@@ -6,7 +6,11 @@ import Button from "../../Common/Button";
 import { useAppSelector } from "../../../hooks";
 import { useState } from "react";
 import { batch, useDispatch } from "react-redux";
-import { setShowRecommendations } from "../../../redux/slices/playerSlice";
+import {
+  setShowRecommendations,
+  setShouldUseRecommendationSliders,
+  setRecommendationSettings,
+} from "../../../redux/slices/playerSlice";
 
 export type ISettingsModalProps = {
   handleCloseSettingsModal: () => void;
@@ -18,13 +22,29 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
   isOpen,
 }) => {
   const dispatch = useDispatch();
+
   const showRecommendations = useAppSelector((state) => state.player.showRecommendations);
+  const shouldUseRecommendationSliders = useAppSelector(
+    (state) => state.player.shouldUseRecommendationSliders
+  );
+  const recommendationSettings = useAppSelector(
+    (state) => state.player.recommendationSettings
+  );
+
   const [tempShowRecommendations, setTempShowRecommendations] =
     useState(showRecommendations);
+  const [tempShouldUseRecommendationSliders, setTempShouldUseRecommendationSliders] =
+    useState(shouldUseRecommendationSliders);
+  const [tempPopularity, setTempPopularity] = useState(recommendationSettings.popularity);
+  const [tempTempo, setTempTempo] = useState(recommendationSettings.tempo);
+  const [tempInstrumentalness, setTempInstrumentalness] = useState(
+    recommendationSettings.instrumentalness
+  );
+  const [tempValence, setTempValence] = useState(recommendationSettings.valence);
   const customModalStyle = {
     content: {
       width: "350px",
-      height: "360px",
+      height: "475px",
       left: "calc(50% - 196px)",
       top: "calc(50% - 250px)",
     },
@@ -33,13 +53,47 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
   const handleConfirm = () => {
     batch(() => {
       dispatch(setShowRecommendations(tempShowRecommendations));
-      //Whatever else
+      dispatch(setShouldUseRecommendationSliders(tempShouldUseRecommendationSliders));
+      if (tempShouldUseRecommendationSliders) {
+        dispatch(
+          setRecommendationSettings({
+            valence: tempValence,
+            popularity: tempPopularity,
+            tempo: tempTempo,
+            instrumentalness: tempInstrumentalness,
+          })
+        );
+      }
     });
     handleCloseSettingsModal();
   };
 
   const handleChangeRecommendations = () => {
+    if (tempShowRecommendations) {
+      //turn off recommendation sliders if recommendations are going to be turned off
+      setTempShouldUseRecommendationSliders(false);
+    }
     setTempShowRecommendations(!tempShowRecommendations);
+  };
+
+  const handleChangeShouldUseRecommendationSliders = () => {
+    setTempShouldUseRecommendationSliders(!tempShouldUseRecommendationSliders);
+  };
+
+  const handlePopularityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempPopularity(Number.parseInt(e.target.value));
+  };
+
+  const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempTempo(Number.parseInt(e.target.value));
+  };
+
+  const handleInstrumentalnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempInstrumentalness(Number.parseInt(e.target.value));
+  };
+
+  const handleValenceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempValence(Number.parseInt(e.target.value));
   };
 
   return (
@@ -59,6 +113,62 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
           />
         </CheckboxContainer>
       </SettingsRow>
+      <SettingsRow>
+        <SettingsLabel> Use Recommendation Sliders</SettingsLabel>
+        <CheckboxContainer>
+          <StyledCheckbox
+            type='checkbox'
+            checked={tempShouldUseRecommendationSliders}
+            onChange={handleChangeShouldUseRecommendationSliders}
+          />
+        </CheckboxContainer>
+      </SettingsRow>
+      <SlidersContainer isDisabled={!tempShouldUseRecommendationSliders}>
+        <SettingsRow>
+          <SettingsLabel>Popularity </SettingsLabel>
+          <input
+            onChange={handlePopularityChange}
+            type='range'
+            min='1'
+            max='100'
+            value={tempPopularity}
+            id='myRange'
+          />
+        </SettingsRow>
+        <SettingsRow>
+          <SettingsLabel> Tempo </SettingsLabel>
+          <input
+            onChange={handleTempoChange}
+            type='range'
+            min='1'
+            max='140'
+            value={tempTempo}
+            id='myRange'
+          />
+        </SettingsRow>
+        <SettingsRow>
+          <SettingsLabel> Happiness </SettingsLabel>
+          <input
+            onChange={handleValenceChange}
+            type='range'
+            min='1'
+            max='100'
+            value={tempValence}
+            id='myRange'
+          />
+        </SettingsRow>
+        <SettingsRow>
+          <SettingsLabel> Instrumentalness </SettingsLabel>
+          <input
+            onChange={handleInstrumentalnessChange}
+            type='range'
+            min='1'
+            max='100'
+            value={tempInstrumentalness}
+            id='myRange'
+          />
+        </SettingsRow>
+      </SlidersContainer>
       <ButtonContainer>
         <Button
           width={120}
@@ -124,6 +234,22 @@ const ButtonContainer = styled.div`
   width: 270px;
   margin: auto;
   margin-top: 50px;
+`;
+
+const SlidersContainer = styled.div<{ isDisabled: boolean }>`
+  width: 90%;
+  margin: auto;
+  ${({ isDisabled }) =>
+    isDisabled &&
+    `
+    background: whitesmoke;
+    pointer-events:none;
+    ${SettingsRow} {
+      color: gray;
+    }
+
+
+  `}
 `;
 
 export { SettingsModal };

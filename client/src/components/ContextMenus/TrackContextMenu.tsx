@@ -5,6 +5,7 @@ import { PopoverContentWrapper } from "./PopoverContentWrapper";
 import useTrackActions from "../../hooks/useTrackActions";
 import { useAppSelector } from "../../hooks";
 import Dropdown from "react-multilevel-dropdown";
+import { useState } from "react";
 
 export type ITrackContextMenuProps = {
   contextMenuId: string | null;
@@ -19,7 +20,6 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   contextMenuX,
   contextMenuY,
 }) => {
-  //contentPosition is not working so use this for now instead
   const playlists = useAppSelector((state) => state.player.playlists);
   const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
   const lastPlaylistAddedTo = useAppSelector((state) => state.player.lastPlaylistAddedTo);
@@ -30,7 +30,8 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     Array.from(new Set([contextMenuId, ...selectedTracksArray]))
   );
 
-  const getContainerStyle = useCallback(() => {
+  const getStyles = useCallback(() => {
+    //TODO: Clean this up. At least use constants rather than 'magic numbers'
     const popoverWidth = 225;
     const popoverHeight = 107;
     const screenWidth = window.innerWidth;
@@ -45,10 +46,22 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     if (adjustedY + popoverHeight > screenHeight) {
       adjustedY = screenHeight - popoverHeight;
     }
+    const submenuWidth = 180;
+    //36 is the height of a menu item
+    const submenuHeight = Math.min(playlists.length * 36, 259);
+    let submenuLeft = 225;
+    let submenuTop = 0;
+    if (adjustedX + popoverWidth > screenWidth - submenuWidth) {
+      submenuLeft = -211;
+    }
+    if (adjustedY + popoverHeight > screenHeight - submenuHeight) {
+      submenuTop = -Math.min(playlists.length * 36, 223);
+    }
+
     return {
-      top: `${adjustedY}px`,
-      left: `${adjustedX}px`,
-      zIndex: "10",
+      mainStyle: { top: `${adjustedY}px`, left: `${adjustedX}px`, zIndex: "10" },
+      submenuTop,
+      submenuLeft,
     };
   }, [contextMenuX, contextMenuY]);
 
@@ -71,6 +84,8 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     setContextMenuId(null);
   };
 
+  const { mainStyle, submenuTop, submenuLeft } = getStyles();
+
   const content = (
     <PopoverContentWrapper width={225}>
       <div>
@@ -85,7 +100,11 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
         </Dropdown.Item>
         <Dropdown.Item>
           Add {!!selectedTracksArray.length && "Songs"} To Playlist
-          <Dropdown.Submenu position='right'>
+          <StyledDropdownSubmenu
+            adjustedTop={submenuTop}
+            adjustedLeft={submenuLeft}
+            position='right'
+          >
             <PlaylistSubListContainer>
               {playlists.map(
                 (playlist) =>
@@ -96,7 +115,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
                   )
               )}
             </PlaylistSubListContainer>
-          </Dropdown.Submenu>
+          </StyledDropdownSubmenu>
         </Dropdown.Item>
         {selectedPlaylistId && (
           <Dropdown.Item onClick={handleRemoveClick}>
@@ -113,13 +132,21 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
         onClickOutside={() => setContextMenuId(null)}
         isOpen={!!contextMenuId}
         content={content}
-        containerStyle={getContainerStyle()}
+        containerStyle={mainStyle}
       >
         <></>
       </Popover>
     </>
   );
 };
+
+const StyledDropdownSubmenu = styled(Dropdown.Submenu)<{
+  adjustedTop: number;
+  adjustedLeft: number;
+}>`
+  top: ${({ adjustedTop }) => adjustedTop}px;
+  left: ${({ adjustedLeft }) => adjustedLeft}px;
+`;
 
 const PlaylistSubListContainer = styled.div`
   height: 235px;
