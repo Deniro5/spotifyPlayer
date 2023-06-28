@@ -3,13 +3,7 @@ import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import { Track } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  addSelectedTrack,
-  getEarliestSelectedTrackIndex,
-  removeSelectedTrack,
-  setPlayingTrack,
-  setSelectedTracksHash,
-} from "../../redux/slices/playerSlice";
+import { addSelectedTrack, removeSelectedTrack } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
 import { ReactComponent as PlayIcon } from "../../assets/play.svg";
 import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
@@ -37,9 +31,7 @@ export const RecommendationResult = ({
     }
   };
 
-  const handlePlay = () => {
-    dispatch(setPlayingTrack(track));
-  };
+  const handlePlay = () => {};
 
   const handleToggleSelected = () => {
     if (isSelected) {

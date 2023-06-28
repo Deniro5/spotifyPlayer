@@ -29,7 +29,8 @@ export interface PlayerState {
   shouldUseRecommendationSliders: boolean;
   recommendationSettings: RecommendationSettings;
   recommendedTracks: Track[];
-  offset: Number | undefined;
+  isPlaying: boolean;
+  deviceId: string | null;
 }
 
 // Define an initial state
@@ -56,7 +57,8 @@ const initialState: PlayerState = {
     instrumentalness: 50,
   },
   recommendedTracks: [],
-  offset: undefined,
+  isPlaying: false,
+  deviceId: null,
 };
 
 // Create a slice containing the configuration of the state
@@ -163,8 +165,11 @@ const playerSlice = createSlice({
     setRecommendedTracks(state, action: PayloadAction<Track[]>) {
       state.recommendedTracks = action.payload;
     },
-    setOffset(state, action: PayloadAction<Number | undefined>) {
-      state.offset = action.payload;
+    setIsPlaying(state, action: PayloadAction<boolean>) {
+      state.isPlaying = action.payload;
+    },
+    setDeviceId(state, action: PayloadAction<string>) {
+      state.deviceId = action.payload;
     },
   },
 });
@@ -194,7 +199,8 @@ export const {
   setShouldUseRecommendationSliders,
   setRecommendationSettings,
   setRecommendedTracks,
-  setOffset,
+  setIsPlaying,
+  setDeviceId,
 } = playerSlice.actions;
 
 // Export default the slice reducer

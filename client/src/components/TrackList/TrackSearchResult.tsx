@@ -12,7 +12,9 @@ import {
 } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
 import { ReactComponent as PlayIcon } from "../../assets/play.svg";
+import { ReactComponent as PauseIcon } from "../../assets/shuffle.svg";
 import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
+import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 
 interface TrackSearchResultProps {
   track: Track;
@@ -28,8 +30,11 @@ export const TrackSearchResult = ({
   index,
 }: TrackSearchResultProps) => {
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
+  const { pause, play } = useSpotifyApiActions();
   const { uri, artist, title, albumUrl } = track;
+  const accessToken = useAppSelector((state) => state.player.accessToken);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const isPlaying = useAppSelector((state) => state.player.isPlaying);
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
@@ -48,12 +53,22 @@ export const TrackSearchResult = ({
     }
   };
 
-  const handlePlay = () => {
+  const handlePlayOrPause = () =>
+    playingTrack?.uri === track.uri ? handlePause() : handlePlay();
+
+  const handlePlay = async () => {
+    //TODO figure out how to handle 'liked songs' because that isnt a playlist but we still want sequential play
+    if (!accessToken) return;
+    //if we are on a playlist we want to send the playlist and an offset. If not send the track
     if (selectedPlaylistId) {
-      alert(selectedPlaylistId);
+      play(index, `spotify:playlist:${selectedPlaylistId}`, undefined);
+    } else {
+      play(undefined, undefined, track.uri);
     }
-    //if we are on playlist view we want this to be the offset and the playlist URI. if not keep as is
-    dispatch(setPlayingTrack(track));
+  };
+
+  const handlePause = () => {
+    pause();
   };
 
   const handleShiftClick = () => {
@@ -98,20 +113,23 @@ export const TrackSearchResult = ({
     <Container
       isSelected={isSelected}
       onClick={handleClick}
-      onDoubleClick={handlePlay}
+      onDoubleClick={handlePlayOrPause}
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
       <ImageAndNameContainer>
         <TrackImageContainer>
           <TrackImage src={albumUrl} />
-          <HiddenPlayButton onClick={handlePlay}>
-            <StyledPlayIcon height={20} width={20} />
-          </HiddenPlayButton>
+
+          <HiddenButton onClick={handlePlayOrPause}>
+            {isPlaying && playingTrack?.uri === uri ? (
+              <StyledPauseIcon height={20} width={20} />
+            ) : (
+              <StyledPlayIcon height={20} width={20} />
+            )}
+          </HiddenButton>
         </TrackImageContainer>
 
-        <TrackTitle isActive={!!playingTrack && playingTrack?.uri === uri}>
-          {title}
-        </TrackTitle>
+        <TrackTitle isActive={playingTrack?.uri === uri}>{title}</TrackTitle>
       </ImageAndNameContainer>
       <TrackArtist>{artist}</TrackArtist>
       <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
@@ -200,7 +218,7 @@ const StyledCheckbox = styled.input`
   width: 16px;
 `;
 
-const HiddenPlayButton = styled.div`
+const HiddenButton = styled.div`
   position: absolute;
   top: 0px;
   left: 12px;
@@ -216,12 +234,16 @@ const HiddenPlayButton = styled.div`
 const TrackImageContainer = styled.div`
   position: relative;
   &:hover {
-    ${HiddenPlayButton} {
+    ${HiddenButton} {
       visibility: visible;
     }
   }
 `;
 
 const StyledPlayIcon = styled(PlayIcon)`
+  margin-left: 2px;
+`;
+
+const StyledPauseIcon = styled(PauseIcon)`
   margin-left: 2px;
 `;

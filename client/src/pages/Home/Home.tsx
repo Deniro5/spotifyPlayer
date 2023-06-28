@@ -87,7 +87,7 @@ export const Home = ({ code }: HomeProps) => {
           </ViewContainer>
         </Body>
         <PlayerContainer>
-          <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+          <Player accessToken={accessToken} />
         </PlayerContainer>
       </Main>
     </Container>
