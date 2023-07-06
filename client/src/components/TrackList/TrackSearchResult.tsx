@@ -7,13 +7,13 @@ import {
   addSelectedTrack,
   getEarliestSelectedTrackIndex,
   removeSelectedTrack,
-  setPlayingTrack,
   setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
 import { ReactComponent as PlayIcon } from "../../assets/play.svg";
-import { ReactComponent as PauseIcon } from "../../assets/shuffle.svg";
+import { ReactComponent as PauseIcon } from "../../assets/pause.svg";
 import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
+import PlayingGif from "../../assets/sound.gif";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 
 interface TrackSearchResultProps {
@@ -119,10 +119,14 @@ export const TrackSearchResult = ({
       <ImageAndNameContainer>
         <TrackImageContainer>
           <TrackImage src={albumUrl} />
-
+          {isPlaying && playingTrack?.uri === track.uri && (
+            <PlayStatus>
+              <img height={50} width={35} src={PlayingGif} alt='' />
+            </PlayStatus>
+          )}
           <HiddenButton onClick={handlePlayOrPause}>
             {isPlaying && playingTrack?.uri === uri ? (
-              <StyledPauseIcon height={20} width={20} />
+              <StyledPauseIcon height={18} width={18} />
             ) : (
               <StyledPlayIcon height={20} width={20} />
             )}
@@ -218,6 +222,12 @@ const StyledCheckbox = styled.input`
   width: 16px;
 `;
 
+const StyledPlayIcon = styled(PlayIcon)`
+  margin-left: 2px;
+`;
+
+const StyledPauseIcon = styled(PauseIcon)``;
+
 const HiddenButton = styled.div`
   position: absolute;
   top: 0px;
@@ -229,6 +239,27 @@ const HiddenButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  ${StyledPauseIcon} {
+    path {
+      fill: white;
+    }
+  }
+`;
+
+// PLAY STATUS AND HIDDEN BUTTON ARE VERY SIMILAR AND SHOULD BE MADE INTO 1
+
+const PlayStatus = styled.div`
+  position: absolute;
+  top: 0px;
+  left: 12px;
+  height: 35px;
+  width: 35px;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  visibility: visible;
 `;
 
 const TrackImageContainer = styled.div`
@@ -237,13 +268,8 @@ const TrackImageContainer = styled.div`
     ${HiddenButton} {
       visibility: visible;
     }
+    ${PlayStatus} {
+      visibility: hidden;
+    }
   }
-`;
-
-const StyledPlayIcon = styled(PlayIcon)`
-  margin-left: 2px;
-`;
-
-const StyledPauseIcon = styled(PauseIcon)`
-  margin-left: 2px;
 `;
