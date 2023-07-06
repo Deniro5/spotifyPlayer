@@ -28,6 +28,7 @@ export const Player = ({ accessToken }: PlayerProps) => {
       const currentTrack = {
         title: name,
         albumUrl: "",
+        albumName: "",
         uri,
         duration,
         artist: artists[0],

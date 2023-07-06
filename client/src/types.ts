@@ -26,6 +26,7 @@ export interface Track {
   title: string;
   uri: string;
   albumUrl: string;
+  albumName: string;
   duration: number;
 }
 

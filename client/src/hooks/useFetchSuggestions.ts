@@ -44,6 +44,7 @@ const useFetchSuggestions = () => {
                   title: track.name,
                   uri: track.uri,
                   albumUrl: track.album?.images[0]?.url,
+                  albumName: track.album?.name,
                   duration: track.duration_ms,
                 };
               }),

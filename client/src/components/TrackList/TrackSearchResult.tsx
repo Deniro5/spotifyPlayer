@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import { Track } from "../../types";
@@ -10,11 +10,10 @@ import {
   setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
-import { ReactComponent as PlayIcon } from "../../assets/play.svg";
-import { ReactComponent as PauseIcon } from "../../assets/pause.svg";
 import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
-import PlayingGif from "../../assets/sound.gif";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
+import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
+import { TrackTitle } from "./TrackResultComponents/TrackTitleArtistAndImage";
 
 interface TrackSearchResultProps {
   track: Track;
@@ -31,10 +30,9 @@ export const TrackSearchResult = ({
 }: TrackSearchResultProps) => {
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
   const { pause, play } = useSpotifyApiActions();
-  const { uri, artist, title, albumUrl } = track;
+  const { uri, albumName } = track;
   const accessToken = useAppSelector((state) => state.player.accessToken);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
-  const isPlaying = useAppSelector((state) => state.player.isPlaying);
   const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
@@ -116,26 +114,8 @@ export const TrackSearchResult = ({
       onDoubleClick={handlePlayOrPause}
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
-      <ImageAndNameContainer>
-        <TrackImageContainer>
-          <TrackImage src={albumUrl} />
-          {isPlaying && playingTrack?.uri === track.uri && (
-            <PlayStatus>
-              <img height={50} width={35} src={PlayingGif} alt='' />
-            </PlayStatus>
-          )}
-          <HiddenButton onClick={handlePlayOrPause}>
-            {isPlaying && playingTrack?.uri === uri ? (
-              <StyledPauseIcon height={18} width={18} />
-            ) : (
-              <StyledPlayIcon height={20} width={20} />
-            )}
-          </HiddenButton>
-        </TrackImageContainer>
-
-        <TrackTitle isActive={playingTrack?.uri === uri}>{title}</TrackTitle>
-      </ImageAndNameContainer>
-      <TrackArtist>{artist}</TrackArtist>
+      <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
+      <TrackAlbum>{albumName}</TrackAlbum>
       <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
       {
         <CheckboxContainer
@@ -148,16 +128,6 @@ export const TrackSearchResult = ({
     </Container>
   );
 };
-
-const TrackTitle = styled.div<{ isActive: boolean }>`
-  font-size: 14px;
-  width: 250px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: 500;
-  color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
-`;
 
 const Container = styled.div<{ isSelected: boolean }>`
   background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
@@ -185,29 +155,31 @@ const Container = styled.div<{ isSelected: boolean }>`
   }
 `;
 
-const ImageAndNameContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TrackImage = styled.img`
-  height: 35px;
-  width: 35px;
-  border-radius: 3px;
-  margin: 0px 12px;
-`;
-
-const TrackArtist = styled.div`
-  font-size: 14px;
-  width: 120px;
-`;
-
 const TrackDuration = styled.div`
   font-size: 14px;
 `;
 
+const TrackAlbum = styled.div`
+  width: 150px;
+  text-align: left;
+  display: -webkit-box;
+  font-size: 14px;
+  -webkit-line-clamp: 2; /* Number of lines for WebKit */
+  -webkit-box-orient: vertical;
+  display: -moz-box;
+  -moz-line-clamp: 2; /* Number of lines for Firefox */
+  -moz-box-orient: vertical;
+  display: -ms-flexbox;
+  -ms-line-clamp: 2; /* Number of lines for Edge/IE */
+  -ms-box-orient: vertical;
+  display: box;
+  line-clamp: 2; /* Number of lines for standard */
+  box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 const CheckboxContainer = styled.div<{ disabled: boolean }>`
-  margin-right: 20px;
   padding: 7px;
   display: flex;
   align-items: center;
@@ -220,56 +192,4 @@ const StyledCheckbox = styled.input`
   cursor: pointer;
   height: 16px;
   width: 16px;
-`;
-
-const StyledPlayIcon = styled(PlayIcon)`
-  margin-left: 2px;
-`;
-
-const StyledPauseIcon = styled(PauseIcon)``;
-
-const HiddenButton = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 12px;
-  height: 35px;
-  width: 35px;
-  background: rgba(0, 0, 0, 0.4);
-  visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${StyledPauseIcon} {
-    path {
-      fill: white;
-    }
-  }
-`;
-
-// PLAY STATUS AND HIDDEN BUTTON ARE VERY SIMILAR AND SHOULD BE MADE INTO 1
-
-const PlayStatus = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 12px;
-  height: 35px;
-  width: 35px;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  visibility: visible;
-`;
-
-const TrackImageContainer = styled.div`
-  position: relative;
-  &:hover {
-    ${HiddenButton} {
-      visibility: visible;
-    }
-    ${PlayStatus} {
-      visibility: hidden;
-    }
-  }
 `;

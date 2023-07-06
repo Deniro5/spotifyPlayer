@@ -52,6 +52,7 @@ const useRecommendations = () => {
                   title: item.name,
                   uri: item.uri,
                   albumUrl: item.album?.images[0]?.url,
+                  albumName: "",
                   duration: item.duration_ms,
                 };
               })
@@ -64,7 +65,13 @@ const useRecommendations = () => {
         setErrorMessage("An unexpected error occured");
       })
       .finally(() => setIsFetching(false));
-  }, [accessToken, playingTrack, shouldUseRecommendationSliders, recommendationSettings]);
+  }, [
+    dispatch,
+    accessToken,
+    playingTrack,
+    shouldUseRecommendationSliders,
+    recommendationSettings,
+  ]);
 
   return {
     isFetching,

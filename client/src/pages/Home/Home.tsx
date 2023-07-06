@@ -58,6 +58,7 @@ export const Home = ({ code }: HomeProps) => {
               title: track.name,
               uri: track.uri,
               albumUrl: smallestAlbumImage.url,
+              albumName: "",
               duration: track.duration_ms,
             };
           })

@@ -4,10 +4,9 @@ import { Track } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addSelectedTrack, removeSelectedTrack } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
-import { ReactComponent as PlayIcon } from "../../assets/play.svg";
-import { ReactComponent as PauseIcon } from "../../assets/pause.svg";
-import PlayingGif from "../../assets/sound.gif";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
+import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
+import { TrackTitle } from "./TrackResultComponents/TrackTitleArtistAndImage";
 
 interface RecommendationResultProps {
   track: Track;
@@ -23,11 +22,11 @@ export const RecommendationResult = ({
   index,
 }: RecommendationResultProps) => {
   const { pause, play } = useSpotifyApiActions();
-  const { uri, artist, title, albumUrl } = track;
+  const { uri } = track;
   const accessToken = useAppSelector((state) => state.player.accessToken);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
-  const isPlaying = useAppSelector((state) => state.player.isPlaying);
   const dispatch = useAppDispatch();
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.metaKey) {
       handleToggleSelected();
@@ -63,42 +62,10 @@ export const RecommendationResult = ({
       onDoubleClick={handlePlay}
       onContextMenu={(e) => handleRightClick(e, uri)}
     >
-      <ImageAndNameContainer>
-        <TrackImageContainer>
-          <TrackImage src={albumUrl} />
-          <PlayStatus>
-            {isPlaying && playingTrack?.uri === track.uri && (
-              <img height={18} width={18} src={PlayingGif} alt='' />
-            )}
-          </PlayStatus>
-          <HiddenButton onClick={handlePlayOrPause}>
-            {isPlaying && playingTrack?.uri === uri ? (
-              <StyledPauseIcon height={18} width={18} />
-            ) : (
-              <StyledPlayIcon height={20} width={20} />
-            )}
-          </HiddenButton>
-        </TrackImageContainer>
-        <TrackTitleAndArtistContainer>
-          <TrackTitle isActive={!!playingTrack && playingTrack?.uri === uri}>
-            {title}
-          </TrackTitle>
-          <TrackArtist> {artist} </TrackArtist>
-        </TrackTitleAndArtistContainer>
-      </ImageAndNameContainer>
+      <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
     </Container>
   );
 };
-
-const TrackTitle = styled.div<{ isActive: boolean }>`
-  font-size: 14px;
-  width: 250px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-weight: 500;
-  color: ${({ isActive }) => (isActive ? COLORS.primary : COLORS.black)};
-`;
 
 const Container = styled.div<{ isSelected: boolean }>`
   background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
@@ -123,73 +90,5 @@ const Container = styled.div<{ isSelected: boolean }>`
   user-select: none;
   ${TrackTitle} {
     color: ${({ isSelected }) => isSelected && COLORS.white};
-  }
-`;
-
-const ImageAndNameContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TrackImage = styled.img`
-  height: 35px;
-  width: 35px;
-  border-radius: 3px;
-  margin: 0px 12px;
-`;
-
-const TrackArtist = styled.div`
-  font-size: 14px;
-  width: 120px;
-`;
-
-const TrackTitleAndArtistContainer = styled.div``;
-
-const StyledPlayIcon = styled(PlayIcon)`
-  margin-left: 2px;
-`;
-
-const StyledPauseIcon = styled(PauseIcon)``;
-
-const HiddenButton = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 12px;
-  height: 35px;
-  width: 35px;
-  background: rgba(0, 0, 0, 0.4);
-  visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${StyledPauseIcon} {
-    path {
-      fill: white;
-    }
-  }
-`;
-
-const PlayStatus = styled.div`
-  height: 35px;
-  width: 35px;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  visibility: visible;
-  top: 10px;
-  left: 20px;
-`;
-
-const TrackImageContainer = styled.div`
-  position: relative;
-  &:hover {
-    ${HiddenButton} {
-      visibility: visible;
-    }
-    ${PlayStatus} {
-      visiblilty: hidden;
-    }
   }
 `;
