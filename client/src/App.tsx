@@ -2,7 +2,6 @@
 import React from "react";
 import { Login } from "./pages/Login/Login";
 import { Home } from "./pages/Home/Home";
-import { useAppDispatch } from "./hooks";
 
 const code = new URLSearchParams(window.location.search).get("code");
 

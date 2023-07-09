@@ -36,16 +36,16 @@ const useFetchSuggestions = () => {
         if (data.items) {
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.items.map((item: any) => {
-                //fix the item: any
+              tracks: data.items.map((item: { track: SpotifyApi.TrackObjectFull }) => {
                 const { track } = item;
+                const { album, name, uri, duration_ms, artists } = track;
                 return {
-                  artist: track.artists[0]?.name,
-                  title: track.name,
-                  uri: track.uri,
-                  albumUrl: track.album?.images[0]?.url,
-                  albumName: track.album?.name,
-                  duration: track.duration_ms,
+                  artist: artists[0]?.name,
+                  name,
+                  uri,
+                  albumUrl: album?.images[0]?.url,
+                  albumName: album?.name,
+                  duration_ms,
                 };
               }),
               isInitialLoad: isFetchingInitial,

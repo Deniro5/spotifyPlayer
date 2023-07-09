@@ -1,9 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
-import { FETCH_LIMIT } from "../constants";
+import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setRecommendedTracks } from "../redux/slices/playerSlice";
 import { uriToId } from "../utils";
-import { Track } from "../types";
 
 const useRecommendations = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
@@ -45,15 +43,15 @@ const useRecommendations = () => {
         if (data.tracks) {
           dispatch(
             setRecommendedTracks(
-              data.tracks.map((item: any) => {
-                //fix the item: any
+              data.tracks.map((track: SpotifyApi.TrackObjectFull) => {
+                const { album, name, uri, duration_ms, artists } = track;
                 return {
-                  artist: item.artists[0]?.name,
-                  title: item.name,
-                  uri: item.uri,
-                  albumUrl: item.album?.images[0]?.url,
-                  albumName: "",
-                  duration: item.duration_ms,
+                  artist: artists[0]?.name,
+                  name,
+                  uri,
+                  albumUrl: album?.images[0]?.url,
+                  albumName: album?.name,
+                  duration_ms,
                 };
               })
             )
@@ -75,6 +73,7 @@ const useRecommendations = () => {
 
   return {
     isFetching,
+    errorMessage,
   };
 };
 

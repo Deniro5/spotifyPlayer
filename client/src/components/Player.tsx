@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
-import SpotifyPlayer from "react-spotify-web-playback";
+import React from "react";
+import SpotifyPlayer, { State } from "react-spotify-web-playback";
 import usePlayer from "../hooks/usePlayer";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { ReactComponent as ShuffleIcon } from "../assets/shuffle.svg";
-import { setDeviceId, setIsPlaying, setPlayingTrack } from "../redux/slices/playerSlice";
-import { current } from "@reduxjs/toolkit";
+import {
+  setDeviceId,
+  setIsPlaying,
+  setPlayingTrack,
+  setShuffle,
+} from "../redux/slices/playerSlice";
 
 interface PlayerProps {
   accessToken: any;
@@ -19,23 +23,25 @@ export const Player = ({ accessToken }: PlayerProps) => {
 
   if (!accessToken) return null;
 
-  const handlePlayerCallback = (state: any) => {
+  const handlePlayerCallback = (state: State) => {
     if (state.deviceId && state.deviceId !== deviceId) {
       dispatch(setDeviceId(state.deviceId));
     }
     if (state.track) {
-      const { name, uri, artists, duration } = state.track;
+      const { name, uri } = state.track;
+      //the empty fields here arent needed
       const currentTrack = {
-        title: name,
+        name,
         albumUrl: "",
         albumName: "",
         uri,
-        duration,
-        artist: artists[0],
+        duration_ms: 0,
+        artist: "",
       };
       dispatch(setPlayingTrack(currentTrack));
     }
     dispatch(setIsPlaying(state.isPlaying));
+    dispatch(setShuffle(state.shuffle));
   };
   //When we change offset, the Spotify player doesnt change... we need to find a way to make in manually change
   return (

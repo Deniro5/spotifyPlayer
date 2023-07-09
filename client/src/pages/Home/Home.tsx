@@ -45,37 +45,28 @@ export const Home = ({ code }: HomeProps) => {
       if (res.body.tracks?.items) {
         setSearchResults(
           res?.body?.tracks?.items?.map((track) => {
-            const smallestAlbumImage = track.album.images.reduce((smallest, image) => {
+            const { album, name, uri, duration_ms, artists } = track;
+            const smallestAlbumImage = album.images.reduce((smallest, image) => {
               if (smallest.height && image.height) {
                 if (image?.height < smallest?.height) return image;
                 return smallest;
               }
               return smallest;
-            }, track.album.images[0]);
+            }, album.images[0]);
 
             return {
-              artist: track.artists[0].name,
-              title: track.name,
-              uri: track.uri,
+              artist: artists[0].name,
+              name,
+              uri,
               albumUrl: smallestAlbumImage.url,
               albumName: "",
-              duration: track.duration_ms,
+              duration_ms,
             };
           })
         );
       }
     });
   }, [search, accessToken]);
-
-  {
-    /* {searchResults.map((track) => (
-              <TrackSearchResult
-                track={track}
-                key={track.uri}
-                chooseTrack={chooseTrack}
-              />
-            ))} */
-  }
 
   return (
     <Container>

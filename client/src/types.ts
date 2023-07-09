@@ -23,11 +23,11 @@ export interface Playlist {
 
 export interface Track {
   artist: string;
-  title: string;
+  name: string;
   uri: string;
   albumUrl: string;
   albumName: string;
-  duration: number;
+  duration_ms: number;
 }
 
 export interface User {

@@ -39,15 +39,15 @@ const useFetchSearchSongs = () => {
         if (data.tracks?.items) {
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.tracks.items.map((track: any) => {
-                //fix the item: any
+              tracks: data.tracks.items.map((track: SpotifyApi.TrackObjectFull) => {
+                const { album, name, uri, duration_ms, artists } = track;
                 return {
-                  artist: track.artists[0]?.name,
-                  title: track.name,
-                  uri: track.uri,
-                  albumUrl: track.album?.images[0]?.url,
-                  albumName: track.album?.name,
-                  duration: track.duration_ms,
+                  artist: artists[0]?.name,
+                  name,
+                  uri,
+                  albumUrl: album?.images[0]?.url,
+                  albumName: album?.name,
+                  duration_ms,
                 };
               }),
               isInitialLoad: isFetchingInitial,
@@ -67,6 +67,7 @@ const useFetchSearchSongs = () => {
   useEffect(() => {
     if (!accessToken || errorMessage || !search.length || !isFetchingInitial) return;
     loadMoreTracks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken, errorMessage, isFetchingInitial]);
 
   const noSearchTermEntered = useMemo(() => !search.length, [search]);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
@@ -12,7 +12,7 @@ const useFetchLikedSongs = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
-  const loadMoreTracks = () => {
+  const loadMoreTracks = useCallback(() => {
     if (!fetchUrl || !accessToken) return;
 
     fetch(fetchUrl, {
@@ -26,16 +26,16 @@ const useFetchLikedSongs = () => {
         if (data.items) {
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.items.map((item: any) => {
-                //fix the item: any
+              tracks: data.items.map((item: { track: SpotifyApi.TrackObjectFull }) => {
                 const { track } = item;
+                const { album, name, uri, duration_ms, artists } = track;
                 return {
-                  artist: track.artists[0]?.name,
-                  title: track.name,
-                  uri: track.uri,
-                  albumUrl: track.album?.images[0]?.url,
-                  albumName: track.album?.name,
-                  duration: track.duration_ms,
+                  artist: artists[0]?.name,
+                  name,
+                  uri,
+                  albumUrl: album?.images[0]?.url,
+                  albumName: album?.name,
+                  duration_ms,
                 };
               }),
               isInitialLoad: isFetchingInitial,
@@ -49,13 +49,13 @@ const useFetchLikedSongs = () => {
         setErrorMessage("An unexpected error occured");
       })
       .finally(() => setIsFetchingInitial(false));
-  };
+  }, [accessToken, fetchUrl, dispatch, isFetchingInitial]);
 
   //For the initial load after username change
   useEffect(() => {
     if (!accessToken || errorMessage) return;
     loadMoreTracks();
-  }, [accessToken, errorMessage]);
+  }, [accessToken, errorMessage, loadMoreTracks]);
 
   return {
     isFetchingInitial,

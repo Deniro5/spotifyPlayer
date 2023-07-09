@@ -16,7 +16,7 @@ const TrackTitleArtistAndImage: React.FC<ITrackTitleArtistAndImageProps> = ({
   track,
   handlePlayOrPause,
 }) => {
-  const { albumUrl, title, artist, uri } = track;
+  const { albumUrl, name, artist, uri } = track;
   const isPlaying = useAppSelector((state) => state.player.playingTrack);
   const playingTrack = useAppSelector((state) => state.player.playingTrack);
   return (
@@ -38,7 +38,7 @@ const TrackTitleArtistAndImage: React.FC<ITrackTitleArtistAndImageProps> = ({
       </TrackImageContainer>
       <TrackTitleAndArtistContainer>
         <TrackTitle isActive={!!playingTrack && playingTrack?.uri === uri}>
-          {title}
+          {name}
         </TrackTitle>
         <TrackArtist> {artist} </TrackArtist>
       </TrackTitleAndArtistContainer>

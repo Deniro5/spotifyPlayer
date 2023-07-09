@@ -28,7 +28,7 @@ export const TrackSearchResult = ({
   isSelected,
   index,
 }: TrackSearchResultProps) => {
-  const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration);
+  const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration_ms);
   const { pause, play } = useSpotifyApiActions();
   const { uri, albumName } = track;
   const accessToken = useAppSelector((state) => state.player.accessToken);
