@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../../hooks";
 import { getCurrentUser } from "../../redux/slices/selectors";
+import { COLORS } from "../../constants";
 
 const UserInfo = ({}) => {
   const currentUser = useAppSelector(getCurrentUser);
@@ -29,13 +30,13 @@ const ProfileImage = styled.img`
 const UserName = styled.h2`
   margin: 0;
   font-weight: 800;
-  color: black;
+  color: ${COLORS.black};
   font-size: 14px;
 `;
 
 const Email = styled.h3`
   font-weight: 400;
-  color: grey;
+  color: ${COLORS.mediumGrey};
   font-size: 10px;
   margin-top: 4px;
 `;

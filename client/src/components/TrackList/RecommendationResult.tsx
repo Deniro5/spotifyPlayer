@@ -1,38 +1,25 @@
 import React from "react";
 import styled from "styled-components";
 import { Track } from "../../types";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addSelectedTrack, removeSelectedTrack } from "../../redux/slices/playerSlice";
+import { useAppSelector } from "../../hooks";
 import { COLORS } from "../../constants";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
-import { TrackTitle } from "./TrackResultComponents/TrackTitleArtistAndImage";
 import { getAccessToken, getPlayingTrack } from "../../redux/slices/selectors";
 
 interface RecommendationResultProps {
   track: Track;
   handleRightClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => void;
-  isSelected: boolean;
-  index: number;
 }
 
 export const RecommendationResult = ({
   track,
   handleRightClick,
-  isSelected,
-  index,
 }: RecommendationResultProps) => {
   const { pause, play } = useSpotifyApiActions();
   const { uri } = track;
   const accessToken = useAppSelector(getAccessToken);
   const playingTrack = useAppSelector(getPlayingTrack);
-  const dispatch = useAppDispatch();
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e.metaKey) {
-      handleToggleSelected();
-    }
-  };
 
   const handlePlayOrPause = () =>
     playingTrack?.uri === track.uri ? handlePause() : handlePlay();
@@ -48,28 +35,15 @@ export const RecommendationResult = ({
     pause();
   };
 
-  const handleToggleSelected = () => {
-    if (isSelected) {
-      dispatch(removeSelectedTrack(uri));
-    } else {
-      dispatch(addSelectedTrack({ trackUri: uri, trackIndex: index }));
-    }
-  };
-
   return (
-    <Container
-      isSelected={isSelected}
-      onClick={handleClick}
-      onDoubleClick={handlePlay}
-      onContextMenu={(e) => handleRightClick(e, uri)}
-    >
+    <Container onDoubleClick={handlePlay} onContextMenu={(e) => handleRightClick(e, uri)}>
       <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
     </Container>
   );
 };
 
-const Container = styled.div<{ isSelected: boolean }>`
-  background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
+const Container = styled.div`
+  background: ${COLORS.trackBackground};
   cursor: pointer;
   transition: 0.1s;
   display: flex;
@@ -77,10 +51,10 @@ const Container = styled.div<{ isSelected: boolean }>`
   align-items: center;
   height: 50px;
   margin: 1px auto;
-  border: 1px solid whitesmoke;
-  color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
+  border: 1px solid ${COLORS.whitesmoke};
+  color: ${COLORS.mediumGrey};
   &:hover {
-    background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : COLORS.white)};
+    background: ${COLORS.white};
   }
   border-radius: 4px;
   -webkit-touch-callout: none;
@@ -89,7 +63,4 @@ const Container = styled.div<{ isSelected: boolean }>`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  ${TrackTitle} {
-    color: ${({ isSelected }) => isSelected && COLORS.white};
-  }
 `;

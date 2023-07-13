@@ -8,4 +8,7 @@ export const COLORS = {
   mediumGrey: "#9d9d9d",
   white: "white",
   black: "black",
+  whitesmoke: "whitesmoke",
+  green: "#009900",
+  trackBackground: "#fefefe",
 };

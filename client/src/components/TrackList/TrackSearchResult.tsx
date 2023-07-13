@@ -136,7 +136,8 @@ export const TrackSearchResult = ({
 };
 
 const Container = styled.div<{ isSelected: boolean }>`
-  background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : "#fefefe")};
+  background: ${({ isSelected }) =>
+    isSelected ? COLORS.lightPrimary : COLORS.trackBackground};
   cursor: pointer;
   transition: 0.1s;
   display: flex;
@@ -144,7 +145,7 @@ const Container = styled.div<{ isSelected: boolean }>`
   align-items: center;
   height: 50px;
   margin: 1px auto;
-  border: 1px solid whitesmoke;
+  border: 1px solid ${COLORS.whitesmoke};
   color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
   &:hover {
     background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : COLORS.white)};

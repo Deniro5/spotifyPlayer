@@ -209,7 +209,7 @@ const SettingsRow = styled.div`
   padding: 5px 0px;
   width: 90%;
   margin: auto;
-  border-bottom: whitesmoke 1px solid;
+  border-bottom: ${COLORS.lightGrey} 1px solid;
 `;
 
 const SettingsLabel = styled.p`
@@ -245,10 +245,10 @@ const SlidersContainer = styled.div<{ isDisabled: boolean }>`
   ${({ isDisabled }) =>
     isDisabled &&
     `
-    background: whitesmoke;
+    background: ${COLORS.whitesmoke};
     pointer-events:none;
     ${SettingsRow} {
-      color: gray;
+      color: ${COLORS.mediumGrey};
     }
 
 

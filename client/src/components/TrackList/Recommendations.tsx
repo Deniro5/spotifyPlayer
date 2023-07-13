@@ -4,6 +4,7 @@ import { useAppSelector } from "../../hooks";
 import { RecommendationResult } from "./RecommendationResult";
 import styled from "styled-components";
 import { getRecommendedTracks } from "../../redux/slices/selectors";
+import { COLORS } from "../../constants";
 
 const Recommendations = () => {
   const { isFetching } = useRecommendations();
@@ -13,13 +14,8 @@ const Recommendations = () => {
       <Title> Recommended Songs: </Title>
       {recommendedTracks.length ? (
         <>
-          {recommendedTracks.map((track, index) => (
-            <RecommendationResult
-              index={index}
-              isSelected={false}
-              track={track}
-              handleRightClick={() => {}}
-            />
+          {recommendedTracks.map((track) => (
+            <RecommendationResult track={track} handleRightClick={() => {}} />
           ))}
         </>
       ) : (
@@ -41,7 +37,7 @@ const Title = styled.div`
 
 const SubTitle = styled.p`
   margin-left: 13px;
-  color: #808080;
+  color: ${COLORS.mediumGrey};
   font-size: 13px;
   margin-top: 0px;
 `;

@@ -11,6 +11,7 @@ import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
 import { getPlaylists, getSelectedPlaylistId } from "../../redux/slices/selectors";
+import { COLORS } from "../../constants";
 
 export type PlaylistsProps = {};
 
@@ -87,9 +88,8 @@ const Container = styled.div`
 const Title = styled.div`
   margin: 0;
   font-weight: 800;
-  color: black;
+  color: ${COLORS.black};
   font-size: 14px;
-  color: #bebebe;
   margin-bottom: 20px;
 `;
 

@@ -98,11 +98,11 @@ const SettingIconContainer = styled.div`
   margin-left: 10px;
   cursor: pointer;
   path {
-    fill: black;
+    fill: ${COLORS.black};
   }
   &:hover {
     path {
-      fill: #315dd5;
+      fill: ${COLORS.primary};
     }
   }
 `;
