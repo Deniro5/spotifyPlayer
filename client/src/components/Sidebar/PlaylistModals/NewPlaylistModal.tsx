@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { addPlaylist } from "../../../redux/slices/playerSlice";
 import { Playlist } from "../../../types";
 import { PlaylistModal } from "./PlaylistModal";
+import { getAccessToken, getCurrentUser } from "../../../redux/slices/selectors";
 
 export type INewPlaylistModalProps = {
   isOpen: boolean;
@@ -15,8 +16,8 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
 }: INewPlaylistModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const currentUser = useAppSelector((state) => state.player.currentUser);
-  const accessToken = useAppSelector((state) => state.player.accessToken);
+  const currentUser = useAppSelector(getCurrentUser);
+  const accessToken = useAppSelector(getAccessToken);
   const dispatch = useAppDispatch();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

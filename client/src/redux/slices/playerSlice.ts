@@ -205,20 +205,3 @@ export const {
 
 // Export default the slice reducer
 export default playerSlice.reducer;
-
-const selectedTracksHash = (state: RootState) => state.player.selectedTracksHash;
-
-export const getEarliestSelectedTrackIndex = createSelector(
-  [selectedTracksHash],
-  (selectedTracksHash) =>
-    Object.values(selectedTracksHash).length > 0
-      ? Object.values(selectedTracksHash).reduce((lowestPosition, position) => {
-          return Math.min(lowestPosition, position);
-        }, Number.MAX_SAFE_INTEGER)
-      : -1
-);
-
-export const getSelectedTracksHashLength = createSelector(
-  [selectedTracksHash],
-  (selectedTracksHash) => Object.keys(selectedTracksHash).length
-);

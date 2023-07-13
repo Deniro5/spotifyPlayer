@@ -6,6 +6,7 @@ import { ReactComponent as PlayIcon } from "../../../assets/play.svg";
 import { ReactComponent as PauseIcon } from "../../../assets/pause.svg";
 import { COLORS } from "../../../constants";
 import { useAppSelector } from "../../../hooks";
+import { getIsPlaying, getPlayingTrack } from "../../../redux/slices/selectors";
 
 export type ITrackTitleArtistAndImageProps = {
   track: Track;
@@ -17,8 +18,8 @@ const TrackTitleArtistAndImage: React.FC<ITrackTitleArtistAndImageProps> = ({
   handlePlayOrPause,
 }) => {
   const { albumUrl, name, artist, uri } = track;
-  const isPlaying = useAppSelector((state) => state.player.playingTrack);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const isPlaying = useAppSelector(getIsPlaying);
+  const playingTrack = useAppSelector(getPlayingTrack);
   return (
     <ImageAndNameContainer>
       <TrackImageContainer>

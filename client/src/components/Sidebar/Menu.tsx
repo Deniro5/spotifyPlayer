@@ -7,10 +7,11 @@ import { View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
+import { getCurrentView } from "../../redux/slices/selectors";
 
 const Menu = ({}) => {
   const dispatch = useAppDispatch();
-  const currentView = useAppSelector((state) => state.player.currentView);
+  const currentView = useAppSelector(getCurrentView);
 
   const handleMenuItemClick = (view: View) => {
     dispatch(setCurrentView(view));

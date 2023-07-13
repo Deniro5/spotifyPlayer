@@ -5,12 +5,13 @@ import "react-dropdown/style.css";
 import { PlaylistSortOptions } from "../../types";
 import { setPlaylistSortOption } from "../../redux/slices/playerSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getPlaylistSortOption } from "../../redux/slices/selectors";
 
 export type IHomeSettingsProps = {};
 
 const HomeSettings: React.FC<IHomeSettingsProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const playlistSortOption = useAppSelector((state) => state.player.playlistSortOption);
+  const playlistSortOption = useAppSelector(getPlaylistSortOption);
 
   const onChange = (arg: Option) => {
     dispatch(setPlaylistSortOption(arg.value));

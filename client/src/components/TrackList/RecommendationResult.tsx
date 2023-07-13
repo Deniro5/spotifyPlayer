@@ -7,6 +7,7 @@ import { COLORS } from "../../constants";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
 import { TrackTitle } from "./TrackResultComponents/TrackTitleArtistAndImage";
+import { getAccessToken, getPlayingTrack } from "../../redux/slices/selectors";
 
 interface RecommendationResultProps {
   track: Track;
@@ -23,8 +24,8 @@ export const RecommendationResult = ({
 }: RecommendationResultProps) => {
   const { pause, play } = useSpotifyApiActions();
   const { uri } = track;
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const accessToken = useAppSelector(getAccessToken);
+  const playingTrack = useAppSelector(getPlayingTrack);
   const dispatch = useAppDispatch();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

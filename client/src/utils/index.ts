@@ -9,3 +9,13 @@ export const MillisecondsToMinutesAndSeconds = (ms: number) => {
 export const uriToId = (uri: string) => {
   return uri.substring(14);
 };
+
+export const debounce = (func: () => {}, timeout: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: []) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+};

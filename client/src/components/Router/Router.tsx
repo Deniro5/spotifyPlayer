@@ -5,6 +5,7 @@ import LikedSongs from "../LikedSongs";
 import SearchPage from "../SearchPage";
 import Home from "../Home";
 import { View } from "../../types";
+import { getCurrentView } from "../../redux/slices/selectors";
 
 const routerMap = {
   [View.HOME]: <Home />,
@@ -14,7 +15,8 @@ const routerMap = {
 };
 
 const Router = ({}) => {
-  const currentView = useAppSelector((state) => state.player.currentView);
+  const currentView = useAppSelector(getCurrentView);
+  console.log(currentView);
   return routerMap[currentView];
 };
 

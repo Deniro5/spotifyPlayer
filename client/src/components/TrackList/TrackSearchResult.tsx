@@ -5,15 +5,22 @@ import { Track } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   addSelectedTrack,
-  getEarliestSelectedTrackIndex,
   removeSelectedTrack,
   setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
-import { getSelectedTracksHashLength } from "../../redux/slices/playerSlice";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
 import { TrackTitle } from "./TrackResultComponents/TrackTitleArtistAndImage";
+import {
+  getAccessToken,
+  getCurrentDisplayTracks,
+  getEarliestSelectedTrackIndex,
+  getPlayingTrack,
+  getSelectedPlaylistId,
+  getSelectedTracksHash,
+  getSelectedTracksHashLength,
+} from "../../redux/slices/selectors";
 
 interface TrackSearchResultProps {
   track: Track;
@@ -31,16 +38,15 @@ export const TrackSearchResult = ({
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration_ms);
   const { pause, play } = useSpotifyApiActions();
   const { uri, albumName } = track;
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
-  const selectedTracksHash = useAppSelector((state) => state.player.selectedTracksHash);
+  const accessToken = useAppSelector(getAccessToken);
+  const playingTrack = useAppSelector(getPlayingTrack);
+  const selectedTracksHash = useAppSelector(getSelectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
-  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
-  const currentDisplayTracks = useAppSelector(
-    (state) => state.player.currentDisplayTracks
-  );
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
+  const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const dispatch = useAppDispatch();
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.metaKey) {
       handleToggleSelected();
@@ -122,7 +128,7 @@ export const TrackSearchResult = ({
           disabled={selectedTracksHashLength < 2}
           onClick={handleCheckboxClick}
         >
-          <StyledCheckbox type='checkbox' checked={isSelected} />
+          <StyledCheckbox type='checkbox' checked={isSelected} readOnly />
         </CheckboxContainer>
       }
     </Container>

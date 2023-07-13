@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { setShuffle } from "../redux/slices/playerSlice";
+import { getAccessToken, getShuffle } from "../redux/slices/selectors";
 
 const usePlayer = () => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
+  const accessToken = useAppSelector(getAccessToken);
+  const shuffle = useAppSelector(getShuffle);
   const dispatch = useAppDispatch();
-  const shuffle = useAppSelector((state) => state.player.shuffle);
 
   const toggleShuffle = () => {
     if (!accessToken) return;

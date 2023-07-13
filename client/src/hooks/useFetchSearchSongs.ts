@@ -2,13 +2,16 @@ import { useState, useEffect, useMemo } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import {
+  getAccessToken,
+  getCurrentDisplayTracks,
+  getSearch,
+} from "../redux/slices/selectors";
 
 const useFetchSearchSongs = () => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const search = useAppSelector((state) => state.player.search);
-  const currentDisplayTracks = useAppSelector(
-    (state) => state.player.currentDisplayTracks
-  );
+  const accessToken = useAppSelector(getAccessToken);
+  const search = useAppSelector(getSearch);
+  const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
@@ -17,6 +20,7 @@ const useFetchSearchSongs = () => {
 
   //after we have a new search term we need to restart the fetch
   useEffect(() => {
+    console.log(search);
     if (search.length) {
       setFetchUrl(
         `https://api.spotify.com/v1/search?q=${search}&type=track&limit=${FETCH_LIMIT}`

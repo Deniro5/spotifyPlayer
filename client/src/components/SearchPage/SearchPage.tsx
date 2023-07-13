@@ -1,5 +1,4 @@
 import React from "react";
-import { useAppSelector } from "../../hooks";
 import useFetchSearchSongs from "../../hooks/useFetchSearchSongs";
 import TrackList from "../TrackList";
 import styled from "styled-components";

@@ -5,10 +5,11 @@ import {
   setLastPlaylistAddedTo,
   setSelectedTracksHash,
 } from "../redux/slices/playerSlice";
+import { getAccessToken, getSelectedPlaylistId } from "../redux/slices/selectors";
 
 const useTrackActions = (trackIds: (string | null)[]) => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const accessToken = useAppSelector(getAccessToken);
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();

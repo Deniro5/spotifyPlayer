@@ -4,9 +4,10 @@ import { useAppSelector } from "../../hooks";
 import { SearchBar } from "./SearchBar";
 import { View } from "../../types";
 import { HomeSettings } from "./HomeSettings";
+import { getCurrentView } from "../../redux/slices/selectors";
 
 const Header = ({}) => {
-  const currentView = useAppSelector((state) => state.player.currentView);
+  const currentView = useAppSelector(getCurrentView);
 
   const getHeader = () => {
     switch (currentView) {

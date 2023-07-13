@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../../hooks";
+import { getCurrentUser } from "../../redux/slices/selectors";
 
 const UserInfo = ({}) => {
-  const currentUser = useAppSelector((state) => state.player.currentUser);
+  const currentUser = useAppSelector(getCurrentUser);
 
   return (
     <Container>

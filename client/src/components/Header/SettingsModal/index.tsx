@@ -11,6 +11,11 @@ import {
   setShouldUseRecommendationSliders,
   setRecommendationSettings,
 } from "../../../redux/slices/playerSlice";
+import {
+  getRecommendationSettings,
+  getShouldUseRecommendationSliders,
+  getShowRecommendations,
+} from "../../../redux/slices/selectors";
 
 export type ISettingsModalProps = {
   handleCloseSettingsModal: () => void;
@@ -23,13 +28,11 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const showRecommendations = useAppSelector((state) => state.player.showRecommendations);
+  const showRecommendations = useAppSelector(getShowRecommendations);
   const shouldUseRecommendationSliders = useAppSelector(
-    (state) => state.player.shouldUseRecommendationSliders
+    getShouldUseRecommendationSliders
   );
-  const recommendationSettings = useAppSelector(
-    (state) => state.player.recommendationSettings
-  );
+  const recommendationSettings = useAppSelector(getRecommendationSettings);
 
   const [tempShowRecommendations, setTempShowRecommendations] =
     useState(showRecommendations);

@@ -2,16 +2,20 @@ import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setRecommendedTracks } from "../redux/slices/playerSlice";
 import { uriToId } from "../utils";
+import {
+  getAccessToken,
+  getPlayingTrack,
+  getRecommendationSettings,
+  getShouldUseRecommendationSliders,
+} from "../redux/slices/selectors";
 
 const useRecommendations = () => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const accessToken = useAppSelector(getAccessToken);
+  const playingTrack = useAppSelector(getPlayingTrack);
   const shouldUseRecommendationSliders = useAppSelector(
-    (state) => state.player.shouldUseRecommendationSliders
+    getShouldUseRecommendationSliders
   );
-  const recommendationSettings = useAppSelector(
-    (state) => state.player.recommendationSettings
-  );
+  const recommendationSettings = useAppSelector(getRecommendationSettings);
   const [isFetching, setIsFetching] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();

@@ -1,12 +1,11 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppSelector } from "../hooks";
 import { spotifyApi } from "react-spotify-web-playback";
+import { getAccessToken, getDeviceId, getIsPlaying } from "../redux/slices/selectors";
 
 const useSpotifyApiActions = () => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const isPlaying = useAppSelector((state) => state.player.isPlaying);
-  const deviceId = useAppSelector((state) => state.player.deviceId);
-  const dispatch = useAppDispatch();
+  const accessToken = useAppSelector(getAccessToken);
+  const isPlaying = useAppSelector(getIsPlaying);
+  const deviceId = useAppSelector(getDeviceId);
 
   const play = async (
     index: number | undefined,

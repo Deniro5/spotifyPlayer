@@ -12,7 +12,7 @@ const useFetchLikedSongs = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
-  const loadMoreTracks = useCallback(() => {
+  const loadMoreTracks = () => {
     if (!fetchUrl || !accessToken) return;
 
     fetch(fetchUrl, {
@@ -49,13 +49,13 @@ const useFetchLikedSongs = () => {
         setErrorMessage("An unexpected error occured");
       })
       .finally(() => setIsFetchingInitial(false));
-  }, [accessToken, fetchUrl, dispatch, isFetchingInitial]);
+  };
 
   //For the initial load after username change
   useEffect(() => {
     if (!accessToken || errorMessage) return;
     loadMoreTracks();
-  }, [accessToken, errorMessage, loadMoreTracks]);
+  }, [accessToken, errorMessage]);
 
   return {
     isFetchingInitial,

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { deletePlaylist } from "../redux/slices/playerSlice";
 import { PlaylistDetails } from "../types";
+import { getAccessToken } from "../redux/slices/selectors";
 
 const usePlaylistActions = (playlistId: string | null) => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
+  const accessToken = useAppSelector(getAccessToken);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 

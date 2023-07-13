@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector, useAppDispatch } from "../../hooks";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 import { ReactComponent as SettingIcon } from "../../assets/setting.svg";
 import { SettingsModal } from "./SettingsModal";
+import { setSearch } from "../../redux/slices/playerSlice";
+import { debounce } from "lodash";
 
-export type ISearchBarProps = {};
-
-const SearchBar: React.FC<ISearchBarProps> = ({}) => {
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+const SearchBar: React.FC = () => {
+  const dispatch = useAppDispatch();
   const search = useAppSelector((state) => state.player.search);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [value, setValue] = useState<string>(search);
-  const [typing, setTyping] = useState(false);
   const searchRef = useRef("");
 
   //Use this to get the current value within the setTimeout
@@ -22,10 +22,12 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    if (!typing) {
-      setTyping(true);
-    }
+    debouncedUpdateSearch();
   };
+
+  const debouncedUpdateSearch = debounce(() => {
+    dispatch(setSearch(searchRef.current));
+  }, 500);
 
   const handleOpenSettingsModal = () => {
     setIsSettingsModalOpen(true);
@@ -34,6 +36,7 @@ const SearchBar: React.FC<ISearchBarProps> = ({}) => {
   const handleCloseSettingsModal = () => {
     setIsSettingsModalOpen(false);
   };
+
   return (
     <SearchRowContainer>
       <Container>

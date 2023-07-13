@@ -3,11 +3,11 @@ import useRecommendations from "../../hooks/useRecommendations";
 import { useAppSelector } from "../../hooks";
 import { RecommendationResult } from "./RecommendationResult";
 import styled from "styled-components";
+import { getRecommendedTracks } from "../../redux/slices/selectors";
 
 const Recommendations = () => {
   const { isFetching } = useRecommendations();
-  const recommendedTracks = useAppSelector((state) => state.player.recommendedTracks);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
+  const recommendedTracks = useAppSelector(getRecommendedTracks);
   return (
     <Container>
       <Title> Recommended Songs: </Title>

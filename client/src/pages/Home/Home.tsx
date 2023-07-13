@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Player } from "../../components/Player";
-import { TrackSearchResult } from "../../components/TrackList/TrackSearchResult";
 import SpotifyWebApi from "spotify-web-api-node";
 import styled from "styled-components";
 import Sidebar from "../../components/Sidebar";
@@ -11,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import Router from "../../components/Router";
 import { setAccessToken } from "../../redux/slices/playerSlice";
 import { Track } from "../../types";
+import { getSearch } from "../../redux/slices/selectors";
 
 interface HomeProps {
   code: string;
@@ -22,19 +22,17 @@ const spotifyApi = new SpotifyWebApi({
 
 export const Home = ({ code }: HomeProps) => {
   const accessToken = useAuth(code);
-  const playingTrack = useAppSelector((state) => state.player.playingTrack);
-  const search = useAppSelector((state) => state.player.search);
-  const showSuggestionSection = useAppSelector(
-    (state) => state.player.showSuggestionSection
-  );
+  const search = useAppSelector(getSearch);
   const [searchResults, setSearchResults] = useState<Track[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log(accessToken);
     if (!accessToken) return;
+
     spotifyApi.setAccessToken(accessToken);
     dispatch(setAccessToken(accessToken));
-  }, [accessToken]);
+  }, [dispatch, accessToken]);
 
   useEffect(() => {
     if (!search) return setSearchResults([]);

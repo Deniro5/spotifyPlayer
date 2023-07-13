@@ -6,6 +6,12 @@ import useTrackActions from "../../hooks/useTrackActions";
 import { useAppSelector } from "../../hooks";
 import Dropdown from "react-multilevel-dropdown";
 import { useState } from "react";
+import {
+  getLastPlaylistAddedTo,
+  getPlaylists,
+  getSelectedPlaylistId,
+  getSelectedTracksArray,
+} from "../../redux/slices/selectors";
 
 export type ITrackContextMenuProps = {
   contextMenuId: string | null;
@@ -20,12 +26,10 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   contextMenuX,
   contextMenuY,
 }) => {
-  const playlists = useAppSelector((state) => state.player.playlists);
-  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
-  const lastPlaylistAddedTo = useAppSelector((state) => state.player.lastPlaylistAddedTo);
-  const selectedTracksArray = useAppSelector((state) =>
-    Object.keys(state.player.selectedTracksHash)
-  );
+  const playlists = useAppSelector(getPlaylists);
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
+  const lastPlaylistAddedTo = useAppSelector(getLastPlaylistAddedTo);
+  const selectedTracksArray = useAppSelector(getSelectedTracksArray);
   const { addTracks, removeTracks } = useTrackActions(
     Array.from(new Set([contextMenuId, ...selectedTracksArray]))
   );

@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import { getAccessToken, getSelectedPlaylistId } from "../redux/slices/selectors";
 
 const useFetchSuggestions = () => {
-  const accessToken = useAppSelector((state) => state.player.accessToken);
-  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const accessToken = useAppSelector(getAccessToken);
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);

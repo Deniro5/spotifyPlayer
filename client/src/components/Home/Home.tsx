@@ -3,10 +3,11 @@ import { useAppSelector } from "../../hooks";
 import styled from "styled-components";
 import { PlaylistSquare } from "./PlaylistSquare";
 import { PlaylistSortOptions } from "../../types";
+import { getPlaylistSortOption, getPlaylists } from "../../redux/slices/selectors";
 
 const Home = ({}) => {
-  const playlists = useAppSelector((state) => state.player.playlists);
-  const playlistSortOption = useAppSelector((state) => state.player.playlistSortOption);
+  const playlists = useAppSelector(getPlaylists);
+  const playlistSortOption = useAppSelector(getPlaylistSortOption);
 
   const sortedPlaylists = useMemo(() => {
     if (playlistSortOption === PlaylistSortOptions.MOST_RECENT) return playlists;

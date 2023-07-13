@@ -8,6 +8,7 @@ import { Playlist } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setPlaylists } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
+import { getAccessToken } from "../../redux/slices/selectors";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",
@@ -15,7 +16,7 @@ const spotifyApi = new SpotifyWebApi({
 
 const Sidebar = () => {
   const dispatch = useAppDispatch();
-  const accessToken = useAppSelector((state) => state.player.accessToken);
+  const accessToken = useAppSelector(getAccessToken);
 
   useEffect(() => {
     if (!accessToken) return;

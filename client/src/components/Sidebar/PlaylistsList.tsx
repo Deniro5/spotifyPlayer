@@ -10,13 +10,14 @@ import {
 import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
+import { getPlaylists, getSelectedPlaylistId } from "../../redux/slices/selectors";
 
 export type PlaylistsProps = {};
 
 const PlaylistsList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const playlists = useAppSelector((state) => state.player.playlists);
-  const selectedPlaylistId = useAppSelector((state) => state.player.selectedPlaylistId);
+  const playlists = useAppSelector(getPlaylists);
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [contextMenuX, setContextMenuX] = useState<number | null>(null);
   const [contextMenuY, setContextMenuY] = useState<number | null>(null);
