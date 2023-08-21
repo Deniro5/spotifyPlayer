@@ -12,10 +12,12 @@ import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
 import { getPlaylists, getSelectedPlaylistId } from "../../redux/slices/selectors";
 import { COLORS } from "../../constants";
+import useFetchPlaylists from "../../hooks/useFetchPlaylists";
 
 export type PlaylistsProps = {};
 
 const PlaylistsList = () => {
+  const { isFetching, errorMessage } = useFetchPlaylists();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const playlists = useAppSelector(getPlaylists);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);

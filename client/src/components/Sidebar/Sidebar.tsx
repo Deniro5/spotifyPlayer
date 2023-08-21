@@ -15,38 +15,6 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 const Sidebar = () => {
-  const dispatch = useAppDispatch();
-  const accessToken = useAppSelector(getAccessToken);
-
-  useEffect(() => {
-    if (!accessToken) return;
-    fetch("https://api.spotify.com/v1/me/playlists", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.items) {
-          dispatch(
-            setPlaylists(
-              data.items.map((playlist: Playlist) => {
-                return {
-                  id: playlist.id,
-                  name: playlist.name,
-                  tracks: playlist.tracks,
-                  description: playlist.description,
-                  images: playlist.images,
-                };
-              })
-            )
-          );
-        }
-      })
-      .catch((err) => console.log(err));
-  }, [accessToken]);
-
   return (
     <Container>
       <UserInfo />

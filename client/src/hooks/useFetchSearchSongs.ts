@@ -20,7 +20,6 @@ const useFetchSearchSongs = () => {
 
   //after we have a new search term we need to restart the fetch
   useEffect(() => {
-    console.log(search);
     if (search.length) {
       setFetchUrl(
         `https://api.spotify.com/v1/search?q=${search}&type=track&limit=${FETCH_LIMIT}`

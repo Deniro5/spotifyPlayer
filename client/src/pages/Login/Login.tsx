@@ -35,7 +35,7 @@ const Container = styled.div`
 const StyledButton = styled.a`
   width: 200px;
   height: 50px;
-  background: green;
+  background: ${COLORS.green};
   color: ${COLORS.white};
   cursor: pointer;
   display: inline-block;
