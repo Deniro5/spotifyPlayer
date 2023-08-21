@@ -10,7 +10,7 @@ import {
   setPlayingTrack,
   setShuffle,
 } from "../redux/slices/playerSlice";
-import { getDeviceId, getShuffle } from "../redux/slices/selectors";
+import { getDeviceId, getPlayingTrack, getShuffle } from "../redux/slices/selectors";
 
 interface PlayerProps {
   accessToken: string | null;
@@ -20,6 +20,7 @@ export const Player = ({ accessToken }: PlayerProps) => {
   const dispatch = useAppDispatch();
   const deviceId = useAppSelector(getDeviceId);
   const shuffle = useAppSelector(getShuffle);
+  const playingTrack = useAppSelector(getPlayingTrack);
   const { toggleShuffle } = usePlayer();
 
   if (!accessToken) return null;
@@ -28,7 +29,7 @@ export const Player = ({ accessToken }: PlayerProps) => {
     if (state.deviceId && state.deviceId !== deviceId) {
       dispatch(setDeviceId(state.deviceId));
     }
-    if (state.track) {
+    if (state.track.uri !== playingTrack?.uri) {
       const { name, uri } = state.track;
       //the empty fields here arent needed
       const currentTrack = {

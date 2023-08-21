@@ -9,13 +9,18 @@ import { COLORS } from "../../constants";
 const Recommendations = () => {
   const { isFetching } = useRecommendations();
   const recommendedTracks = useAppSelector(getRecommendedTracks);
+  console.log(recommendedTracks);
   return (
     <Container>
       <Title> Recommended Songs: </Title>
       {recommendedTracks.length ? (
         <>
           {recommendedTracks.map((track) => (
-            <RecommendationResult track={track} handleRightClick={() => {}} />
+            <RecommendationResult
+              key={track.uri}
+              track={track}
+              handleRightClick={() => {}}
+            />
           ))}
         </>
       ) : (
