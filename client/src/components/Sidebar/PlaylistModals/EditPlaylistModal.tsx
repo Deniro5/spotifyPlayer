@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { updatePlaylist } from "../../../redux/slices/playerSlice";
 import { PlaylistModal } from "./PlaylistModal";
-import { getAccessToken } from "../../../redux/slices/selectors";
+import { getAccessToken, getPlaylistById } from "../../../redux/slices/selectors";
 
 export type IEditPlaylistModalProps = {
   isOpen: boolean;
@@ -18,9 +18,7 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
   const dispatch = useAppDispatch();
 
   const accessToken = useAppSelector(getAccessToken);
-  const playlist = useAppSelector((state) =>
-    state.player.playlists.find((playlist) => playlist.id === playlistId)
-  );
+  const playlist = useAppSelector(getPlaylistById(playlistId));
 
   const [name, setName] = useState(playlist?.name || "");
   const [description, setDescription] = useState(playlist?.description || "");
