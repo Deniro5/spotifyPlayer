@@ -47,6 +47,16 @@ const Menu = ({}) => {
         </IconContainer>
         {View.LIKED_SONGS}
       </MenuItem>
+
+      <MenuItem
+        onClick={() => handleMenuItemClick(View.RECENT_SONGS)}
+        isActive={currentView === View.RECENT_SONGS}
+      >
+        <IconContainer isActive={currentView === View.RECENT_SONGS}>
+          <HeartIcon height={14} width={16} />
+        </IconContainer>
+        {View.RECENT_SONGS}
+      </MenuItem>
     </Container>
   );
 };

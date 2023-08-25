@@ -4,6 +4,7 @@ export enum View {
   HOME = "Home",
   BROWSE = "Browse",
   LIKED_SONGS = "Liked Songs",
+  RECENT_SONGS = "Recently Played",
   PLAYLIST = "Playlist",
 }
 
