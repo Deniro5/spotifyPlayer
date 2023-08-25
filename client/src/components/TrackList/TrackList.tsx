@@ -12,20 +12,34 @@ import {
   getShowRecommendations,
   getSelectedTracksHashLength,
 } from "../../redux/slices/selectors";
-import { setSelectedTracksHash } from "../../redux/slices/playerSlice";
+import {
+  moveTrackInDisplay,
+  setCurrentDisplayTracks,
+  setSelectedTracksHash,
+} from "../../redux/slices/playerSlice";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+  DragStart,
+} from "react-beautiful-dnd";
+import usePlaylistActions from "../../hooks/usePlaylistActions";
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
   loadMoreTracks: () => void;
 };
 
 const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
+  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
+  const { handleMoveTrack } = usePlaylistActions(selectedPlaylistId);
   const currentDisplayTracks = useAppSelector(
     (state) => state.player.currentDisplayTracks
   );
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
-  const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
+
   const showRecommendations = useAppSelector(getShowRecommendations);
 
   useEffect(() => {
@@ -58,6 +72,19 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
     dispatch(setSelectedTracksHash({}));
   };
 
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+    if (!destination) return;
+
+    handleMoveTrack(source.index, destination.index);
+    dispatch(
+      moveTrackInDisplay({
+        sourceIndex: source.index,
+        destinationIndex: destination.index,
+      })
+    );
+  };
+
   return (
     <TrackListAndRecommendationsContainer>
       <TrackListContainer isFullWidth={!showRecommendations}>
@@ -67,15 +94,33 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
           )}
         </TrackListBatchOptions>
         <ScrollContainer id='scrollContainer'>
-          {currentDisplayTracks.map((track, index) => (
-            <TrackSearchResult
-              handleRightClick={handleRightClick}
-              track={track}
-              key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-              index={index}
-            />
-          ))}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId='droppable'>
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {currentDisplayTracks.map((track, index) => (
+                    <Draggable key={track.uri} draggableId={track.uri} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <TrackSearchResult
+                            handleRightClick={handleRightClick}
+                            track={track}
+                            key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
+                            isSelected={Number.isInteger(selectedTracksHash[track.uri])}
+                            index={index}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
           <Waypoint onEnter={handleLoadMoreTracks} />
         </ScrollContainer>
 
@@ -117,12 +162,6 @@ const TrackListAndRecommendationsContainer = styled.div`
 const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
   width: ${({ isFullWidth }) => (isFullWidth ? "100%" : "75%")};
   padding: 0px 10px;
-`;
-
-const RecommendationsContainer = styled.div`
-  width: 25%;
-  margin: auto;
-  padding: 0px 30px;
 `;
 
 const ScrollContainer = styled.div`

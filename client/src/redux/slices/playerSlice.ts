@@ -106,6 +106,15 @@ const playerSlice = createSlice({
         ...tracks,
       ];
     },
+    moveTrackInDisplay(
+      state,
+      action: PayloadAction<{ sourceIndex: number; destinationIndex: number }>
+    ) {
+      const updatedDisplayTracks = [...state.currentDisplayTracks];
+      const track = updatedDisplayTracks.splice(action.payload.sourceIndex, 1)[0];
+      updatedDisplayTracks.splice(action.payload.destinationIndex, 0, track);
+      state.currentDisplayTracks = updatedDisplayTracks;
+    },
     removeTracksFromDisplay(state, action: PayloadAction<(string | null)[]>) {
       const tracksToDeleteHash: Record<string, boolean> = action.payload.reduce(
         (accumulator, value) => {
@@ -185,6 +194,7 @@ export const {
   updatePlaylist,
   setCurrentView,
   setCurrentDisplayTracks,
+  moveTrackInDisplay,
   removeTracksFromDisplay,
   setPlayingTrack,
   setCurrentUser,

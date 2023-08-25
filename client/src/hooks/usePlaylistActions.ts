@@ -49,7 +49,27 @@ const usePlaylistActions = (playlistId: string | null) => {
       });
   };
 
-  return { handleRenamePlaylist, handlePlaylistDelete, errorMessage };
+  const handleMoveTrack = (sourceIndex: number, destinationIndex: number) => {
+    if (!playlistId) return;
+
+    fetch(`	https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ range_start: sourceIndex, insert_before: destinationIndex }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setErrorMessage("An unexpected error occured");
+      });
+  };
+
+  return { handleRenamePlaylist, handlePlaylistDelete, handleMoveTrack, errorMessage };
 };
 
 export default usePlaylistActions;
