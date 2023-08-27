@@ -33,7 +33,7 @@ const useRecommendations = () => {
         }&target_valence=${recommendationSettings.valence / 100}&seed_tracks=${uriToId(
           playingTrack.uri
         )}`
-      : `https://api.spotify.com/v1/recommendations?limit=10&seed_tracks=${uriToId(
+      : `https://api.spotify.com/v1/recommendations?limit=8&seed_tracks=${uriToId(
           playingTrack.uri
         )}`;
     fetch(fetchUrl, {
@@ -45,9 +45,12 @@ const useRecommendations = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.tracks) {
+          const filteredTracks = data.tracks
+            .filter((track: SpotifyApi.TrackObjectFull) => track.uri !== playingTrack.uri)
+            .slice(0, 7);
           dispatch(
             setRecommendedTracks(
-              data.tracks.map((track: SpotifyApi.TrackObjectFull) => {
+              filteredTracks.map((track: SpotifyApi.TrackObjectFull) => {
                 const { album, name, uri, duration_ms, artists } = track;
                 return {
                   artist: artists[0]?.name,
