@@ -16,8 +16,7 @@ const usePlayer = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         dispatch(setShuffle(newShuffle));
       })
       .catch((err) => console.log(err));

@@ -108,12 +108,32 @@ export const getRecommendedTracks = createSelector(
   (state) => state.player.recommendedTracks
 );
 
+export const getQueueTracks = createSelector(
+  [getRootState],
+  (state) => state.player.queueTracks
+);
+
+export const getTracksManuallyAddedToQueue = createSelector(
+  [getRootState],
+  (state) => state.player.tracksManuallyAddedToQueue
+);
+
 export const getIsPlaying = createSelector(
   [getRootState],
   (state) => state.player.isPlaying
 );
 
+export const getIsActive = createSelector(
+  [getRootState],
+  (state) => state.player.isActive
+);
+
 export const getDeviceId = createSelector(
   [getRootState],
   (state) => state.player.deviceId
+);
+
+export const getDontPopQueue = createSelector(
+  [getRootState],
+  (state) => state.player.dontPopQueue
 );

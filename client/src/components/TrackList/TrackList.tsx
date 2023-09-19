@@ -25,6 +25,9 @@ import {
   DragStart,
 } from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
+import { Queue } from "./Queue";
+import { Track } from "../../types";
+
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
   loadMoreTracks: () => void;
@@ -47,7 +50,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
     if (container) setTimeout(() => (container.scrollTop = 0), 300);
   }, [selectedPlaylistId]);
 
-  const [contextMenuId, setContextMenuId] = useState<string | null>(null);
+  const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);
   const [contextMenuX, setContextMenuX] = useState<number>(0);
   const [contextMenuY, setContextMenuY] = useState<number>(0);
 
@@ -60,12 +63,12 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
 
   const handleRightClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string
+    track: Track
   ) => {
     e.preventDefault();
     setContextMenuX(Math.min(e.clientX, window.innerWidth));
     setContextMenuY(Math.min(e.clientY, window.innerHeight));
-    setContextMenuId(id);
+    setContextMenuTrack(track);
   };
 
   const handleBatchSelectClear = () => {
@@ -107,7 +110,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
                           {...provided.dragHandleProps}
                         >
                           <TrackSearchResult
-                            handleRightClick={handleRightClick}
+                            handleRightClick={(e) => handleRightClick(e, track)}
                             track={track}
                             key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
                             isSelected={Number.isInteger(selectedTracksHash[track.uri])}
@@ -124,16 +127,21 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
           <Waypoint onEnter={handleLoadMoreTracks} />
         </ScrollContainer>
 
-        {contextMenuId && (
+        {contextMenuTrack && (
           <TrackContextMenu
-            contextMenuId={contextMenuId}
-            setContextMenuId={setContextMenuId}
+            contextMenuTrack={contextMenuTrack}
+            setContextMenuTrack={setContextMenuTrack}
             contextMenuX={contextMenuX}
             contextMenuY={contextMenuY}
           />
         )}
       </TrackListContainer>
-      {showRecommendations && <Recommendations />}
+      {showRecommendations && (
+        <RightSidebar>
+          <Recommendations />
+          <Queue />
+        </RightSidebar>
+      )}
     </TrackListAndRecommendationsContainer>
   );
 };
@@ -167,6 +175,11 @@ const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
 const ScrollContainer = styled.div`
   height: calc(100vh - 168px);
   overflow: scroll;
+`;
+
+const RightSidebar = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export { TrackList };

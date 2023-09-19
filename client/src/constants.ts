@@ -12,3 +12,10 @@ export const COLORS = {
   green: "#009900",
   trackBackground: "#fefefe",
 };
+
+export const TRACK_CONTEXT_MENU_OPTIONS = {
+  addToQueue: "addToQueue",
+  addToRecent: "addToRecent",
+  addToPlaylist: "addSongsToPlaylist",
+  remove: "remove",
+};

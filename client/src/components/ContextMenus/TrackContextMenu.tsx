@@ -5,33 +5,42 @@ import { PopoverContentWrapper } from "./PopoverContentWrapper";
 import useTrackActions from "../../hooks/useTrackActions";
 import { useAppSelector } from "../../hooks";
 import Dropdown from "react-multilevel-dropdown";
-import { useState } from "react";
 import {
+  getIsActive,
   getLastPlaylistAddedTo,
   getPlaylists,
   getSelectedPlaylistId,
   getSelectedTracksArray,
 } from "../../redux/slices/selectors";
+import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
+import { Track } from "../../types";
 
 export type ITrackContextMenuProps = {
-  contextMenuId: string | null;
-  setContextMenuId: React.Dispatch<React.SetStateAction<string | null>>;
+  contextMenuTrack: Track | null;
+  setContextMenuTrack: React.Dispatch<React.SetStateAction<Track | null>>;
   contextMenuX: number;
   contextMenuY: number;
+  hideAddToQueue?: boolean;
+  hideRemoveSong?: boolean;
 };
 
 const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
-  contextMenuId,
-  setContextMenuId,
+  contextMenuTrack,
+  setContextMenuTrack,
   contextMenuX,
   contextMenuY,
+  hideAddToQueue,
+  hideRemoveSong,
 }) => {
   const playlists = useAppSelector(getPlaylists);
+  const isActive = useAppSelector(getIsActive);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const lastPlaylistAddedTo = useAppSelector(getLastPlaylistAddedTo);
   const selectedTracksArray = useAppSelector(getSelectedTracksArray);
+  const { addToQueue } = useSpotifyApiActions();
+
   const { addTracks, removeTracks } = useTrackActions(
-    Array.from(new Set([contextMenuId, ...selectedTracksArray]))
+    Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray]))
   );
 
   const getStyles = useCallback(() => {
@@ -69,9 +78,14 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     };
   }, [contextMenuX, contextMenuY]);
 
+  const handleAddToQueue = () => {
+    addToQueue(contextMenuTrack);
+    setContextMenuTrack(null);
+  };
+
   const handleAddClick = (playlistId: string) => {
     addTracks(playlistId);
-    setContextMenuId(null);
+    setContextMenuTrack(null);
   };
 
   const addToLastPlaylistEnabled = useMemo(() => {
@@ -85,7 +99,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
 
   const handleRemoveClick = () => {
     removeTracks();
-    setContextMenuId(null);
+    setContextMenuTrack(null);
   };
 
   const { mainStyle, submenuTop, submenuLeft } = getStyles();
@@ -93,6 +107,11 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const content = (
     <PopoverContentWrapper width={225}>
       <div>
+        {!hideAddToQueue && (
+          <Dropdown.Item onClick={handleAddToQueue}>
+            <DisableWrapper isDisabled={!isActive}>Add to Queue</DisableWrapper>
+          </Dropdown.Item>
+        )}
         <Dropdown.Item
           isDisabled={!addToLastPlaylistEnabled}
           onClick={handleAddToLastPlaylist}
@@ -121,7 +140,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
             </PlaylistSubListContainer>
           </StyledDropdownSubmenu>
         </Dropdown.Item>
-        {selectedPlaylistId && (
+        {selectedPlaylistId && !hideRemoveSong && (
           <Dropdown.Item onClick={handleRemoveClick}>
             Remove {!!selectedTracksArray.length && "Songs"} From Playlist
           </Dropdown.Item>
@@ -133,8 +152,8 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   return (
     <>
       <Popover
-        onClickOutside={() => setContextMenuId(null)}
-        isOpen={!!contextMenuId}
+        onClickOutside={() => setContextMenuTrack(null)}
+        isOpen={!!contextMenuTrack}
         content={content}
         containerStyle={mainStyle}
       >

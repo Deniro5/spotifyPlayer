@@ -7,37 +7,26 @@ import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
 import { getAccessToken, getPlayingTrack } from "../../redux/slices/selectors";
 
-interface RecommendationResultProps {
+interface SidebarTrackResultProps {
   track: Track;
-  handleRightClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => void;
+  handleRightClick: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    track: Track
+  ) => void;
+  handlePlay: () => Promise<void>;
 }
 
-export const RecommendationResult = ({
+const SidebarTrackResult = ({
   track,
   handleRightClick,
-}: RecommendationResultProps) => {
-  const { pause, play } = useSpotifyApiActions();
-  const { uri } = track;
-  const accessToken = useAppSelector(getAccessToken);
-  const playingTrack = useAppSelector(getPlayingTrack);
-
-  const handlePlayOrPause = () =>
-    playingTrack?.uri === track.uri ? handlePause() : handlePlay();
-
-  const handlePlay = async () => {
-    //TODO figure out how to handle 'liked songs' because that isnt a playlist but we still want sequential play
-    if (!accessToken) return;
-    //if we are on a playlist we want to send the playlist and an offset. If not send the track
-    play(undefined, undefined, track.uri);
-  };
-
-  const handlePause = () => {
-    pause();
-  };
-
+  handlePlay,
+}: SidebarTrackResultProps) => {
   return (
-    <Container onDoubleClick={handlePlay} onContextMenu={(e) => handleRightClick(e, uri)}>
-      <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
+    <Container
+      onDoubleClick={handlePlay}
+      onContextMenu={(e) => handleRightClick(e, track)}
+    >
+      <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlay} />
     </Container>
   );
 };
@@ -64,3 +53,5 @@ const Container = styled.div`
   -ms-user-select: none;
   user-select: none;
 `;
+
+export default SidebarTrackResult;

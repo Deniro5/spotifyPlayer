@@ -29,8 +29,13 @@ export interface PlayerState {
   shouldUseRecommendationSliders: boolean;
   recommendationSettings: RecommendationSettings;
   recommendedTracks: Track[];
+  queueTracks: Track[];
+  //need this to help us with placing the added track
+  tracksManuallyAddedToQueue: Track[];
+  isActive: boolean;
   isPlaying: boolean;
   deviceId: string | null;
+  dontPopQueue: boolean;
 }
 
 // Define an initial state
@@ -48,7 +53,7 @@ const initialState: PlayerState = {
   showSuggestionSection: true,
   playlistSortOption: PlaylistSortOptions.MOST_RECENT,
   shuffle: false,
-  showRecommendations: false,
+  showRecommendations: true,
   shouldUseRecommendationSliders: true,
   recommendationSettings: {
     popularity: 50,
@@ -57,8 +62,12 @@ const initialState: PlayerState = {
     instrumentalness: 50,
   },
   recommendedTracks: [],
+  queueTracks: [],
+  tracksManuallyAddedToQueue: [],
+  isActive: false,
   isPlaying: false,
   deviceId: null,
+  dontPopQueue: false,
 };
 
 // Create a slice containing the configuration of the state
@@ -174,11 +183,28 @@ const playerSlice = createSlice({
     setRecommendedTracks(state, action: PayloadAction<Track[]>) {
       state.recommendedTracks = action.payload;
     },
+    setQueueTracks(state, action: PayloadAction<Track[]>) {
+      state.queueTracks = action.payload;
+    },
+    setTracksManuallyAddedToQueue(state, action: PayloadAction<Track[]>) {
+      state.tracksManuallyAddedToQueue = action.payload;
+    },
+    popTracksManuallyAddedToQueue(state) {
+      let newTracksManuallyAddedToQueue = [...state.tracksManuallyAddedToQueue];
+      newTracksManuallyAddedToQueue.shift();
+      state.tracksManuallyAddedToQueue = newTracksManuallyAddedToQueue;
+    },
     setIsPlaying(state, action: PayloadAction<boolean>) {
       state.isPlaying = action.payload;
     },
+    setIsActive(state, action: PayloadAction<boolean>) {
+      state.isActive = action.payload;
+    },
     setDeviceId(state, action: PayloadAction<string>) {
       state.deviceId = action.payload;
+    },
+    setDontPopQueue(state, action: PayloadAction<boolean>) {
+      state.dontPopQueue = action.payload;
     },
   },
 });
@@ -209,8 +235,13 @@ export const {
   setShouldUseRecommendationSliders,
   setRecommendationSettings,
   setRecommendedTracks,
+  setQueueTracks,
+  setTracksManuallyAddedToQueue,
+  popTracksManuallyAddedToQueue,
+  setIsActive,
   setIsPlaying,
   setDeviceId,
+  setDontPopQueue,
 } = playerSlice.actions;
 
 // Export default the slice reducer
