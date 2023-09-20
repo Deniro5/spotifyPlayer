@@ -97,34 +97,16 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
           )}
         </TrackListBatchOptions>
         <ScrollContainer id='scrollContainer'>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId='droppable'>
-              {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {currentDisplayTracks.map((track, index) => (
-                    <Draggable key={track.uri} draggableId={track.uri} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <TrackSearchResult
-                            handleRightClick={(e) => handleRightClick(e, track)}
-                            track={track}
-                            key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-                            isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-                            index={index}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          <Waypoint onEnter={handleLoadMoreTracks} />
+          {currentDisplayTracks.map((track, index) => (
+            <TrackSearchResult
+              handleRightClick={(e) => handleRightClick(e, track)}
+              track={track}
+              key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
+              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
+              index={index}
+            />
+          ))}
+          <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
         </ScrollContainer>
 
         {contextMenuTrack && (
@@ -173,7 +155,7 @@ const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
 `;
 
 const ScrollContainer = styled.div`
-  height: calc(100vh - 168px);
+  height: calc(100vh - 180px);
   overflow: scroll;
 `;
 
