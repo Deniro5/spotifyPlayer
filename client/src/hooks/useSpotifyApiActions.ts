@@ -8,11 +8,13 @@ import {
   getTracksManuallyAddedToQueue,
 } from "../redux/slices/selectors";
 import {
+  removeTracksFromDisplay,
   setDontPopQueue,
   setQueueTracks,
   setTracksManuallyAddedToQueue,
 } from "../redux/slices/playerSlice";
 import { Track } from "../types";
+import { uriToId } from "../utils";
 
 const useSpotifyApiActions = () => {
   const dispatch = useAppDispatch();
@@ -93,7 +95,27 @@ const useSpotifyApiActions = () => {
     // .finally(() => dispatch(setSelectedTracksHash({})));
   };
 
-  return { play, pause, shuffle, next, doubleNext, addToQueue };
+  const removeLikedSongs = (uris: (string | null)[]) => {
+    const idArray = uris.map((uri) => uriToId(uri));
+    fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      //body: JSON.stringify({ ids: uris }),
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.status !== 200) return;
+        dispatch(removeTracksFromDisplay(uris));
+      })
+      .catch((err) => {
+        console.log(err);
+        //setErrorMessage("An unexpected error occured");
+      });
+  };
+
+  return { play, pause, shuffle, next, doubleNext, addToQueue, removeLikedSongs };
 };
 
 export default useSpotifyApiActions;

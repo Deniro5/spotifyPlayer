@@ -6,8 +6,8 @@ export const MillisecondsToMinutesAndSeconds = (ms: number) => {
   return { seconds: secondsString, minutes: minutes.toString() };
 };
 
-export const uriToId = (uri: string) => {
-  return uri.substring(14);
+export const uriToId = (uri: string | null) => {
+  return uri ? uri.substring(14) : "";
 };
 
 export const debounce = (func: () => {}, timeout: number) => {

@@ -11,6 +11,7 @@ import {
   getSelectedTracksHash,
   getShowRecommendations,
   getSelectedTracksHashLength,
+  getCurrentView,
 } from "../../redux/slices/selectors";
 import {
   moveTrackInDisplay,
@@ -26,7 +27,7 @@ import {
 } from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { Queue } from "./Queue";
-import { Track } from "../../types";
+import { Track, View } from "../../types";
 
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
@@ -42,6 +43,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
+  const currentView = useAppSelector(getCurrentView);
 
   const showRecommendations = useAppSelector(getShowRecommendations);
 
@@ -115,6 +117,7 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
             setContextMenuTrack={setContextMenuTrack}
             contextMenuX={contextMenuX}
             contextMenuY={contextMenuY}
+            hideRemoveSong={currentView === View.BROWSE}
           />
         )}
       </TrackListContainer>

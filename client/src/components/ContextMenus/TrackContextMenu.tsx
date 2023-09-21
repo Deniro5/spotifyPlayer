@@ -37,7 +37,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const lastPlaylistAddedTo = useAppSelector(getLastPlaylistAddedTo);
   const selectedTracksArray = useAppSelector(getSelectedTracksArray);
-  const { addToQueue } = useSpotifyApiActions();
+  const { addToQueue, removeLikedSongs } = useSpotifyApiActions();
 
   const { addTracks, removeTracks } = useTrackActions(
     Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray]))
@@ -98,7 +98,14 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   };
 
   const handleRemoveClick = () => {
-    removeTracks();
+    if (!selectedPlaylistId) {
+      //If we are on liked songs
+      removeLikedSongs(
+        Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray]))
+      );
+    } else {
+      removeTracks();
+    }
     setContextMenuTrack(null);
   };
 
@@ -142,8 +149,9 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
         </Dropdown.Item>
         {!hideRemoveSong && (
           <Dropdown.Item onClick={handleRemoveClick}>
-            Remove {!!selectedTracksArray.length && "Songs"} From{" "}
-            {!!selectedPlaylistId ? "Playlist" : "Liked Songs"}
+            {!!selectedPlaylistId
+              ? "Remove songs from Playlist"
+              : "Remove from Liked Songs"}
           </Dropdown.Item>
         )}
       </div>
