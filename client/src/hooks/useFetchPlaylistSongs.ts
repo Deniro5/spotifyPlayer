@@ -3,10 +3,13 @@ import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
 import { getAccessToken, getSelectedPlaylistId } from "../redux/slices/selectors";
+import useFetchLikedStatus from "./useFetchLikedStatus";
+import { uriToId } from "../utils";
 
 const useFetchPlaylistSongs = () => {
   const accessToken = useAppSelector(getAccessToken);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
+  const { getLikedStatus } = useFetchLikedStatus();
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
@@ -52,6 +55,10 @@ const useFetchPlaylistSongs = () => {
               isInitialLoad: isFetchingInitial,
             })
           );
+          const trackIds = data.items.map((item: { track: SpotifyApi.TrackObjectFull }) =>
+            uriToId(item.track.uri)
+          );
+          getLikedStatus(trackIds);
           setFetchUrl(data.next);
         }
       })

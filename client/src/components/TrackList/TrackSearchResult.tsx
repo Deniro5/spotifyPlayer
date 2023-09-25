@@ -20,7 +20,10 @@ import {
   getSelectedPlaylistId,
   getSelectedTracksHash,
   getSelectedTracksHashLength,
+  getSongsStatusHash,
 } from "../../redux/slices/selectors";
+import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
+import { uriToId } from "../../utils";
 
 interface TrackSearchResultProps {
   track: Track;
@@ -45,6 +48,7 @@ export const TrackSearchResult = ({
   const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
+  const songsStatusHash = useAppSelector(getSongsStatusHash);
   const dispatch = useAppDispatch();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -114,26 +118,33 @@ export const TrackSearchResult = ({
   };
 
   return (
-    <Container
-      isSelected={isSelected}
-      onClick={handleClick}
-      onDoubleClick={handlePlayOrPause}
-      onContextMenu={(e) => handleRightClick(e, uri)}
-    >
-      <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
-      <TrackAlbum>{albumName}</TrackAlbum>
-      <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
-      {
+    <OuterContainer>
+      <Container
+        isSelected={isSelected}
+        onClick={handleClick}
+        onDoubleClick={handlePlayOrPause}
+        onContextMenu={(e) => handleRightClick(e, uri)}
+      >
+        <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
+        <TrackAlbum>{albumName}</TrackAlbum>
+        <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
+        <SavedStatusContainer isSaved={songsStatusHash[uriToId(track.uri)]}>
+          <HeartIcon height={14} width={16} />
+        </SavedStatusContainer>
         <CheckboxContainer
           disabled={selectedTracksHashLength < 2}
           onClick={handleCheckboxClick}
         >
           <StyledCheckbox type='checkbox' checked={isSelected} readOnly />
         </CheckboxContainer>
-      }
-    </Container>
+      </Container>
+    </OuterContainer>
   );
 };
+
+const OuterContainer = styled.div`
+  position: relative;
+`;
 
 const Container = styled.div<{ isSelected: boolean }>`
   background: ${({ isSelected }) =>
@@ -184,6 +195,27 @@ const TrackAlbum = styled.div`
   box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const SavedStatusContainer = styled.div<{ isSaved: boolean }>`
+  padding: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    path {
+      stroke: ${COLORS.primary};
+      fill: ${COLORS.primary};
+    }
+  }
+  ${({ isSaved }) =>
+    isSaved &&
+    `
+  path {
+    stroke: ${COLORS.primary};
+    fill: ${COLORS.primary};
+  }
+  `}
 `;
 
 const CheckboxContainer = styled.div<{ disabled: boolean }>`

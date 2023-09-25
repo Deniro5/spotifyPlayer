@@ -7,11 +7,14 @@ import {
   getCurrentDisplayTracks,
   getSearch,
 } from "../redux/slices/selectors";
+import { uriToId } from "../utils";
+import useFetchLikedStatus from "./useFetchLikedStatus";
 
 const useFetchSearchSongs = () => {
   const accessToken = useAppSelector(getAccessToken);
   const search = useAppSelector(getSearch);
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
+  const { getLikedStatus } = useFetchLikedStatus();
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
@@ -56,6 +59,11 @@ const useFetchSearchSongs = () => {
               isInitialLoad: isFetchingInitial,
             })
           );
+          const trackIds = data.tracks.items.map((track: SpotifyApi.TrackObjectFull) =>
+            uriToId(track?.uri || "")
+          );
+          console.log(trackIds);
+          getLikedStatus(trackIds);
           setFetchUrl(data.tracks?.next);
         }
       })

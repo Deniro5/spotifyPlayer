@@ -137,3 +137,8 @@ export const getDontPopQueue = createSelector(
   [getRootState],
   (state) => state.player.dontPopQueue
 );
+
+export const getSongsStatusHash = createSelector(
+  [getRootState],
+  (state) => state.player.songsStatusHash
+);

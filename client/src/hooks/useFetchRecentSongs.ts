@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import { uriToId } from "../utils";
+import useFetchLikedStatus from "./useFetchLikedStatus";
 
 const useFetchRecentSongs = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { getLikedStatus } = useFetchLikedStatus();
   const dispatch = useAppDispatch();
 
   const removeDuplicateTracksFromArray = (
@@ -52,6 +55,10 @@ const useFetchRecentSongs = () => {
               isInitialLoad: true,
             })
           );
+          const trackIds = data.items.map((item: { track: SpotifyApi.TrackObjectFull }) =>
+            uriToId(item.track.uri)
+          );
+          getLikedStatus(trackIds);
         }
       })
       .catch((err) => {

@@ -36,6 +36,7 @@ export interface PlayerState {
   isPlaying: boolean;
   deviceId: string | null;
   dontPopQueue: boolean;
+  songsStatusHash: Record<string, boolean>;
 }
 
 // Define an initial state
@@ -68,6 +69,7 @@ const initialState: PlayerState = {
   isPlaying: false,
   deviceId: null,
   dontPopQueue: false,
+  songsStatusHash: {},
 };
 
 // Create a slice containing the configuration of the state
@@ -206,6 +208,9 @@ const playerSlice = createSlice({
     setDontPopQueue(state, action: PayloadAction<boolean>) {
       state.dontPopQueue = action.payload;
     },
+    addSongsStatusHash(state, action: PayloadAction<Record<string, boolean>>) {
+      state.songsStatusHash = { ...state.songsStatusHash, ...action.payload };
+    },
   },
 });
 
@@ -242,6 +247,7 @@ export const {
   setIsPlaying,
   setDeviceId,
   setDontPopQueue,
+  addSongsStatusHash,
 } = playerSlice.actions;
 
 // Export default the slice reducer
