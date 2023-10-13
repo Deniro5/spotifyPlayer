@@ -14,6 +14,10 @@ interface ButtonProps {
   fontColor?: string;
   borderColor?: string;
   borderWidth?: number;
+  isDisabled?: boolean;
+  disabledBackgroundColor?: string;
+  disabledFontColor?: string;
+  disabledBorderColor?: string;
 }
 
 function Button({
@@ -21,14 +25,18 @@ function Button({
   width = 110,
   height = 40,
   onClick,
-  hoverColor = "none",
   backgroundColor = COLORS.primary,
+  hoverColor = backgroundColor,
   fontSize = 16,
   fontWeight = 600,
   borderRadius = 4,
   fontColor = COLORS.white,
   borderColor = "none",
   borderWidth = 0,
+  isDisabled = false,
+  disabledBackgroundColor = COLORS.lightGrey,
+  disabledFontColor = COLORS.black,
+  disabledBorderColor = "none",
 }: ButtonProps) {
   return (
     <StyledButton
@@ -43,6 +51,10 @@ function Button({
       fontColor={fontColor}
       borderColor={borderColor}
       borderWidth={borderWidth}
+      isDisabled={isDisabled}
+      disabledBackgroundColor={disabledBackgroundColor}
+      disabledFontColor={disabledFontColor}
+      disabledBorderColor={disabledBorderColor}
     >
       {children}
     </StyledButton>
@@ -50,10 +62,12 @@ function Button({
 }
 
 const StyledButton = styled.div<ButtonProps>`
-  background: ${({ backgroundColor }) => backgroundColor};
+  background: ${({ backgroundColor, disabledBackgroundColor, isDisabled }) =>
+    isDisabled ? disabledBackgroundColor : backgroundColor};
   width: ${({ width }) => `${width}px`};
   height: ${({ height }) => `${height}px`};
-  color: ${({ fontColor }) => `${fontColor}`};
+  color: ${({ fontColor, disabledFontColor, isDisabled }) =>
+    isDisabled ? disabledFontColor : fontColor};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,7 +78,9 @@ const StyledButton = styled.div<ButtonProps>`
   &:hover {
     background: ${({ hoverColor }) => hoverColor};
   }
-  border: ${({ borderWidth, borderColor }) => `${borderWidth}px solid ${borderColor} `};
+  border: ${({ borderWidth, borderColor, isDisabled, disabledBorderColor }) =>
+    `${borderWidth}px solid ${isDisabled ? disabledBorderColor : borderColor} `};
+  pointer-events: ${({ isDisabled }) => isDisabled && "none"};
 `;
 
 export { Button };

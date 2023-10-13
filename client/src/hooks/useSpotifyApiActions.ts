@@ -8,6 +8,8 @@ import {
   getTracksManuallyAddedToQueue,
 } from "../redux/slices/selectors";
 import {
+  addSongsStatusHash,
+  addTracksToDisplay,
   removeTracksFromDisplay,
   setDontPopQueue,
   setQueueTracks,
@@ -95,19 +97,19 @@ const useSpotifyApiActions = () => {
     // .finally(() => dispatch(setSelectedTracksHash({})));
   };
 
-  const removeLikedSongs = (uris: (string | null)[]) => {
+  const addLikedSongs = (uris: (string | null)[], isLikedSongs?: boolean) => {
     const idArray = uris.map((uri) => uriToId(uri));
     fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
-      method: "delete",
+      method: "put",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      //body: JSON.stringify({ ids: uris }),
     })
       .then((res) => {
-        console.log(res);
         if (res.status !== 200) return;
-        dispatch(removeTracksFromDisplay(uris));
+        const newSongStatuses = Object.fromEntries(idArray.map((id) => [id, true]));
+        dispatch(addSongsStatusHash(newSongStatuses));
+        if (isLikedSongs) return; // dispatch(addTracksToDisplay(uris));
       })
       .catch((err) => {
         console.log(err);
@@ -115,7 +117,37 @@ const useSpotifyApiActions = () => {
       });
   };
 
-  return { play, pause, shuffle, next, doubleNext, addToQueue, removeLikedSongs };
+  const removeLikedSongs = (uris: (string | null)[], isLikedSongs?: boolean) => {
+    const idArray = uris.map((uri) => uriToId(uri));
+    fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.status !== 200) return;
+        const newSongStatuses = Object.fromEntries(idArray.map((id) => [id, false]));
+        dispatch(addSongsStatusHash(newSongStatuses));
+        if (isLikedSongs) dispatch(removeTracksFromDisplay(uris));
+      })
+      .catch((err) => {
+        console.log(err);
+        //setErrorMessage("An unexpected error occured");
+      });
+  };
+
+  return {
+    play,
+    pause,
+    shuffle,
+    next,
+    doubleNext,
+    addToQueue,
+    addLikedSongs,
+    removeLikedSongs,
+  };
 };
 
 export default useSpotifyApiActions;

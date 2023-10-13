@@ -6,6 +6,13 @@ export const MillisecondsToMinutesAndSeconds = (ms: number) => {
   return { seconds: secondsString, minutes: minutes.toString() };
 };
 
+export const MinutesToDisplayTime = (totalMinutes: number) => {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  const minutesString = minutes < 10 ? "0" + minutes : minutes.toString();
+  return `${hours}:${minutesString}`;
+};
+
 export const uriToId = (uri: string | null) => {
   return uri ? uri.substring(14) : "";
 };
@@ -19,3 +26,6 @@ export const debounce = (func: () => {}, timeout: number) => {
     }, timeout);
   };
 };
+
+export const hoursToMilliseconds = (hours: number) => hours * 3600000;
+export const minutesToMilliseconds = (minutes: number) => minutes * 60000;

@@ -9,6 +9,7 @@ import {
 } from "../../types";
 import { Track } from "../../types";
 import { RootState } from "../store";
+import { spotifyApi } from "react-spotify-web-playback";
 
 // Define the state of the slice as an object
 export interface PlayerState {
@@ -37,6 +38,8 @@ export interface PlayerState {
   deviceId: string | null;
   dontPopQueue: boolean;
   songsStatusHash: Record<string, boolean>;
+  sleepTimer: NodeJS.Timeout | null;
+  sleepTimerMinutes: number;
 }
 
 // Define an initial state
@@ -70,6 +73,8 @@ const initialState: PlayerState = {
   deviceId: null,
   dontPopQueue: false,
   songsStatusHash: {},
+  sleepTimer: null,
+  sleepTimerMinutes: 0,
 };
 
 // Create a slice containing the configuration of the state
@@ -125,6 +130,12 @@ const playerSlice = createSlice({
       const track = updatedDisplayTracks.splice(action.payload.sourceIndex, 1)[0];
       updatedDisplayTracks.splice(action.payload.destinationIndex, 0, track);
       state.currentDisplayTracks = updatedDisplayTracks;
+    },
+    addTracksToDisplay(state, action: PayloadAction<{ tracks: Track[] }>) {
+      state.currentDisplayTracks = [
+        ...action.payload.tracks,
+        ...state.currentDisplayTracks,
+      ];
     },
     removeTracksFromDisplay(state, action: PayloadAction<(string | null)[]>) {
       const tracksToDeleteHash: Record<string, boolean> = action.payload.reduce(
@@ -211,6 +222,35 @@ const playerSlice = createSlice({
     addSongsStatusHash(state, action: PayloadAction<Record<string, boolean>>) {
       state.songsStatusHash = { ...state.songsStatusHash, ...action.payload };
     },
+    clearSleepTimer(state) {
+      if (state.sleepTimer) {
+        clearTimeout(state.sleepTimer);
+        state.sleepTimer = null;
+        state.sleepTimerMinutes = 0;
+      }
+    },
+    setSleepTimer(state, action: PayloadAction<NodeJS.Timeout>) {
+      if (state.sleepTimer) {
+        clearTimeout(state.sleepTimer);
+      }
+      state.sleepTimer = action.payload;
+    },
+    setSleepTimerMinutes(state, action: PayloadAction<number>) {
+      state.sleepTimerMinutes = action.payload;
+    },
+    decrementSleepTimerMinutes(state) {
+      if (
+        state.sleepTimerMinutes === 1 &&
+        state.sleepTimer &&
+        state.accessToken &&
+        state.deviceId
+      ) {
+        clearTimeout(state.sleepTimer);
+        state.sleepTimer = null;
+        spotifyApi.pause(state.accessToken, state.deviceId);
+      }
+      state.sleepTimerMinutes--;
+    },
   },
 });
 
@@ -226,6 +266,7 @@ export const {
   setCurrentView,
   setCurrentDisplayTracks,
   moveTrackInDisplay,
+  addTracksToDisplay,
   removeTracksFromDisplay,
   setPlayingTrack,
   setCurrentUser,
@@ -248,6 +289,10 @@ export const {
   setDeviceId,
   setDontPopQueue,
   addSongsStatusHash,
+  setSleepTimer,
+  clearSleepTimer,
+  setSleepTimerMinutes,
+  decrementSleepTimerMinutes,
 } = playerSlice.actions;
 
 // Export default the slice reducer

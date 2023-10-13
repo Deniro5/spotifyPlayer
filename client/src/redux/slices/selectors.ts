@@ -142,3 +142,13 @@ export const getSongsStatusHash = createSelector(
   [getRootState],
   (state) => state.player.songsStatusHash
 );
+
+export const getSleepTimer = createSelector(
+  [getRootState],
+  (state) => state.player.sleepTimer
+);
+
+export const getSleepTimerMinutes = createSelector(
+  [getRootState],
+  (state) => state.player.sleepTimerMinutes
+);

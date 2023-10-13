@@ -11,6 +11,7 @@ export const COLORS = {
   whitesmoke: "whitesmoke",
   green: "#009900",
   trackBackground: "#fefefe",
+  red: "red",
 };
 
 export const TRACK_CONTEXT_MENU_OPTIONS = {

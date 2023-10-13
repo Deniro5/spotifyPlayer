@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import SpotifyPlayer, { SpotifyTrack, State } from "react-spotify-web-playback";
-import usePlayer from "../hooks/usePlayer";
+import usePlayer from "../../hooks/usePlayer";
 import styled from "styled-components";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { ReactComponent as ShuffleIcon } from "../assets/shuffle.svg";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { ReactComponent as ShuffleIcon } from "../../assets/shuffle.svg";
+import { ReactComponent as ClockIcon } from "../../assets/clock.svg";
 import {
   popTracksManuallyAddedToQueue,
   setDeviceId,
@@ -12,14 +13,18 @@ import {
   setIsActive,
   setPlayingTrack,
   setQueueTracks,
-} from "../redux/slices/playerSlice";
+} from "../../redux/slices/playerSlice";
 import {
   getDeviceId,
   getDontPopQueue,
-  getPlayingTrack,
   getShuffle,
   getTracksManuallyAddedToQueue,
-} from "../redux/slices/selectors";
+  getSleepTimer,
+  getSleepTimerMinutes,
+} from "../../redux/slices/selectors";
+import { SleepModal } from "./SleepModal";
+import { COLORS } from "../../constants";
+import { MinutesToDisplayTime } from "../../utils";
 
 interface PlayerProps {
   accessToken: string | null;
@@ -27,10 +32,13 @@ interface PlayerProps {
 
 export const Player = ({ accessToken }: PlayerProps) => {
   const dispatch = useAppDispatch();
+  const [isSleepModalOpen, setIsSleepModalOpen] = useState(false);
   const deviceId = useAppSelector(getDeviceId);
   const shuffle = useAppSelector(getShuffle);
   const dontPopQueue = useAppSelector(getDontPopQueue);
   const tracksManuallyAddedToQueue = useAppSelector(getTracksManuallyAddedToQueue);
+  const sleepTimer = useAppSelector(getSleepTimer);
+  const sleepTimerMinutes = useAppSelector(getSleepTimerMinutes);
   const { toggleShuffle } = usePlayer();
 
   if (!accessToken) return null;
@@ -87,11 +95,19 @@ export const Player = ({ accessToken }: PlayerProps) => {
     }
   };
 
+  const handleToggleSleepModal = () => {
+    setIsSleepModalOpen(!isSleepModalOpen);
+  };
+
   return (
     <PlayerContainer>
       <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
         <ShuffleIcon height={24} width={24} />
       </ShuffleIconContainer>
+      <ClockIconContainer onClick={handleToggleSleepModal} isActive={!!sleepTimerMinutes}>
+        <ClockIcon height={22} width={22} />
+        {!!sleepTimerMinutes && <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>}
+      </ClockIconContainer>
       <SpotifyPlayer
         token={accessToken}
         showSaveIcon
@@ -99,6 +115,9 @@ export const Player = ({ accessToken }: PlayerProps) => {
         syncExternalDevice
         uris={[]}
       />
+      {isSleepModalOpen && (
+        <SleepModal isOpen handleCloseSleepModal={handleToggleSleepModal} />
+      )}
     </PlayerContainer>
   );
 };
@@ -110,10 +129,26 @@ const PlayerContainer = styled.div`
 const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
   position: absolute;
   z-index: 1000000000000;
-  top: calc(50% - 9px);
+  top: 20px;
   left: calc(50% - 110px);
   cursor: pointer;
   path {
     stroke: ${({ isActive }) => (isActive ? "blue" : "lightgrey")};
+  }
+`;
+
+const ClockIconContainer = styled.div<{ isActive: boolean }>`
+  position: absolute;
+  z-index: 1000000000000;
+  top: 29px;
+  right: 190px;
+  cursor: pointer;
+  path {
+    fill: ${({ isActive }) => isActive && COLORS.primary};
+  }
+  font-size: 10px;
+  p {
+    margin-top: 0px;
+    color: ${COLORS.primary};
   }
 `;

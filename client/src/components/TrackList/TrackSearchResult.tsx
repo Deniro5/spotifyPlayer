@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
-import { Track } from "../../types";
+import { Track, View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   addSelectedTrack,
@@ -21,6 +21,7 @@ import {
   getSelectedTracksHash,
   getSelectedTracksHashLength,
   getSongsStatusHash,
+  getCurrentView,
 } from "../../redux/slices/selectors";
 import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
 import { uriToId } from "../../utils";
@@ -39,9 +40,10 @@ export const TrackSearchResult = ({
   index,
 }: TrackSearchResultProps) => {
   const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration_ms);
-  const { pause, play } = useSpotifyApiActions();
+  const { pause, play, addLikedSongs, removeLikedSongs } = useSpotifyApiActions();
   const { uri, albumName } = track;
   const accessToken = useAppSelector(getAccessToken);
+  const currentView = useAppSelector(getCurrentView);
   const playingTrack = useAppSelector(getPlayingTrack);
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
@@ -50,6 +52,10 @@ export const TrackSearchResult = ({
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const songsStatusHash = useAppSelector(getSongsStatusHash);
   const dispatch = useAppDispatch();
+  const isSaved = useMemo(
+    () => songsStatusHash[uriToId(track.uri)],
+    [track, songsStatusHash]
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.metaKey) {
@@ -117,6 +123,15 @@ export const TrackSearchResult = ({
     }
   };
 
+  const handleSavedStatusClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (isSaved) {
+      removeLikedSongs([uri], currentView === View.LIKED_SONGS);
+    } else {
+      addLikedSongs([uri], currentView === View.LIKED_SONGS);
+    }
+  };
+
   return (
     <OuterContainer>
       <Container
@@ -128,15 +143,22 @@ export const TrackSearchResult = ({
         <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
         <TrackAlbum>{albumName}</TrackAlbum>
         <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
-        <SavedStatusContainer isSaved={songsStatusHash[uriToId(track.uri)]}>
-          <HeartIcon height={14} width={16} />
-        </SavedStatusContainer>
-        <CheckboxContainer
-          disabled={selectedTracksHashLength < 2}
-          onClick={handleCheckboxClick}
-        >
-          <StyledCheckbox type='checkbox' checked={isSelected} readOnly />
-        </CheckboxContainer>
+        <RightColumn>
+          {selectedTracksHashLength < 2 ? (
+            <SavedStatusContainer
+              onClick={handleSavedStatusClick}
+              isSaved={
+                songsStatusHash[uriToId(track.uri)] || currentView === View.LIKED_SONGS
+              }
+            >
+              <HeartIcon height={14} width={16} />
+            </SavedStatusContainer>
+          ) : (
+            <CheckboxContainer onClick={handleCheckboxClick}>
+              <StyledCheckbox type='checkbox' checked={isSelected} readOnly />
+            </CheckboxContainer>
+          )}
+        </RightColumn>
       </Container>
     </OuterContainer>
   );
@@ -218,17 +240,19 @@ const SavedStatusContainer = styled.div<{ isSaved: boolean }>`
   `}
 `;
 
-const CheckboxContainer = styled.div<{ disabled: boolean }>`
+const CheckboxContainer = styled.div`
   padding: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
-  visibility: ${({ disabled }) => (disabled ? "hidden" : "visible")};
-  pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 `;
 
 const StyledCheckbox = styled.input`
   cursor: pointer;
   height: 16px;
   width: 16px;
+`;
+
+const RightColumn = styled.div`
+  padding-right: 10px;
 `;

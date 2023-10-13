@@ -101,7 +101,8 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     if (!selectedPlaylistId) {
       //If we are on liked songs
       removeLikedSongs(
-        Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray]))
+        Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray])),
+        true
       );
     } else {
       removeTracks();
