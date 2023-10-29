@@ -152,3 +152,5 @@ export const getSleepTimerMinutes = createSelector(
   [getRootState],
   (state) => state.player.sleepTimerMinutes
 );
+
+export const getToast = createSelector([getRootState], (state) => state.player.toast);

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
 import { ReactComponent as HomeIcon } from "../../assets/home.svg";
+import { ReactComponent as RecentIcon } from "../../assets/recently-played.svg";
 import { View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
@@ -53,7 +54,7 @@ const Menu = ({}) => {
         isActive={currentView === View.RECENT_SONGS}
       >
         <IconContainer isActive={currentView === View.RECENT_SONGS}>
-          <HeartIcon height={14} width={16} />
+          <RecentIcon height={14} width={14} />
         </IconContainer>
         {View.RECENT_SONGS}
       </MenuItem>

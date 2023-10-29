@@ -25,7 +25,8 @@ const SleepModal: React.FC<ISleepModalProps> = ({ handleCloseSleepModal, isOpen 
   const sleepTimer = useAppSelector(getSleepTimer);
 
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newHours = parseInt(e.target.value, 10);
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    const newHours = parseInt(value, 10);
     setHours(newHours);
   };
 
@@ -149,6 +150,19 @@ const FormContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+  input[type="number"] {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+  }
+
+  /* For Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 `;
 
 const FieldContainer = styled.div`

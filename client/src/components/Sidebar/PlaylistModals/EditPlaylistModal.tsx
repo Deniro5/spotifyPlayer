@@ -3,6 +3,9 @@ import { useAppSelector, useAppDispatch } from "../../../hooks";
 import { updatePlaylist } from "../../../redux/slices/playerSlice";
 import { PlaylistModal } from "./PlaylistModal";
 import { getAccessToken, getPlaylistById } from "../../../redux/slices/selectors";
+import useToast from "../../../hooks/useToast";
+import usePlaylistActions from "../../../hooks/usePlaylistActions";
+import { isAlphaNumeric } from "../../../utils";
 
 export type IEditPlaylistModalProps = {
   isOpen: boolean;
@@ -15,13 +18,13 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
   handleClose,
   playlistId,
 }: IEditPlaylistModalProps) => {
-  const dispatch = useAppDispatch();
+  const { handlePlaylistUpdate } = usePlaylistActions(null);
 
-  const accessToken = useAppSelector(getAccessToken);
   const playlist = useAppSelector(getPlaylistById(playlistId));
 
   const [name, setName] = useState(playlist?.name || "");
   const [description, setDescription] = useState(playlist?.description || "");
+  const [error, setError] = useState<string | null>(null);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -31,32 +34,22 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
     setDescription(e.target.value);
   };
 
+  const isValid = () => {
+    if (!name.length) {
+      setError("Name field cannot be blank");
+      return false;
+    } else if (!isAlphaNumeric(name) || !isAlphaNumeric(description)) {
+      setError("Invalid characters in name/description field");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
   const handleUpdatePlaylist = () => {
-    if (!name.length || !playlist) return;
-    fetch(`https://api.spotify.com/v1/playlists/${playlist.id}`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({ name, ...(description.length ? { description } : {}) }),
-    })
-      .then((res) => {
-        if (res.status !== 200) return;
-        dispatch(
-          updatePlaylist({
-            ...playlist,
-            name,
-            description,
-          })
-        );
-        handleClose();
-      })
-      .catch((err) => {
-        //FIX put this error on the modal and dont close!
-        console.log(err);
-      });
+    if (!playlist || !isValid()) return;
+    handlePlaylistUpdate(playlist, name, description);
+    handleClose();
   };
 
   return (
@@ -69,6 +62,7 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
       description={description}
       handleNameChange={handleNameChange}
       handleDescriptionChange={handleDescriptionChange}
+      error={error}
     />
   );
 };

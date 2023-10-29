@@ -22,8 +22,8 @@ const PlaylistsList = () => {
   const playlists = useAppSelector(getPlaylists);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
-  const [contextMenuX, setContextMenuX] = useState<number | null>(null);
-  const [contextMenuY, setContextMenuY] = useState<number | null>(null);
+  const [contextMenuX, setContextMenuX] = useState<number>(0);
+  const [contextMenuY, setContextMenuY] = useState<number>(0);
   const dispatch = useAppDispatch();
 
   const handleModalOpen = () => {

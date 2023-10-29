@@ -13,12 +13,13 @@ export type IPlaylistModalProps = {
   handleConfirm: () => void;
   handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  error: string | null;
 };
 
 const customModalStyle = {
   content: {
     width: "350px",
-    height: "360px",
+    height: "380px",
     left: "calc(50% - 196px)",
     top: "calc(50% - 250px)",
   },
@@ -33,18 +34,22 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
   handleConfirm,
   handleNameChange,
   handleDescriptionChange,
+  error,
 }: IPlaylistModalProps) => {
   return (
     <Modal isOpen={isOpen} onRequestClose={handleClose} style={customModalStyle}>
       <Title>{title}</Title>
-      <FieldContainer>
-        <FieldLabel>Name</FieldLabel>
-        <NameField value={name} onChange={handleNameChange} />
-      </FieldContainer>
-      <FieldContainer>
-        <FieldLabel>Description</FieldLabel>
-        <DescriptionField value={description} onChange={handleDescriptionChange} />
-      </FieldContainer>
+      <Error> {error || ""} </Error>
+      <Fields>
+        <FieldContainer>
+          <FieldLabel>Name</FieldLabel>
+          <NameField value={name} onChange={handleNameChange} />
+        </FieldContainer>
+        <FieldContainer>
+          <FieldLabel>Description</FieldLabel>
+          <DescriptionField value={description} onChange={handleDescriptionChange} />
+        </FieldContainer>
+      </Fields>
       <ButtonContainer>
         <Button
           width={120}
@@ -70,6 +75,22 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
   );
 };
 
+const Fields = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const Error = styled.div`
+  color: ${COLORS.red};
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin: -10px;
+  height: 20px;
+`;
+
 const FieldContainer = styled.div``;
 
 const FieldLabel = styled.p`
@@ -90,7 +111,6 @@ const DescriptionField = styled.textarea`
   resize: none;
   height: 85px;
   padding: 10px;
-  width: 328px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu";
   font-size: 15px;
   &:focus {
@@ -109,7 +129,7 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   width: 270px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 40px;
 `;
 
 export { PlaylistModal };

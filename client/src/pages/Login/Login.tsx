@@ -18,7 +18,6 @@ export const Login = () => {
 
   return (
     <Container>
-      <Title> Spotify Alternate </Title>
       <StyledButton id='login' href={AUTH_URL}>
         {" "}
         Login With Spotify{" "}
@@ -29,7 +28,9 @@ export const Login = () => {
 
 const Container = styled.div`
   text-align: center;
-  margin-top: 40vh;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(109.6deg, rgb(255, 207, 84) 11.2%, rgb(255, 158, 27) 91.1%);
 `;
 
 const StyledButton = styled.a`

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
-import styled from "styled-components";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
 import { EditPlaylistModal } from "../Sidebar/PlaylistModals/EditPlaylistModal";
 import Dropdown from "react-multilevel-dropdown";
+import { getAdjustedPopoverPosition } from "../../utils";
 
 export type IPlaylistContextMenuProps = {
   contextMenuId: string | null;
   setContextMenuId: React.Dispatch<React.SetStateAction<string | null>>;
-  contextMenuX: number | null;
-  contextMenuY: number | null;
+  contextMenuX: number;
+  contextMenuY: number;
 };
 
 const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
@@ -22,13 +22,20 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editPlaylistId, setEditPlaylistId] = useState<string | null>(null);
 
-  const { handlePlaylistDelete, handleRenamePlaylist } =
-    usePlaylistActions(contextMenuId);
+  const { handlePlaylistDelete } = usePlaylistActions(contextMenuId);
   //contentPosition is not working so use this for now instead
   const getContainerStyle = () => {
+    const popoverWidth = 225;
+    const popoverHeight = 71;
+    const { adjustedX, adjustedY } = getAdjustedPopoverPosition(
+      contextMenuX,
+      contextMenuY,
+      popoverWidth,
+      popoverHeight
+    );
     return {
-      top: `${contextMenuY}px`,
-      left: `${contextMenuX}px`,
+      top: `${adjustedY}px`,
+      left: `${adjustedX}px`,
     };
   };
 

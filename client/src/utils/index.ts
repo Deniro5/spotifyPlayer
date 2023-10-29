@@ -29,3 +29,30 @@ export const debounce = (func: () => {}, timeout: number) => {
 
 export const hoursToMilliseconds = (hours: number) => hours * 3600000;
 export const minutesToMilliseconds = (minutes: number) => minutes * 60000;
+
+export const getAdjustedPopoverPosition = (
+  xPosition: number,
+  yPosition: number,
+  popoverWidth: number,
+  popoverHeight: number
+) => {
+  //adjusts popover position to prevent it from overflowing off screen
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  let adjustedX = xPosition;
+  let adjustedY = yPosition;
+
+  if (adjustedX + popoverWidth > screenWidth) {
+    adjustedX = screenWidth - popoverWidth;
+  }
+
+  if (adjustedY + popoverHeight > screenHeight) {
+    adjustedY = screenHeight - popoverHeight;
+  }
+
+  return { adjustedX, adjustedY };
+};
+
+export const isAlphaNumeric = (str: string) => {
+  return /^[a-zA-Z0-9]*$/.test(str);
+};

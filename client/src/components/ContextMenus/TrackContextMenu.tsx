@@ -14,6 +14,7 @@ import {
 } from "../../redux/slices/selectors";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { Track } from "../../types";
+import { getAdjustedPopoverPosition } from "../../utils";
 
 export type ITrackContextMenuProps = {
   contextMenuTrack: Track | null;
@@ -37,7 +38,8 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const lastPlaylistAddedTo = useAppSelector(getLastPlaylistAddedTo);
   const selectedTracksArray = useAppSelector(getSelectedTracksArray);
-  const { addToQueue, removeLikedSongs } = useSpotifyApiActions();
+  const { removeLikedSongs } = useSpotifyApiActions();
+  const { addToQueue } = useTrackActions([null]);
 
   const { addTracks, removeTracks } = useTrackActions(
     Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray]))
@@ -46,19 +48,16 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const getStyles = useCallback(() => {
     //TODO: Clean this up. At least use constants rather than 'magic numbers'
     const popoverWidth = 225;
-    const popoverHeight = 107;
+    const popoverHeight = 142;
+    const { adjustedX, adjustedY } = getAdjustedPopoverPosition(
+      contextMenuX,
+      contextMenuY,
+      popoverHeight,
+      popoverWidth
+    );
+
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-    let adjustedX = contextMenuX;
-    let adjustedY = contextMenuY;
-
-    if (adjustedX + popoverWidth > screenWidth) {
-      adjustedX = screenWidth - popoverWidth;
-    }
-
-    if (adjustedY + popoverHeight > screenHeight) {
-      adjustedY = screenHeight - popoverHeight;
-    }
     const submenuWidth = 180;
     //36 is the height of a menu item
     const submenuHeight = Math.min(playlists.length * 36, 259);

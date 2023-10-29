@@ -128,7 +128,6 @@ const PlayerContainer = styled.div`
 
 const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
   position: absolute;
-  z-index: 1000000000000;
   top: 20px;
   left: calc(50% - 110px);
   cursor: pointer;
@@ -139,7 +138,6 @@ const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
 
 const ClockIconContainer = styled.div<{ isActive: boolean }>`
   position: absolute;
-  z-index: 1000000000000;
   top: 29px;
   right: 190px;
   cursor: pointer;

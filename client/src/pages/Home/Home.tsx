@@ -9,9 +9,10 @@ import Header from "../../components/Header";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Router from "../../components/Router";
 import { setAccessToken } from "../../redux/slices/playerSlice";
-import { Track } from "../../types";
+import { ToastType, Track } from "../../types";
 import { getSearch } from "../../redux/slices/selectors";
-
+import Toast from "../../components/Toast";
+import { setToast } from "../../redux/slices/playerSlice";
 interface HomeProps {
   code: string;
 }
@@ -22,49 +23,14 @@ const spotifyApi = new SpotifyWebApi({
 
 export const Home = ({ code }: HomeProps) => {
   const accessToken = useAuth(code);
-  const search = useAppSelector(getSearch);
-  const [searchResults, setSearchResults] = useState<Track[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(accessToken);
     if (!accessToken) return;
 
     spotifyApi.setAccessToken(accessToken);
     dispatch(setAccessToken(accessToken));
   }, [dispatch, accessToken]);
-
-  useEffect(() => {
-    if (!search) return setSearchResults([]);
-    if (!accessToken) return;
-    let cancel = false;
-    spotifyApi.searchTracks(search).then((res) => {
-      if (cancel) return;
-      if (res.body.tracks?.items) {
-        setSearchResults(
-          res?.body?.tracks?.items?.map((track) => {
-            const { album, name, uri, duration_ms, artists } = track;
-            const smallestAlbumImage = album.images.reduce((smallest, image) => {
-              if (smallest.height && image.height) {
-                if (image?.height < smallest?.height) return image;
-                return smallest;
-              }
-              return smallest;
-            }, album.images[0]);
-
-            return {
-              artist: artists[0].name,
-              name,
-              uri,
-              albumUrl: smallestAlbumImage.url,
-              albumName: "",
-              duration_ms,
-            };
-          })
-        );
-      }
-    });
-  }, [search, accessToken]);
 
   return (
     <Container>
@@ -80,6 +46,7 @@ export const Home = ({ code }: HomeProps) => {
           <Player accessToken={accessToken} />
         </PlayerContainer>
       </Main>
+      <Toast />
     </Container>
   );
 };

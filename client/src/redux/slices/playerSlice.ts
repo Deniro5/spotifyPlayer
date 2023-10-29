@@ -4,6 +4,7 @@ import {
   Playlist,
   PlaylistSortOptions,
   RecommendationSettings,
+  ToastType,
   User,
   View,
 } from "../../types";
@@ -40,6 +41,7 @@ export interface PlayerState {
   songsStatusHash: Record<string, boolean>;
   sleepTimer: NodeJS.Timeout | null;
   sleepTimerMinutes: number;
+  toast: { message: string; type: ToastType; duration?: number } | null;
 }
 
 // Define an initial state
@@ -75,6 +77,11 @@ const initialState: PlayerState = {
   songsStatusHash: {},
   sleepTimer: null,
   sleepTimerMinutes: 0,
+  toast: {
+    message: "Successfully added to playlist",
+    type: ToastType.ERROR,
+    duration: 800000000,
+  },
 };
 
 // Create a slice containing the configuration of the state
@@ -251,6 +258,16 @@ const playerSlice = createSlice({
       }
       state.sleepTimerMinutes--;
     },
+    setToast(
+      state,
+      action: PayloadAction<{
+        message: string;
+        type: ToastType;
+        duration?: number;
+      } | null>
+    ) {
+      state.toast = action.payload;
+    },
   },
 });
 
@@ -293,6 +310,7 @@ export const {
   clearSleepTimer,
   setSleepTimerMinutes,
   decrementSleepTimerMinutes,
+  setToast,
 } = playerSlice.actions;
 
 // Export default the slice reducer

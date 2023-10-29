@@ -1,5 +1,8 @@
 import { Moment } from "moment";
-
+export enum ToastType {
+  MESSAGE = "message",
+  ERROR = "error",
+}
 export enum View {
   HOME = "Home",
   BROWSE = "Browse",

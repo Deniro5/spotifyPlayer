@@ -7,6 +7,7 @@ import QueueResult from "./QueueResult";
 import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
 import { Track } from "../../../types";
 import { setSelectedTracksHash } from "../../../redux/slices/playerSlice";
+import { COLORS } from "../../../constants";
 
 const Queue = () => {
   const { isFetching } = useQueue();
@@ -34,24 +35,29 @@ const Queue = () => {
       <TitleContainer>
         <Title> Up Next: </Title>
       </TitleContainer>
-      <>
-        {queueTracks.slice(0, 2).map((track, index) => (
-          <QueueResult
-            key={track.uri}
-            track={track}
-            handleRightClick={handleRightClick}
-            index={index}
+      {queueTracks.length ? (
+        <>
+          {queueTracks.slice(0, 2).map((track, index) => (
+            <QueueResult
+              key={track.uri}
+              track={track}
+              handleRightClick={handleRightClick}
+              index={index}
+            />
+          ))}
+
+          <TrackContextMenu
+            setContextMenuTrack={setContextMenuTrack}
+            contextMenuX={contextMenuX}
+            contextMenuY={contextMenuY}
+            contextMenuTrack={contextMenuTrack}
+            hideAddToQueue
+            hideRemoveSong
           />
-        ))}
-      </>
-      <TrackContextMenu
-        setContextMenuTrack={setContextMenuTrack}
-        contextMenuX={contextMenuX}
-        contextMenuY={contextMenuY}
-        contextMenuTrack={contextMenuTrack}
-        hideAddToQueue
-        hideRemoveSong
-      />
+        </>
+      ) : (
+        <SubTitle> No tracks currently in the queue</SubTitle>
+      )}
     </Container>
   );
 };
@@ -72,6 +78,13 @@ const TitleContainer = styled.p`
   align-items: center;
   justify-content: space-between;
   width: 305px;
+`;
+
+const SubTitle = styled.p`
+  margin-left: 13px;
+  color: ${COLORS.mediumGrey};
+  font-size: 13px;
+  margin-top: -10px;
 `;
 
 export { Queue };

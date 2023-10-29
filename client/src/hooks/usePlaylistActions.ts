@@ -1,16 +1,47 @@
-import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { deletePlaylist } from "../redux/slices/playerSlice";
-import { PlaylistDetails } from "../types";
-import { getAccessToken } from "../redux/slices/selectors";
+import { addPlaylist, deletePlaylist, updatePlaylist } from "../redux/slices/playerSlice";
+import { Playlist } from "../types";
+import { getAccessToken, getCurrentUser } from "../redux/slices/selectors";
+import useToast from "./useToast";
 
 const usePlaylistActions = (playlistId: string | null) => {
   const accessToken = useAppSelector(getAccessToken);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const currentUser = useAppSelector(getCurrentUser);
   const dispatch = useAppDispatch();
+  const { setToastHelper, setErrorHelper } = useToast();
+
+  const handlePlaylistCreate = (name: string, description: string) => {
+    if (!name.length || !currentUser?.id || !accessToken) return;
+    fetch(`https://api.spotify.com/v1/users/${currentUser.id}/playlists`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ name, description }),
+    })
+      .then((res) => res.json())
+      .then((data: Playlist) => {
+        const { id, tracks, name, description } = data;
+        const newPlaylist = {
+          id,
+          tracks,
+          name,
+          description,
+          images: [{ url: "placeholder", height: 0, width: 0 }],
+        };
+        dispatch(addPlaylist(newPlaylist));
+        setToastHelper("Playlist successfully created");
+      })
+      .catch((err) => {
+        console.log(err);
+        setErrorHelper("Something went wrong. Please try again");
+      });
+  };
 
   const handlePlaylistDelete = () => {
-    if (!playlistId) return;
+    if (!playlistId || !accessToken) return;
     fetch(`https://api.spotify.com/v1/playlists/${playlistId}/followers`, {
       method: "DELETE",
       headers: {
@@ -20,32 +51,46 @@ const usePlaylistActions = (playlistId: string | null) => {
       .then((res) => {
         if (res.status !== 200) return;
         dispatch(deletePlaylist(playlistId));
+        setToastHelper("Playlist successfully deleted");
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       });
   };
 
-  const handleRenamePlaylist = (playlistDetails: PlaylistDetails) => {
-    if (!playlistId) return;
+  const handlePlaylistUpdate = (
+    playlist: Playlist,
+    name: string,
+    description: string
+  ) => {
+    if (!playlist?.id || !accessToken) return;
 
-    const { name, description } = playlistDetails;
-    fetch(`	https://api.spotify.com/v1/playlists/${playlistId}`, {
+    const { id } = playlist;
+    fetch(`https://api.spotify.com/v1/playlists/${id}`, {
       method: "PUT",
       headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ name, description }),
+      body: JSON.stringify({ name, ...(description.length ? { description } : {}) }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        //we need to put the response back
-        console.log(data);
+      .then((res) => {
+        if (res.status !== 200) return;
+        dispatch(
+          updatePlaylist({
+            ...playlist,
+            name,
+            description,
+          })
+        );
+        setToastHelper("Playlist successfully updated");
       })
       .catch((err) => {
+        //FIX put this error on the modal and dont close!
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       });
   };
 
@@ -65,11 +110,15 @@ const usePlaylistActions = (playlistId: string | null) => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
       });
   };
 
-  return { handleRenamePlaylist, handlePlaylistDelete, handleMoveTrack, errorMessage };
+  return {
+    handlePlaylistUpdate,
+    handlePlaylistDelete,
+    handlePlaylistCreate,
+    handleMoveTrack,
+  };
 };
 
 export default usePlaylistActions;

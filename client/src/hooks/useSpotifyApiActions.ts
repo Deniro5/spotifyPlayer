@@ -23,8 +23,6 @@ const useSpotifyApiActions = () => {
   const accessToken = useAppSelector(getAccessToken);
   const isPlaying = useAppSelector(getIsPlaying);
   const deviceId = useAppSelector(getDeviceId);
-  const queue = useAppSelector(getQueueTracks);
-  const tracksManuallyAddedToQueue = useAppSelector(getTracksManuallyAddedToQueue);
 
   const play = async (
     index: number | undefined,
@@ -68,35 +66,7 @@ const useSpotifyApiActions = () => {
     await next();
   };
 
-  const addToQueue = async (track: Track | null) => {
-    if (!accessToken || !track) return;
-
-    fetch(` https://api.spotify.com/v1/me/player/queue/?uri=${track.uri}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({}),
-    })
-      .then(() => {
-        if (tracksManuallyAddedToQueue.length === 0) {
-          dispatch(setQueueTracks([track, ...queue]));
-        } else if (tracksManuallyAddedToQueue.length === 1) {
-          let newQueueTracks = [...queue];
-          newQueueTracks.splice(1, 0, track);
-          dispatch(setQueueTracks(newQueueTracks));
-        }
-
-        dispatch(setTracksManuallyAddedToQueue([...tracksManuallyAddedToQueue, track]));
-      })
-      .catch((err) => {
-        console.log(err);
-        // console.log(err);
-        // setErrorMessage("An unexpected error occured");
-      });
-    // .finally(() => dispatch(setSelectedTracksHash({})));
-  };
-
+  //probably makes more sense in track actions
   const addLikedSongs = (uris: (string | null)[], isLikedSongs?: boolean) => {
     const idArray = uris.map((uri) => uriToId(uri));
     fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
@@ -117,6 +87,7 @@ const useSpotifyApiActions = () => {
       });
   };
 
+  //probably makes more sense in track actions
   const removeLikedSongs = (uris: (string | null)[], isLikedSongs?: boolean) => {
     const idArray = uris.map((uri) => uriToId(uri));
     fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
@@ -144,7 +115,6 @@ const useSpotifyApiActions = () => {
     shuffle,
     next,
     doubleNext,
-    addToQueue,
     addLikedSongs,
     removeLikedSongs,
   };
