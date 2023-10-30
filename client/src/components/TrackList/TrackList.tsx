@@ -158,8 +158,11 @@ const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
 `;
 
 const ScrollContainer = styled.div`
-  height: calc(100vh - 180px);
+  height: calc(100vh - 200px);
   overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const RightSidebar = styled.div`

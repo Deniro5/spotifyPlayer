@@ -59,13 +59,13 @@ const Main = styled.div`
 //i35px is the height of the header + div
 const Body = styled.div`
   display: flex;
-  height: calc(100vh - 143px);
   overflow-x: hidden;
+  max-height: calc(100vh - 170px);
 `;
 
 const ViewContainer = styled.div`
-  overflow-y: scroll;
   width: 100%;
+  overflow: hidden;
 `;
 
 const Container = styled.div``;

@@ -77,11 +77,7 @@ const initialState: PlayerState = {
   songsStatusHash: {},
   sleepTimer: null,
   sleepTimerMinutes: 0,
-  toast: {
-    message: "Successfully added to playlist",
-    type: ToastType.ERROR,
-    duration: 800000000,
-  },
+  toast: null,
 };
 
 // Create a slice containing the configuration of the state
