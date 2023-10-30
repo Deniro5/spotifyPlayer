@@ -16,7 +16,7 @@ const useRecommendations = () => {
     getShouldUseRecommendationSliders
   );
   const recommendationSettings = useAppSelector(getRecommendationSettings);
-  const [isFetching, setIsFetching] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
@@ -47,7 +47,7 @@ const useRecommendations = () => {
         if (data.tracks) {
           const filteredTracks = data.tracks
             .filter((track: SpotifyApi.TrackObjectFull) => track.uri !== playingTrack.uri)
-            .slice(0, 8);
+            .slice(0, 6);
           dispatch(
             setRecommendedTracks(
               filteredTracks.map((track: SpotifyApi.TrackObjectFull) => {

@@ -3,9 +3,15 @@ import useFetchLikedSongs from "../../hooks/useFetchLikedSongs";
 import TrackList from "../TrackList";
 
 const LikedSongs = () => {
-  const { isFetchingInitial, loadMoreTracks, errorMessage } = useFetchLikedSongs();
+  const { isFetchingInitial, loadMoreTracks } = useFetchLikedSongs();
 
-  return <TrackList isUserTracks={false} loadMoreTracks={loadMoreTracks} />;
+  return (
+    <TrackList
+      isLoading={isFetchingInitial}
+      isUserTracks={false}
+      loadMoreTracks={loadMoreTracks}
+    />
+  );
 };
 
 export { LikedSongs };

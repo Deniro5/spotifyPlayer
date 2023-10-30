@@ -3,12 +3,13 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 import { getAccessToken } from "../redux/slices/selectors";
 import { setPlaylists } from "../redux/slices/playerSlice";
 import { Playlist } from "../types";
+import useToast from "./useToast";
 
 const useFetchPlaylists = () => {
   const accessToken = useAppSelector(getAccessToken);
 
   const [isFetching, setIsFetching] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { setErrorHelper } = useToast();
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!accessToken) return;
@@ -36,16 +37,14 @@ const useFetchPlaylists = () => {
           );
         }
       })
-      .catch((err) => {
-        setErrorMessage("Unable to fetch playlists");
-        console.log(err);
+      .catch(() => {
+        setErrorHelper("Unable to fetch playlists. Please try again.");
       })
       .finally(() => setIsFetching(false));
   }, [dispatch, accessToken]);
 
   return {
     isFetching,
-    errorMessage,
   };
 };
 

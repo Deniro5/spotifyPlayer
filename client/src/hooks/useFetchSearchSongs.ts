@@ -9,16 +9,17 @@ import {
 } from "../redux/slices/selectors";
 import { uriToId } from "../utils";
 import useFetchLikedStatus from "./useFetchLikedStatus";
+import useToast from "./useToast";
 
 const useFetchSearchSongs = () => {
   const accessToken = useAppSelector(getAccessToken);
   const search = useAppSelector(getSearch);
+  const { setErrorHelper } = useToast();
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const { getLikedStatus } = useFetchLikedStatus();
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   //after we have a new search term we need to restart the fetch
@@ -62,24 +63,23 @@ const useFetchSearchSongs = () => {
           const trackIds = data.tracks.items.map((track: SpotifyApi.TrackObjectFull) =>
             uriToId(track?.uri || "")
           );
-          console.log(trackIds);
           getLikedStatus(trackIds);
           setFetchUrl(data.tracks?.next);
         }
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please Try Again");
       })
       .finally(() => setIsFetchingInitial(false));
   };
 
   //For the initial load after playlistId change
   useEffect(() => {
-    if (!accessToken || errorMessage || !search.length || !isFetchingInitial) return;
+    if (!accessToken || !search.length || !isFetchingInitial) return;
     loadMoreTracks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, errorMessage, isFetchingInitial]);
+  }, [accessToken, isFetchingInitial]);
 
   const noSearchTermEntered = useMemo(() => !search.length, [search]);
 
@@ -91,7 +91,6 @@ const useFetchSearchSongs = () => {
   return {
     isFetchingInitial,
     loadMoreTracks,
-    errorMessage,
     noResults,
     noSearchTermEntered,
   };

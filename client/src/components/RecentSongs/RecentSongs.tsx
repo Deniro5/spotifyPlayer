@@ -3,9 +3,11 @@ import TrackList from "../TrackList";
 import useFetchRecentSongs from "../../hooks/useFetchRecentSongs";
 
 const RecentSongs = () => {
-  const { errorMessage } = useFetchRecentSongs();
+  const { isFetching } = useFetchRecentSongs();
 
-  return <TrackList isUserTracks={false} loadMoreTracks={() => {}} />;
+  return (
+    <TrackList isLoading={isFetching} isUserTracks={false} loadMoreTracks={() => {}} />
+  );
 };
 
 export { RecentSongs };

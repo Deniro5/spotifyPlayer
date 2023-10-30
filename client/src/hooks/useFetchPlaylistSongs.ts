@@ -5,15 +5,16 @@ import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
 import { getAccessToken, getSelectedPlaylistId } from "../redux/slices/selectors";
 import useFetchLikedStatus from "./useFetchLikedStatus";
 import { uriToId } from "../utils";
+import useToast from "./useToast";
 
 const useFetchPlaylistSongs = () => {
   const accessToken = useAppSelector(getAccessToken);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const { getLikedStatus } = useFetchLikedStatus();
+  const { setErrorHelper } = useToast();
 
   const [fetchUrl, setFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   //after we have a new playlist id we need to restart the fetch
@@ -64,22 +65,21 @@ const useFetchPlaylistSongs = () => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       })
       .finally(() => setIsFetchingInitial(false));
   };
 
   //For the initial load after playlistId change
   useEffect(() => {
-    if (!accessToken || errorMessage || !selectedPlaylistId || !isFetchingInitial) return;
+    if (!accessToken || !selectedPlaylistId || !isFetchingInitial) return;
     loadMoreTracks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, errorMessage, isFetchingInitial]);
+  }, [accessToken, isFetchingInitial]);
 
   return {
     isFetchingInitial,
     loadMoreTracks,
-    errorMessage,
   };
 };
 

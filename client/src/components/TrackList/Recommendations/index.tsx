@@ -8,6 +8,7 @@ import { COLORS } from "../../../constants";
 import { Track } from "../../../types";
 import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
 import { setSelectedTracksHash } from "../../../redux/slices/playerSlice";
+import SkeletonLoader from "../../Common/Loaders/SkeletonLoader";
 
 const Recommendations = () => {
   const { isFetching } = useRecommendations();
@@ -32,15 +33,19 @@ const Recommendations = () => {
   return (
     <Container>
       <Title> Recommended Songs: </Title>
-      {recommendedTracks.length ? (
+      {isFetching ? (
+        <SkeletonLoader count={6} height={50} />
+      ) : recommendedTracks.length ? (
         <>
-          {recommendedTracks.map((track) => (
-            <RecommendationResult
-              key={track.uri}
-              track={track}
-              handleRightClick={handleRightClick}
-            />
-          ))}
+          <ScrollContainer>
+            {recommendedTracks.map((track) => (
+              <RecommendationResult
+                key={track.uri}
+                track={track}
+                handleRightClick={handleRightClick}
+              />
+            ))}
+          </ScrollContainer>
         </>
       ) : (
         <SubTitle> Start playing a song to see Recommendations</SubTitle>
@@ -58,6 +63,10 @@ const Recommendations = () => {
 
 const Container = styled.div`
   padding: 0px 20px;
+`;
+
+const ScrollContainer = styled.div`
+  overflow: scroll;
 `;
 const Title = styled.div`
   font-weight: 500;

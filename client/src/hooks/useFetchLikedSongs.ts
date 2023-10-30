@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import useToast from "./useToast";
 
 const useFetchLikedSongs = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
@@ -9,7 +10,7 @@ const useFetchLikedSongs = () => {
     `https://api.spotify.com/v1/me/tracks?offset=0&limit=${FETCH_LIMIT}`
   );
   const [isFetchingInitial, setIsFetchingInitial] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { setErrorHelper } = useToast();
   const dispatch = useAppDispatch();
 
   const loadMoreTracks = () => {
@@ -46,21 +47,20 @@ const useFetchLikedSongs = () => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("An unexpected error occured");
       })
       .finally(() => setIsFetchingInitial(false));
   };
 
   //For the initial load after username change
   useEffect(() => {
-    if (!accessToken || errorMessage) return;
+    if (!accessToken) return;
     loadMoreTracks();
-  }, [accessToken, errorMessage]);
+  }, [accessToken]);
 
   return {
     isFetchingInitial,
     loadMoreTracks,
-    errorMessage,
   };
 };
 

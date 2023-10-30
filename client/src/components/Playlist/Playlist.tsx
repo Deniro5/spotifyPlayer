@@ -3,9 +3,15 @@ import useFetchPlaylistSongs from "../../hooks/useFetchPlaylistSongs";
 import TrackList from "../TrackList";
 
 const Playlist = () => {
-  const { loadMoreTracks, errorMessage } = useFetchPlaylistSongs();
+  const { loadMoreTracks, isFetchingInitial } = useFetchPlaylistSongs();
 
-  return <TrackList isUserTracks loadMoreTracks={loadMoreTracks} />;
+  return (
+    <TrackList
+      isLoading={isFetchingInitial}
+      isUserTracks
+      loadMoreTracks={loadMoreTracks}
+    />
+  );
 };
 
 export { Playlist };

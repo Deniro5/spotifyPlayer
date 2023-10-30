@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setQueueTracks } from "../redux/slices/playerSlice";
 import { getAccessToken, getPlayingTrack, getShuffle } from "../redux/slices/selectors";
+import useToast from "./useToast";
 
 const useQueue = () => {
   const accessToken = useAppSelector(getAccessToken);
   const playingTrack = useAppSelector(getPlayingTrack);
   const shuffle = useAppSelector(getShuffle);
   const [isFetching, setIsFetching] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { setErrorHelper } = useToast();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -26,7 +27,6 @@ const useQueue = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.queue) {
-          //seems to be a race condition somewhere that sometimes puts the playing track at the front of the queue and sometimes doesnt.
           const filteredQueue = data.queue.filter(
             (track: SpotifyApi.TrackObjectFull) => track.uri !== playingTrack.uri
           );
@@ -49,14 +49,13 @@ const useQueue = () => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong while fetching the queue");
       })
       .finally(() => setIsFetching(false));
   }, [dispatch, accessToken, shuffle]);
 
   return {
     isFetching,
-    errorMessage,
   };
 };
 

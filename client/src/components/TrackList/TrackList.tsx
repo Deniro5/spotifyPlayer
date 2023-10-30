@@ -28,13 +28,15 @@ import {
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { Queue } from "./Queue";
 import { Track, View } from "../../types";
+import SkeletonLoader from "../Common/Loaders/SkeletonLoader";
 
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
   loadMoreTracks: () => void;
+  isLoading: boolean;
 };
 
-const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
+const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks, isLoading }) => {
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const { handleMoveTrack } = usePlaylistActions(selectedPlaylistId);
   const currentDisplayTracks = useAppSelector(
@@ -99,15 +101,19 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks }) => {
           )}
         </TrackListBatchOptions>
         <ScrollContainer id='scrollContainer'>
-          {currentDisplayTracks.map((track, index) => (
-            <TrackSearchResult
-              handleRightClick={(e) => handleRightClick(e, track)}
-              track={track}
-              key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-              index={index}
-            />
-          ))}
+          {isLoading ? (
+            <SkeletonLoader count={25} height={50} />
+          ) : (
+            currentDisplayTracks.map((track, index) => (
+              <TrackSearchResult
+                handleRightClick={(e) => handleRightClick(e, track)}
+                track={track}
+                key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
+                isSelected={Number.isInteger(selectedTracksHash[track.uri])}
+                index={index}
+              />
+            ))
+          )}
           <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
         </ScrollContainer>
 

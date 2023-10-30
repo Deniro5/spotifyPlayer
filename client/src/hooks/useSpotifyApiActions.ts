@@ -1,28 +1,20 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { spotifyApi } from "react-spotify-web-playback";
-import {
-  getAccessToken,
-  getDeviceId,
-  getIsPlaying,
-  getQueueTracks,
-  getTracksManuallyAddedToQueue,
-} from "../redux/slices/selectors";
+import { getAccessToken, getDeviceId, getIsPlaying } from "../redux/slices/selectors";
 import {
   addSongsStatusHash,
-  addTracksToDisplay,
   removeTracksFromDisplay,
   setDontPopQueue,
-  setQueueTracks,
-  setTracksManuallyAddedToQueue,
 } from "../redux/slices/playerSlice";
-import { Track } from "../types";
 import { uriToId } from "../utils";
+import useToast from "./useToast";
 
 const useSpotifyApiActions = () => {
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector(getAccessToken);
   const isPlaying = useAppSelector(getIsPlaying);
   const deviceId = useAppSelector(getDeviceId);
+  const { setErrorHelper } = useToast();
 
   const play = async (
     index: number | undefined,
@@ -83,7 +75,7 @@ const useSpotifyApiActions = () => {
       })
       .catch((err) => {
         console.log(err);
-        //setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       });
   };
 
@@ -105,7 +97,7 @@ const useSpotifyApiActions = () => {
       })
       .catch((err) => {
         console.log(err);
-        //setErrorMessage("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       });
   };
 

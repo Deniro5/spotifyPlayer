@@ -17,7 +17,7 @@ import useFetchPlaylists from "../../hooks/useFetchPlaylists";
 export type PlaylistsProps = {};
 
 const PlaylistsList = () => {
-  const { isFetching, errorMessage } = useFetchPlaylists();
+  const { isFetching } = useFetchPlaylists();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const playlists = useAppSelector(getPlaylists);
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);

@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
 import { uriToId } from "../utils";
 import useFetchLikedStatus from "./useFetchLikedStatus";
+import useToast from "./useToast";
 
 const useFetchRecentSongs = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const { setErrorHelper } = useToast();
   const { getLikedStatus } = useFetchLikedStatus();
   const dispatch = useAppDispatch();
 
@@ -26,8 +28,8 @@ const useFetchRecentSongs = () => {
   };
 
   useEffect(() => {
-    if (!accessToken || errorMessage) return;
-
+    if (!accessToken) return;
+    setIsFetching(true);
     const fetchUrl = `https://api.spotify.com/v1/me/player/recently-played?limit=50`;
     fetch(fetchUrl, {
       method: "GET",
@@ -63,12 +65,13 @@ const useFetchRecentSongs = () => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage("An unexpected error occured");
-      });
-  }, [dispatch, accessToken, errorMessage]);
+        setErrorHelper("Something went wrong. Please try again");
+      })
+      .finally(() => setIsFetching(false));
+  }, [dispatch, accessToken]);
 
   return {
-    errorMessage,
+    isFetching,
   };
 };
 

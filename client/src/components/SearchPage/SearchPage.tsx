@@ -4,13 +4,8 @@ import TrackList from "../TrackList";
 import styled from "styled-components";
 
 const SearchPage = () => {
-  const {
-    isFetchingInitial,
-    loadMoreTracks,
-    errorMessage,
-    noResults,
-    noSearchTermEntered,
-  } = useFetchSearchSongs();
+  const { isFetchingInitial, loadMoreTracks, noResults, noSearchTermEntered } =
+    useFetchSearchSongs();
 
   const getDisplayComponent = () => {
     if (noSearchTermEntered) {
@@ -18,7 +13,13 @@ const SearchPage = () => {
     } else if (noResults) {
       return <Message> No results </Message>;
     } else {
-      return <TrackList isUserTracks={false} loadMoreTracks={loadMoreTracks} />;
+      return (
+        <TrackList
+          isLoading={isFetchingInitial}
+          isUserTracks={false}
+          loadMoreTracks={loadMoreTracks}
+        />
+      );
     }
   };
 
