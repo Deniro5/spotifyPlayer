@@ -47,7 +47,7 @@ const useFetchLikedSongs = () => {
       })
       .catch((err) => {
         console.log(err);
-        setErrorHelper("An unexpected error occured");
+        setErrorHelper("Something went wrong. Please try again");
       })
       .finally(() => setIsFetchingInitial(false));
   };
