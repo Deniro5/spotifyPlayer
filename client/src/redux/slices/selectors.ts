@@ -1,6 +1,7 @@
 import { PayloadAction, createSelector } from "@reduxjs/toolkit";
 import playerSlice from "./playerSlice";
 import { RootState } from "../store";
+import { View } from "../../types";
 
 const getRootState = (state: RootState) => state;
 
@@ -154,3 +155,11 @@ export const getSleepTimerMinutes = createSelector(
 );
 
 export const getToast = createSelector([getRootState], (state) => state.player.toast);
+
+export const getIsRecommendationsView = createSelector(
+  [getRootState],
+  (state) =>
+    state.player.currentView === View.LIKED_SONGS ||
+    state.player.currentView === View.RECENT_SONGS ||
+    state.player.currentView === View.PLAYLIST
+);

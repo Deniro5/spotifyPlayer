@@ -15,8 +15,6 @@ const Header = ({}) => {
         return <HomeSettings />;
       case View.BROWSE:
         return <SearchBar />;
-      case View.PLAYLIST:
-        return <SearchBar />;
       default:
         return <SearchBar />;
     }
@@ -29,6 +27,8 @@ const Container = styled.div`
   padding: 20px;
   width: 100%;
   position: relative;
+  display: flex;
+  justify-content: center;
 `;
 
 export { Header };

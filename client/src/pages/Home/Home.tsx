@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Player } from "../../components/Player";
 import SpotifyWebApi from "spotify-web-api-node";
@@ -9,10 +9,13 @@ import Header from "../../components/Header";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Router from "../../components/Router";
 import { setAccessToken } from "../../redux/slices/playerSlice";
-import { ToastType, Track } from "../../types";
-import { getSearch } from "../../redux/slices/selectors";
+import {
+  getIsRecommendationsView,
+  getShowRecommendations,
+} from "../../redux/slices/selectors";
 import Toast from "../../components/Toast";
-import { setToast } from "../../redux/slices/playerSlice";
+import { Recommendations } from "../../components/TrackList/Recommendations";
+import { Queue } from "../../components/TrackList/Queue";
 interface HomeProps {
   code: string;
 }
@@ -24,6 +27,8 @@ const spotifyApi = new SpotifyWebApi({
 export const Home = ({ code }: HomeProps) => {
   const accessToken = useAuth(code);
   const dispatch = useAppDispatch();
+  const showRecommendations = useAppSelector(getShowRecommendations);
+  const isRecommendationsView = useAppSelector(getIsRecommendationsView);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -40,6 +45,12 @@ export const Home = ({ code }: HomeProps) => {
         <Body>
           <ViewContainer>
             <Router />
+            {showRecommendations && isRecommendationsView && (
+              <RightSidebar>
+                <Recommendations />
+                <Queue />
+              </RightSidebar>
+            )}
           </ViewContainer>
         </Body>
         <PlayerContainer>
@@ -56,15 +67,21 @@ const Main = styled.div`
   overflow: hidden;
 `;
 
+const RightSidebar = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 //i35px is the height of the header + div
 const Body = styled.div`
   display: flex;
   overflow-x: hidden;
-  max-height: calc(100vh - 170px);
+  height: calc(100vh - 170px);
 `;
 
 const ViewContainer = styled.div`
   width: 100%;
+  display: flex;
   overflow: hidden;
 `;
 

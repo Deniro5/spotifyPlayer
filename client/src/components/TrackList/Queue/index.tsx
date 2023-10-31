@@ -64,13 +64,12 @@ const Queue = () => {
 
 const Container = styled.div`
   padding: 0px 20px;
-  height: 20vh;
 `;
 const Title = styled.div`
   font-weight: 500;
   font-size: 16px;
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 2px;
   padding-left: 13px;
 `;
 

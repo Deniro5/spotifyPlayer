@@ -2,6 +2,8 @@ import React from "react";
 import useFetchSearchSongs from "../../hooks/useFetchSearchSongs";
 import TrackList from "../TrackList";
 import styled from "styled-components";
+import EmptySearch from "./EmptySearch";
+import Placeholder from "./Placeholder";
 
 const SearchPage = () => {
   const { isFetchingInitial, loadMoreTracks, noResults, noSearchTermEntered } =
@@ -9,9 +11,9 @@ const SearchPage = () => {
 
   const getDisplayComponent = () => {
     if (noSearchTermEntered) {
-      return <Message> Enter a search term above </Message>;
+      return <Placeholder />;
     } else if (noResults) {
-      return <Message> No results </Message>;
+      return <EmptySearch />;
     } else {
       return (
         <TrackList
@@ -27,9 +29,5 @@ const SearchPage = () => {
 
   return componentToReturn;
 };
-
-const Message = styled.div`
-  font-size: 14px;
-`;
 
 export { SearchPage };

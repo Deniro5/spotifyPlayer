@@ -34,18 +34,16 @@ const Recommendations = () => {
     <Container>
       <Title> Recommended Songs: </Title>
       {isFetching ? (
-        <SkeletonLoader count={6} height={50} />
+        <SkeletonLoader count={6} height={52} />
       ) : recommendedTracks.length ? (
         <>
-          <ScrollContainer>
-            {recommendedTracks.map((track) => (
-              <RecommendationResult
-                key={track.uri}
-                track={track}
-                handleRightClick={handleRightClick}
-              />
-            ))}
-          </ScrollContainer>
+          {recommendedTracks.map((track) => (
+            <RecommendationResult
+              key={track.uri}
+              track={track}
+              handleRightClick={handleRightClick}
+            />
+          ))}
         </>
       ) : (
         <SubTitle> Start playing a song to see Recommendations</SubTitle>
@@ -63,11 +61,9 @@ const Recommendations = () => {
 
 const Container = styled.div`
   padding: 0px 20px;
+  height: 355px;
 `;
 
-const ScrollContainer = styled.div`
-  overflow: scroll;
-`;
 const Title = styled.div`
   font-weight: 500;
   font-size: 16px;

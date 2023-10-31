@@ -5,28 +5,20 @@ import { TrackContextMenu } from "../ContextMenus/TrackContextMenu";
 import { COLORS } from "../../constants";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { Recommendations } from "./Recommendations";
 import {
   getSelectedPlaylistId,
   getSelectedTracksHash,
   getShowRecommendations,
   getSelectedTracksHashLength,
   getCurrentView,
+  getIsRecommendationsView,
 } from "../../redux/slices/selectors";
 import {
   moveTrackInDisplay,
-  setCurrentDisplayTracks,
   setSelectedTracksHash,
 } from "../../redux/slices/playerSlice";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-  DragStart,
-} from "react-beautiful-dnd";
+import { DropResult } from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
-import { Queue } from "./Queue";
 import { Track, View } from "../../types";
 import SkeletonLoader from "../Common/Loaders/SkeletonLoader";
 
@@ -46,8 +38,8 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks, isLoading }) => 
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
   const currentView = useAppSelector(getCurrentView);
-
   const showRecommendations = useAppSelector(getShowRecommendations);
+  const isRecommendationsView = useAppSelector(getIsRecommendationsView);
 
   useEffect(() => {
     const container = document.getElementById("scrollContainer");
@@ -93,47 +85,39 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks, isLoading }) => 
   };
 
   return (
-    <TrackListAndRecommendationsContainer>
-      <TrackListContainer isFullWidth={!showRecommendations}>
-        <TrackListBatchOptions>
-          {selectedTracksHashLength > 1 && (
-            <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
-          )}
-        </TrackListBatchOptions>
-        <ScrollContainer id='scrollContainer'>
-          {isLoading ? (
-            <SkeletonLoader count={25} height={50} />
-          ) : (
-            currentDisplayTracks.map((track, index) => (
-              <TrackSearchResult
-                handleRightClick={(e) => handleRightClick(e, track)}
-                track={track}
-                key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-                isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-                index={index}
-              />
-            ))
-          )}
-          <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
-        </ScrollContainer>
-
-        {contextMenuTrack && (
-          <TrackContextMenu
-            contextMenuTrack={contextMenuTrack}
-            setContextMenuTrack={setContextMenuTrack}
-            contextMenuX={contextMenuX}
-            contextMenuY={contextMenuY}
-            hideRemoveSong={currentView === View.BROWSE}
-          />
+    <TrackListContainer isFullWidth={!showRecommendations || !isRecommendationsView}>
+      <TrackListBatchOptions>
+        {selectedTracksHashLength > 1 && (
+          <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
         )}
-      </TrackListContainer>
-      {showRecommendations && (
-        <RightSidebar>
-          <Recommendations />
-          <Queue />
-        </RightSidebar>
+      </TrackListBatchOptions>
+      <ScrollContainer id='scrollContainer'>
+        {isLoading ? (
+          <SkeletonLoader count={25} height={50} />
+        ) : (
+          currentDisplayTracks.map((track, index) => (
+            <TrackSearchResult
+              handleRightClick={(e) => handleRightClick(e, track)}
+              track={track}
+              key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
+              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
+              index={index}
+            />
+          ))
+        )}
+        <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
+      </ScrollContainer>
+
+      {contextMenuTrack && (
+        <TrackContextMenu
+          contextMenuTrack={contextMenuTrack}
+          setContextMenuTrack={setContextMenuTrack}
+          contextMenuX={contextMenuX}
+          contextMenuY={contextMenuY}
+          hideRemoveSong={currentView === View.BROWSE}
+        />
       )}
-    </TrackListAndRecommendationsContainer>
+    </TrackListContainer>
   );
 };
 
@@ -154,10 +138,6 @@ const TrackListBatchOptions = styled.div`
   padding-right: 18px;
 `;
 
-const TrackListAndRecommendationsContainer = styled.div`
-  display: flex;
-`;
-
 const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
   width: ${({ isFullWidth }) => (isFullWidth ? "100%" : "75%")};
   padding: 0px 10px;
@@ -169,11 +149,6 @@ const ScrollContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-
-const RightSidebar = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 export { TrackList };
