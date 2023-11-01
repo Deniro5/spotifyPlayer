@@ -21,6 +21,7 @@ const Menu = ({}) => {
 
   return (
     <Container>
+      <Title> Menu </Title>
       <MenuItem
         onClick={() => handleMenuItemClick(View.HOME)}
         isActive={currentView === View.HOME}
@@ -70,29 +71,39 @@ const IconContainer = styled.div<{ isActive: boolean }>`
   margin-right: 6px;
   transform: translateY(3px);
   path {
-    stroke: ${({ isActive }) => isActive && COLORS.primary};
-    fill: ${({ isActive }) => isActive && COLORS.primary};
+    stroke: ${({ isActive }) => isActive && COLORS.white};
+    fill: ${({ isActive }) => isActive && COLORS.white};
   }
 `;
 
+export const Title = styled.div`
+  margin: 0;
+  font-weight: 800;
+  color: ${COLORS.darkFont};
+  font-size: 16px;
+  margin-bottom: 16px;
+`;
+
 export const MenuItem = styled.div<{ isActive: boolean }>`
-  color: ${({ isActive }) => (isActive ? COLORS.primary : "black")};
+  color: ${({ isActive }) => (isActive ? COLORS.white : COLORS.font)};
+  background: ${({ isActive }) => (isActive ? COLORS.primary : "")};
+  border-radius: 4px;
   transition: 0.1s;
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
   &:hover {
-    color: ${COLORS.primary};
+    color: ${({ isActive }) => (isActive ? COLORS.white : COLORS.primary)};
     ${IconContainer} {
       path {
-        stroke: ${COLORS.primary};
-        fill: ${COLORS.primary};
+        stroke: ${({ isActive }) => (isActive ? COLORS.white : COLORS.primary)};
+        fill: ${({ isActive }) => (isActive ? COLORS.white : COLORS.primary)};
       }
     }
   }
   display: flex;
   align-items: center;
-  padding: 7px 0px;
+  padding: 8px 10px;
 `;
 
 export { Menu };

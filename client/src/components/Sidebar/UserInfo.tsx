@@ -36,7 +36,7 @@ const UserName = styled.h2`
 
 const Email = styled.h3`
   font-weight: 400;
-  color: ${COLORS.mediumGrey};
+  color: ${COLORS.lightFont};
   font-size: 10px;
   margin-top: 4px;
 `;

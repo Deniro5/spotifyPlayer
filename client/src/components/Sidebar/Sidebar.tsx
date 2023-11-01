@@ -28,7 +28,7 @@ const Container = styled.div`
   width: 179px;
   padding: 0 35px;
   height: 100vh;
-  background: ${COLORS.white};
+  background: ${COLORS.secondary};
   position: fixed;
   border-right: 1px whitesmoke solid;
 `;

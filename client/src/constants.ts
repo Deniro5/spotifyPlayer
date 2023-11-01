@@ -1,17 +1,23 @@
 export const FETCH_LIMIT = 50;
 //#3F51B5
 export const COLORS = {
-  primary: "#932193",
+  primary: "#094EBE",
   darkPrimary: "#194bd1",
   lightPrimary: "#932193",
+  secondary: "#f7f7f7",
+  darkSecondary: "#e7e7e7",
   lightGrey: "lightgrey",
   mediumGrey: "#9d9d9d",
   white: "white",
   black: "black",
-  whitesmoke: "whitesmoke",
+  whitesmoke: "#f7f7f7",
   green: "#2ECC71",
   trackBackground: "#fefefe",
   red: "#E74C3C",
+
+  darkFont: "black",
+  font: "#4f4f4f",
+  lightFont: "grey", // chnage
 };
 
 export const TRACK_CONTEXT_MENU_OPTIONS = {
@@ -23,9 +29,13 @@ export const TRACK_CONTEXT_MENU_OPTIONS = {
 
 export const DEFAULT_TOAST_DURATION = 5000;
 
-// #ff8c00;
+// #ff8c00 - orange
 //MEDIUM SEA GREN
 //SLATE BLUE
 //ORANGE
-// #f5bc52
-//#932193
+// #f5bc52 - orange
+
+//#932193 - purple
+//#3F51B5 - blue
+//#FFA500 - another
+//094EBE - Accessible blue

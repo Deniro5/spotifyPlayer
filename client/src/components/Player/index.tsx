@@ -134,6 +134,7 @@ const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
   path {
     stroke: ${({ isActive }) => (isActive ? "blue" : "lightgrey")};
   }
+  z-index: 10;
 `;
 
 const ClockIconContainer = styled.div<{ isActive: boolean }>`
@@ -149,4 +150,5 @@ const ClockIconContainer = styled.div<{ isActive: boolean }>`
     margin-top: 0px;
     color: ${COLORS.primary};
   }
+  z-index: 10;
 `;

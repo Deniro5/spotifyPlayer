@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { MenuItem } from "./Menu";
+import { MenuItem, Title } from "./Menu";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import {
   setCurrentView,
@@ -11,7 +11,6 @@ import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
 import { getPlaylists, getSelectedPlaylistId } from "../../redux/slices/selectors";
-import { COLORS } from "../../constants";
 import useFetchPlaylists from "../../hooks/useFetchPlaylists";
 
 export type PlaylistsProps = {};
@@ -56,7 +55,7 @@ const PlaylistsList = () => {
 
   return (
     <Container>
-      <Title> MY PLAYLISTS </Title>
+      <Title> Playlists </Title>
       <PlaylistList>
         <MenuItem isActive={false} onClick={handleNewPlaylistClick}>
           Create Playlist
@@ -87,17 +86,13 @@ const Container = styled.div`
   margin-top: 30px;
 `;
 
-const Title = styled.div`
-  margin: 0;
-  font-weight: 800;
-  color: ${COLORS.black};
-  font-size: 14px;
-  margin-bottom: 20px;
-`;
-
 const PlaylistList = styled.div`
   height: calc(85vh - 260px);
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  padding-bottom: 10px;
 `;
 
 export { PlaylistsList };
