@@ -19,7 +19,6 @@ import {
   getDontPopQueue,
   getShuffle,
   getTracksManuallyAddedToQueue,
-  getSleepTimer,
   getSleepTimerMinutes,
 } from "../../redux/slices/selectors";
 import { SleepModal } from "./SleepModal";
@@ -33,18 +32,18 @@ interface PlayerProps {
 export const Player = ({ accessToken }: PlayerProps) => {
   const dispatch = useAppDispatch();
   const [isSleepModalOpen, setIsSleepModalOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const deviceId = useAppSelector(getDeviceId);
   const shuffle = useAppSelector(getShuffle);
   const dontPopQueue = useAppSelector(getDontPopQueue);
   const tracksManuallyAddedToQueue = useAppSelector(getTracksManuallyAddedToQueue);
-  const sleepTimer = useAppSelector(getSleepTimer);
   const sleepTimerMinutes = useAppSelector(getSleepTimerMinutes);
   const { toggleShuffle } = usePlayer();
 
   if (!accessToken) return null;
 
   const handlePlayerCallback = (state: State) => {
-    console.log(state);
+    if (!isLoaded && state.deviceId) setIsLoaded(true);
     if (state.deviceId && state.deviceId !== deviceId) {
       dispatch(setDeviceId(state.deviceId));
     }
@@ -99,21 +98,39 @@ export const Player = ({ accessToken }: PlayerProps) => {
     setIsSleepModalOpen(!isSleepModalOpen);
   };
 
+  const handleUpdateSavedStatus = (fn: (status: boolean) => any) => {
+    console.log(fn(true));
+  };
+
   return (
     <PlayerContainer>
-      <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
-        <ShuffleIcon height={24} width={24} />
-      </ShuffleIconContainer>
-      <ClockIconContainer onClick={handleToggleSleepModal} isActive={!!sleepTimerMinutes}>
-        <ClockIcon height={22} width={22} />
-        {!!sleepTimerMinutes && <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>}
-      </ClockIconContainer>
+      {isLoaded && (
+        <>
+          <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
+            <ShuffleIcon height={24} width={24} />
+          </ShuffleIconContainer>
+          <ClockIconContainer
+            onClick={handleToggleSleepModal}
+            isActive={!!sleepTimerMinutes}
+          >
+            <ClockIcon height={22} width={22} />
+            {!!sleepTimerMinutes && <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>}
+          </ClockIconContainer>
+        </>
+      )}
       <SpotifyPlayer
         token={accessToken}
         showSaveIcon
         callback={handlePlayerCallback}
         syncExternalDevice
         uris={[]}
+        styles={{
+          activeColor: COLORS.primary,
+          loaderSize: "20px",
+        }}
+        updateSavedStatus={(fn: (status: boolean) => any) => {
+          handleUpdateSavedStatus(fn);
+        }}
       />
       {isSleepModalOpen && (
         <SleepModal isOpen handleCloseSleepModal={handleToggleSleepModal} />
@@ -124,15 +141,16 @@ export const Player = ({ accessToken }: PlayerProps) => {
 
 const PlayerContainer = styled.div`
   position: relative;
+  border-top: 1px solid ${COLORS.lightSecondary};
 `;
 
 const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
   position: absolute;
-  top: 20px;
-  left: calc(50% - 110px);
+  top: 19px;
+  left: calc(50% - 90px);
   cursor: pointer;
   path {
-    stroke: ${({ isActive }) => (isActive ? "blue" : "lightgrey")};
+    stroke: ${({ isActive }) => (isActive ? COLORS.primary : "lightgrey")};
   }
   z-index: 10;
 `;

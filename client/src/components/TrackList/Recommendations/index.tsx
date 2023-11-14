@@ -32,7 +32,7 @@ const Recommendations = () => {
 
   return (
     <Container>
-      <Title> Recommended Songs: </Title>
+      <Title> Recommended Songs </Title>
       {isFetching ? (
         <SkeletonLoader count={6} height={52} />
       ) : recommendedTracks.length ? (
@@ -73,7 +73,7 @@ const Title = styled.div`
 
 const SubTitle = styled.p`
   margin-left: 13px;
-  color: ${COLORS.mediumGrey};
+  color: ${COLORS.lightFont};
   font-size: 13px;
   margin-top: 0px;
 `;

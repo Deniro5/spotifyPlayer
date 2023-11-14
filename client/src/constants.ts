@@ -4,8 +4,15 @@ export const COLORS = {
   primary: "#094EBE",
   darkPrimary: "#194bd1",
   lightPrimary: "#932193",
+
   secondary: "#f7f7f7",
   darkSecondary: "#e7e7e7",
+  lightSecondary: "whitesmoke",
+
+  font: "#4f4f4f",
+  darkFont: "black",
+  lightFont: "#767676",
+
   lightGrey: "lightgrey",
   mediumGrey: "#9d9d9d",
   white: "white",
@@ -14,10 +21,6 @@ export const COLORS = {
   green: "#2ECC71",
   trackBackground: "#fefefe",
   red: "#E74C3C",
-
-  darkFont: "black",
-  font: "#4f4f4f",
-  lightFont: "grey", // chnage
 };
 
 export const TRACK_CONTEXT_MENU_OPTIONS = {

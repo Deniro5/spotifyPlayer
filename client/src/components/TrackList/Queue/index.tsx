@@ -33,7 +33,7 @@ const Queue = () => {
   return (
     <Container>
       <TitleContainer>
-        <Title> Up Next: </Title>
+        <Title> Up Next </Title>
       </TitleContainer>
       {queueTracks.length ? (
         <>

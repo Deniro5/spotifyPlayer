@@ -41,7 +41,7 @@ const Container = styled.div`
   height: 50px;
   margin: 1px auto;
   border: 1px solid ${COLORS.whitesmoke};
-  color: ${COLORS.mediumGrey};
+  color: ${COLORS.lightFont};
   &:hover {
     background: ${COLORS.white};
   }

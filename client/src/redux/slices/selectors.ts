@@ -27,6 +27,12 @@ export const getPlaylistById = (playlistId: String | null) =>
     state.player.playlists.find((playlist) => playlist.id === playlistId)
   );
 
+export const getSelectedPlaylist = createSelector([getRootState], (state) =>
+  state.player.playlists.find(
+    (playlist) => state.player.selectedPlaylistId === playlist.id
+  )
+);
+
 export const getCurrentView = createSelector(
   [getRootState],
   (state) => state.player.currentView

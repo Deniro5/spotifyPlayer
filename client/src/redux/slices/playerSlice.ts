@@ -20,6 +20,7 @@ export interface PlayerState {
   playlists: Playlist[];
   currentView: View;
   currentDisplayTracks: Track[];
+  totalLikedSongs: number;
   playingTrack: Track | null;
   currentUser: User | null;
   selectedTracksHash: Record<string, number>;
@@ -52,6 +53,7 @@ const initialState: PlayerState = {
   playlists: [],
   currentView: View.HOME,
   currentDisplayTracks: [],
+  totalLikedSongs: 0,
   playingTrack: null,
   currentUser: null,
   selectedTracksHash: {},
@@ -124,6 +126,9 @@ const playerSlice = createSlice({
         ...(isInitialLoad ? [] : state.currentDisplayTracks),
         ...tracks,
       ];
+    },
+    setTotalLikedSongs(state, action: PayloadAction<number>) {
+      state.totalLikedSongs = action.payload;
     },
     moveTrackInDisplay(
       state,
@@ -278,6 +283,7 @@ export const {
   updatePlaylist,
   setCurrentView,
   setCurrentDisplayTracks,
+  setTotalLikedSongs,
   moveTrackInDisplay,
   addTracksToDisplay,
   removeTracksFromDisplay,

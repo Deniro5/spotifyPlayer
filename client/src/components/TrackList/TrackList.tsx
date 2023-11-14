@@ -145,6 +145,7 @@ const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
 
 const ScrollContainer = styled.div`
   height: calc(100vh - 200px);
+  border-top: 1px solid ${COLORS.lightSecondary};
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;

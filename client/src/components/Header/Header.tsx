@@ -5,6 +5,9 @@ import { SearchBar } from "./SearchBar";
 import { View } from "../../types";
 import { HomeSettings } from "./HomeSettings";
 import { getCurrentView } from "../../redux/slices/selectors";
+import { PlaylistHeader } from "./PlaylistHeader";
+import { RecentlyPlayedHeader } from "./RecentlyPlayedHeader";
+import { LikedSongsHeader } from "./LikedSongsHeader";
 
 const Header = ({}) => {
   const currentView = useAppSelector(getCurrentView);
@@ -15,6 +18,12 @@ const Header = ({}) => {
         return <HomeSettings />;
       case View.BROWSE:
         return <SearchBar />;
+      case View.LIKED_SONGS:
+        return <LikedSongsHeader />;
+      case View.RECENT_SONGS:
+        return <RecentlyPlayedHeader />;
+      case View.PLAYLIST:
+        return <PlaylistHeader />;
       default:
         return <SearchBar />;
     }
@@ -24,11 +33,9 @@ const Header = ({}) => {
 };
 
 const Container = styled.div`
-  padding: 20px;
   width: 100%;
   position: relative;
   display: flex;
-  justify-content: center;
 `;
 
 export { Header };

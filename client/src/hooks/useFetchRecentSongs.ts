@@ -30,7 +30,7 @@ const useFetchRecentSongs = () => {
   useEffect(() => {
     if (!accessToken) return;
     setIsFetching(true);
-    const fetchUrl = `https://api.spotify.com/v1/me/player/recently-played?limit=50`;
+    const fetchUrl = `https://api.spotify.com/v1/me/player/recently-played?limit=25`;
     fetch(fetchUrl, {
       method: "GET",
       headers: {
@@ -40,7 +40,7 @@ const useFetchRecentSongs = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.items) {
-          const uniqueTracks = removeDuplicateTracksFromArray(data.items).slice(0, 25);
+          const uniqueTracks = removeDuplicateTracksFromArray(data.items);
           dispatch(
             setCurrentDisplayTracks({
               tracks: uniqueTracks.map((track: SpotifyApi.TrackObjectFull) => {

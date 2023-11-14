@@ -136,6 +136,7 @@ export const TrackSearchResult = ({
     <OuterContainer>
       <Container
         isSelected={isSelected}
+        isFirst={index === 0}
         onClick={handleClick}
         onDoubleClick={handlePlayOrPause}
         onContextMenu={(e) => handleRightClick(e, uri)}
@@ -150,6 +151,7 @@ export const TrackSearchResult = ({
               isSaved={
                 songsStatusHash[uriToId(track.uri)] || currentView === View.LIKED_SONGS
               }
+              isSelected={isSelected}
             >
               <HeartIcon height={14} width={16} />
             </SavedStatusContainer>
@@ -168,9 +170,9 @@ const OuterContainer = styled.div`
   position: relative;
 `;
 
-const Container = styled.div<{ isSelected: boolean }>`
+const Container = styled.div<{ isSelected: boolean; isFirst: boolean }>`
   background: ${({ isSelected }) =>
-    isSelected ? COLORS.lightPrimary : COLORS.trackBackground};
+    isSelected ? COLORS.primary : COLORS.trackBackground};
   cursor: pointer;
   transition: 0.1s;
   display: flex;
@@ -178,10 +180,11 @@ const Container = styled.div<{ isSelected: boolean }>`
   align-items: center;
   height: 50px;
   margin: 1px auto;
+  margin-top: ${({ isFirst }) => isFirst && "-1px"};
   border: 1px solid ${COLORS.whitesmoke};
-  color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.mediumGrey)};
+  color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.lightFont)};
   &:hover {
-    background: ${({ isSelected }) => (isSelected ? COLORS.lightPrimary : COLORS.white)};
+    background: ${({ isSelected }) => (isSelected ? COLORS.primary : COLORS.whitesmoke)};
   }
   border-radius: 4px;
   -webkit-touch-callout: none;
@@ -219,23 +222,20 @@ const TrackAlbum = styled.div`
   text-overflow: ellipsis;
 `;
 
-const SavedStatusContainer = styled.div<{ isSaved: boolean }>`
+const SavedStatusContainer = styled.div<{ isSaved: boolean; isSelected: boolean }>`
   padding: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
-  &:hover {
-    path {
-      stroke: ${COLORS.primary};
-      fill: ${COLORS.primary};
-    }
+  path {
+    stroke: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.black)};
   }
-  ${({ isSaved }) =>
+  ${({ isSaved, isSelected }) =>
     isSaved &&
     `
   path {
-    stroke: ${COLORS.primary};
-    fill: ${COLORS.primary};
+    stroke: ${isSelected ? COLORS.white : COLORS.primary};
+    fill: ${isSelected ? COLORS.white : COLORS.primary};
   }
   `}
 `;
