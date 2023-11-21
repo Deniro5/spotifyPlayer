@@ -9,7 +9,7 @@ import { getPlaylistSortOption } from "../../redux/slices/selectors";
 
 export type IHomeSettingsProps = {};
 
-const HomeSettings: React.FC<IHomeSettingsProps> = ({}) => {
+const HomeHeader: React.FC<IHomeSettingsProps> = ({}) => {
   const dispatch = useAppDispatch();
   const playlistSortOption = useAppSelector(getPlaylistSortOption);
 
@@ -31,7 +31,8 @@ const HomeSettings: React.FC<IHomeSettingsProps> = ({}) => {
 };
 
 const Container = styled.div`
-  height: 48px;
+  padding-top: 20px;
+  padding-bottom: 34px;
   margin-left: 30px;
   display: flex;
   align-items: center;
@@ -45,4 +46,4 @@ const Label = styled.div`
   margin-right: 10px;
 `;
 
-export { HomeSettings };
+export { HomeHeader };

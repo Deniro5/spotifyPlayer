@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import {
+  setCurrentDisplayTracks,
+  setTotalRecentSongs,
+} from "../redux/slices/playerSlice";
 import { uriToId } from "../utils";
 import useFetchLikedStatus from "./useFetchLikedStatus";
 import useToast from "./useToast";
@@ -57,6 +60,7 @@ const useFetchRecentSongs = () => {
               isInitialLoad: true,
             })
           );
+          dispatch(setTotalRecentSongs(uniqueTracks.length));
           const trackIds = data.items.map((item: { track: SpotifyApi.TrackObjectFull }) =>
             uriToId(item.track.uri)
           );

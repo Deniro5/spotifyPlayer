@@ -3,15 +3,12 @@ import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
-import { ReactComponent as SettingIcon } from "../../assets/setting.svg";
-import { SettingsModal } from "./SettingsModal";
 import { setSearch } from "../../redux/slices/playerSlice";
 import { debounce } from "lodash";
 
 const SearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const search = useAppSelector((state) => state.player.search);
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [value, setValue] = useState<string>(search);
   const searchRef = useRef("");
 
@@ -29,14 +26,6 @@ const SearchBar: React.FC = () => {
     dispatch(setSearch(searchRef.current));
   }, 500);
 
-  const handleOpenSettingsModal = () => {
-    setIsSettingsModalOpen(true);
-  };
-
-  const handleCloseSettingsModal = () => {
-    setIsSettingsModalOpen(false);
-  };
-
   return (
     <SearchRowContainer>
       <Container>
@@ -49,12 +38,6 @@ const SearchBar: React.FC = () => {
           <SearchIcon height={16} width={16} />
         </SearchIconContainer>
       </Container>
-      <SettingIconContainer onClick={handleOpenSettingsModal}>
-        <SettingIcon height={20} width={20} />
-      </SettingIconContainer>
-      {isSettingsModalOpen && (
-        <SettingsModal isOpen handleCloseSettingsModal={handleCloseSettingsModal} />
-      )}
     </SearchRowContainer>
   );
 };
@@ -62,6 +45,9 @@ const SearchBar: React.FC = () => {
 const SearchRowContainer = styled.div`
   display: flex;
   align-items: center;
+  padding-top: 20px;
+  padding-bottom: 21px;
+  padding-left: 30px;
 `;
 
 const Container = styled.div`

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useAppSelector } from "../../hooks";
 import { SearchBar } from "./SearchBar";
 import { View } from "../../types";
-import { HomeSettings } from "./HomeSettings";
+import { HomeHeader } from "./HomeHeader";
 import { getCurrentView } from "../../redux/slices/selectors";
 import { PlaylistHeader } from "./PlaylistHeader";
 import { RecentlyPlayedHeader } from "./RecentlyPlayedHeader";
@@ -15,7 +15,7 @@ const Header = ({}) => {
   const getHeader = () => {
     switch (currentView) {
       case View.HOME:
-        return <HomeSettings />;
+        return <HomeHeader />;
       case View.BROWSE:
         return <SearchBar />;
       case View.LIKED_SONGS:

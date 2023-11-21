@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import { setCurrentDisplayTracks, setTotalLikedSongs } from "../redux/slices/playerSlice";
 import useToast from "./useToast";
 
 const useFetchLikedSongs = () => {
@@ -42,6 +42,7 @@ const useFetchLikedSongs = () => {
               isInitialLoad: isFetchingInitial,
             })
           );
+          dispatch(setTotalLikedSongs(data.total));
           setFetchUrl(data.next);
         }
       })

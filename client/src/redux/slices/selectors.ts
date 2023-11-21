@@ -43,6 +43,16 @@ export const getCurrentDisplayTracks = createSelector(
   (state) => state.player.currentDisplayTracks
 );
 
+export const getTotalLikedSongs = createSelector(
+  [getRootState],
+  (state) => state.player.totalLikedSongs
+);
+
+export const getTotalRecentSongs = createSelector(
+  [getRootState],
+  (state) => state.player.totalRecentSongs
+);
+
 export const getPlayingTrack = createSelector(
   [getRootState],
   (state) => state.player.playingTrack

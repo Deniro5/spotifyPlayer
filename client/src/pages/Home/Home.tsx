@@ -68,6 +68,9 @@ const Main = styled.div`
 `;
 
 const RightSidebar = styled.div`
+  @media (max-width: 1135px) {
+    display: none; // or any other display value you prefer for smaller screens
+  }
   display: flex;
   flex-direction: column;
 `;

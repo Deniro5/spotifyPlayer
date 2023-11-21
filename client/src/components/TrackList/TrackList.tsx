@@ -139,6 +139,9 @@ const TrackListBatchOptions = styled.div`
 `;
 
 const TrackListContainer = styled.div<{ isFullWidth: boolean }>`
+  @media (max-width: 1135px) {
+    width: 100% !important;
+  }
   width: ${({ isFullWidth }) => (isFullWidth ? "100%" : "75%")};
   padding: 0px 10px;
 `;

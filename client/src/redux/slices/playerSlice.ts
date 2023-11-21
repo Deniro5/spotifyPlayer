@@ -21,6 +21,7 @@ export interface PlayerState {
   currentView: View;
   currentDisplayTracks: Track[];
   totalLikedSongs: number;
+  totalRecentSongs: number;
   playingTrack: Track | null;
   currentUser: User | null;
   selectedTracksHash: Record<string, number>;
@@ -54,6 +55,7 @@ const initialState: PlayerState = {
   currentView: View.HOME,
   currentDisplayTracks: [],
   totalLikedSongs: 0,
+  totalRecentSongs: 0,
   playingTrack: null,
   currentUser: null,
   selectedTracksHash: {},
@@ -129,6 +131,9 @@ const playerSlice = createSlice({
     },
     setTotalLikedSongs(state, action: PayloadAction<number>) {
       state.totalLikedSongs = action.payload;
+    },
+    setTotalRecentSongs(state, action: PayloadAction<number>) {
+      state.totalRecentSongs = action.payload;
     },
     moveTrackInDisplay(
       state,
@@ -284,6 +289,7 @@ export const {
   setCurrentView,
   setCurrentDisplayTracks,
   setTotalLikedSongs,
+  setTotalRecentSongs,
   moveTrackInDisplay,
   addTracksToDisplay,
   removeTracksFromDisplay,
