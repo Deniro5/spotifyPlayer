@@ -10,7 +10,10 @@ import {
 import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
-import { getPlaylists, getSelectedPlaylistId } from "../../redux/slices/selectors";
+import {
+  getPlaylists,
+  getSelectedPlaylistId,
+} from "../../redux/slices/selectors";
 import useFetchPlaylists from "../../hooks/useFetchPlaylists";
 
 export type PlaylistsProps = {};
@@ -37,6 +40,10 @@ const PlaylistsList = () => {
     dispatch(setSelectedPlaylistId(id));
     dispatch(setCurrentView(View.PLAYLIST));
     dispatch(setSelectedTracksHash({}));
+  };
+
+  const hello = () => {
+    console.log("red");
   };
 
   const handleRightClick = (
@@ -67,11 +74,13 @@ const PlaylistsList = () => {
             isActive={selectedPlaylistId === playlist.id}
             key={playlist.id}
           >
-            {playlist.name}
+            <MenuItemText> {playlist.name} </MenuItemText>
           </MenuItem>
         ))}
       </PlaylistList>
-      {isModalOpen && <NewPlaylistModal isOpen handleClose={handleModalClose} />}
+      {isModalOpen && (
+        <NewPlaylistModal isOpen handleClose={handleModalClose} />
+      )}
       <PlaylistContextMenu
         contextMenuId={contextMenuId}
         setContextMenuId={setContextMenuId}
@@ -93,6 +102,13 @@ const PlaylistList = styled.div`
     display: none;
   }
   padding-bottom: 10px;
+`;
+
+const MenuItemText = styled.div`
+  max-width: 170px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export { PlaylistsList };

@@ -1,12 +1,15 @@
-import React from "react";
+/// <reference types="vite-plugin-svgr/client" />
 import styled from "styled-components";
-import { ReactComponent as SearchIcon } from "../../assets/search.svg";
-import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
-import { ReactComponent as HomeIcon } from "../../assets/home.svg";
-import { ReactComponent as RecentIcon } from "../../assets/recently-played.svg";
+import SearchIcon from "../../assets/search.svg?react";
+import HeartIcon from "../../assets/heart.svg?react";
+import HomeIcon from "../../assets/home.svg?react";
+import RecentIcon from "../../assets/recently-played.svg?react";
 import { View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
+import {
+  setCurrentView,
+  setSelectedPlaylistId,
+} from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
 import { getCurrentView } from "../../redux/slices/selectors";
 
@@ -26,7 +29,10 @@ const Menu = ({}) => {
         onClick={() => handleMenuItemClick(View.HOME)}
         isActive={currentView === View.HOME}
       >
-        <IconContainer isActive={currentView === View.HOME} style={{ marginTop: "-3px" }}>
+        <IconContainer
+          isActive={currentView === View.HOME}
+          style={{ marginTop: "-3px" }}
+        >
           <HomeIcon height={16} width={16} />
         </IconContainer>
         {View.HOME}
@@ -49,7 +55,6 @@ const Menu = ({}) => {
         </IconContainer>
         {View.LIKED_SONGS}
       </MenuItem>
-
       <MenuItem
         onClick={() => handleMenuItemClick(View.RECENT_SONGS)}
         isActive={currentView === View.RECENT_SONGS}

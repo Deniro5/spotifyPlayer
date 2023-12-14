@@ -1,9 +1,10 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React from "react";
 import { Track } from "../../../types";
 import styled from "styled-components";
 import PlayingGif from "../../../assets/sound.gif";
-import { ReactComponent as PlayIcon } from "../../../assets/play.svg";
-import { ReactComponent as PauseIcon } from "../../../assets/pause.svg";
+import PlayIcon from "../../../assets/play.svg?react";
+import PauseIcon from "../../../assets/pause.svg?react";
 import { COLORS } from "../../../constants";
 import { useAppSelector } from "../../../hooks";
 import { getIsPlaying, getPlayingTrack } from "../../../redux/slices/selectors";
@@ -30,7 +31,7 @@ const TrackTitleArtistAndImage: React.FC<ITrackTitleArtistAndImageProps> = ({
           </PlayStatus>
         )}
         <HiddenButton onClick={handlePlayOrPause}>
-          {isPlaying && playingTrack?.uri === uri ? (
+        {isPlaying && playingTrack?.uri === uri ? (
             <StyledPauseIcon height={18} width={18} />
           ) : (
             <StyledPlayIcon height={20} width={20} />

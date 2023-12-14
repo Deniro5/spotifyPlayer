@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch } from "../hooks";
-import { access } from "fs";
 import { setCurrentUser } from "../redux/slices/playerSlice";
 import { User } from "../types";
 

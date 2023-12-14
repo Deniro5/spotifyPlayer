@@ -1,7 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../../hooks";
-import { getSelectedPlaylist } from "../../redux/slices/selectors";
 import { COLORS } from "../../constants";
 
 export interface TrackListHeaderProps {
@@ -41,7 +38,7 @@ const PlaylistInfo = styled.div`
 
 const PlaylistName = styled.p`
   font-size: 18px;
-  width: 500px;
+  max-width: 500px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -53,7 +50,7 @@ const PlaylistName = styled.p`
 
 const PlaylistTrackCount = styled.p`
   font-size: 14px;
-  width: 500px;
+  max-width: 500px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

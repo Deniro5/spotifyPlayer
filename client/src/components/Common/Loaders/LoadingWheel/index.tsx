@@ -1,4 +1,3 @@
-import React from "react";
 import LoadingWheel from "../../../assets/loadingwheel.gif";
 import styled from "styled-components";
 

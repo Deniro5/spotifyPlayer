@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppSelector } from "../../hooks";
 import { getSearch } from "../../redux/slices/selectors";
 import styled from "styled-components";

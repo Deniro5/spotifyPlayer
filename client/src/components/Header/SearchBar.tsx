@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { ReactComponent as SearchIcon } from "../../assets/search.svg";
+import SearchIcon from "../../assets/search.svg?react";
 import { setSearch } from "../../redux/slices/playerSlice";
 import { debounce } from "lodash";
 
@@ -78,19 +78,6 @@ const SearchIconContainer = styled.div`
   justify-content: center;
   padding-left: 4px;
   top: 5px;
-`;
-
-const SettingIconContainer = styled.div`
-  margin-left: 10px;
-  cursor: pointer;
-  path {
-    fill: ${COLORS.black};
-  }
-  &:hover {
-    path {
-      fill: ${COLORS.primary};
-    }
-  }
 `;
 
 export { SearchBar };

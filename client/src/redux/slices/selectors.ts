@@ -1,5 +1,4 @@
-import { PayloadAction, createSelector } from "@reduxjs/toolkit";
-import playerSlice from "./playerSlice";
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { View } from "../../types";
 

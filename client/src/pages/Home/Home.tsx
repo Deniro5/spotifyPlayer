@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Player } from "../../components/Player";

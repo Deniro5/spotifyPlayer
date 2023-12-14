@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 // Import the previously created search slice
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import playerSliceReducer, { PlayerState } from "./slices/playerSlice";
+import playerSliceReducer from "./slices/playerSlice";
 
 // Create the store, adding the search slice to it
 export const store = configureStore({

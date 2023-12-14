@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../../hooks";
-import { updatePlaylist } from "../../../redux/slices/playerSlice";
+import { useAppSelector } from "../../../hooks";
 import { PlaylistModal } from "./PlaylistModal";
-import { getAccessToken, getPlaylistById } from "../../../redux/slices/selectors";
-import useToast from "../../../hooks/useToast";
+import { getPlaylistById } from "../../../redux/slices/selectors";
 import usePlaylistActions from "../../../hooks/usePlaylistActions";
 import { isAlphaNumeric } from "../../../utils";
 

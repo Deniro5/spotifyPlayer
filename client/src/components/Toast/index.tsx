@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+/// <reference types="vite-plugin-svgr/client" />
+import { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { COLORS, DEFAULT_TOAST_DURATION } from "../../constants";
-import { ReactComponent as CloseIcon } from "../../assets/close.svg";
+import CloseIcon from "../../assets/close.svg?react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { getToast } from "../../redux/slices/selectors";
 import { setToast } from "../../redux/slices/playerSlice";
@@ -17,7 +18,7 @@ const Toast = ({}) => {
 
   useEffect(() => {
     if (!toast) return;
-    const newCloseTimer = setTimeout(
+    setTimeout(
       () => closeToast(),
       toast.duration || DEFAULT_TOAST_DURATION
     );
@@ -27,7 +28,7 @@ const Toast = ({}) => {
     <ToastContainer show={!!toast} type={toast?.type}>
       {toast?.message}
       <CloseIconContainer onClick={closeToast}>
-        <CloseIcon height={18} width={18} fill={COLORS.white} />
+      <CloseIcon height={18} width={18} fill={COLORS.white} />
       </CloseIconContainer>
     </ToastContainer>
   );

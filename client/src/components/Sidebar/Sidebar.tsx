@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserInfo } from "./UserInfo";
 import { Menu } from "./Menu";
 import { PlaylistsList } from "./PlaylistsList";
 import SpotifyWebApi from "spotify-web-api-node";
-import { Playlist } from "../../types";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setPlaylists } from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
-import { getAccessToken } from "../../redux/slices/selectors";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",

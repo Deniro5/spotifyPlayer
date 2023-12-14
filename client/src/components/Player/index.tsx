@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SpotifyPlayer, { SpotifyTrack, State } from "react-spotify-web-playback";
 import usePlayer from "../../hooks/usePlayer";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { ReactComponent as ShuffleIcon } from "../../assets/shuffle.svg";
-import { ReactComponent as ClockIcon } from "../../assets/clock.svg";
+import ShuffleIcon from "../../assets/shuffle.svg?react";
+import ClockIcon  from "../../assets/clock.svg?react";
 import {
   popTracksManuallyAddedToQueue,
   setDeviceId,
@@ -12,7 +12,7 @@ import {
   setIsPlaying,
   setIsActive,
   setPlayingTrack,
-  setQueueTracks,
+  setQueueTracks, 
 } from "../../redux/slices/playerSlice";
 import {
   getDeviceId,
@@ -106,7 +106,7 @@ export const Player = ({ accessToken }: PlayerProps) => {
     <PlayerContainer>
       {isLoaded && (
         <>
-          <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
+        <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
             <ShuffleIcon height={24} width={24} />
           </ShuffleIconContainer>
           <ClockIconContainer

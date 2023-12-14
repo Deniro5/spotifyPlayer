@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
@@ -23,7 +24,7 @@ import {
   getSongsStatusHash,
   getCurrentView,
 } from "../../redux/slices/selectors";
-import { ReactComponent as HeartIcon } from "../../assets/heart.svg";
+import HeartIcon from "../../assets/heart.svg?react";
 import { uriToId } from "../../utils";
 
 interface TrackSearchResultProps {
@@ -153,7 +154,7 @@ export const TrackSearchResult = ({
               }
               isSelected={isSelected}
             >
-              <HeartIcon height={14} width={16} />
+            <HeartIcon height={14} width={16} />
             </SavedStatusContainer>
           ) : (
             <CheckboxContainer onClick={handleCheckboxClick}>

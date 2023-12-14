@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
   Playlist,
   PlaylistSortOptions,
@@ -9,14 +9,13 @@ import {
   View,
 } from "../../types";
 import { Track } from "../../types";
-import { RootState } from "../store";
 import { spotifyApi } from "react-spotify-web-playback";
 
 // Define the state of the slice as an object
 export interface PlayerState {
   accessToken: string | null;
   search: string;
-  selectedPlaylistId: string | null;
+  selectedPlaylistId: string | null
   playlists: Playlist[];
   currentView: View;
   currentDisplayTracks: Track[];

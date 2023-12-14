@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppSelector } from "../../hooks";
 import { getSelectedPlaylist } from "../../redux/slices/selectors";
 import { TrackListHeader } from "./TrackListHeader";

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React from "react";
+/// <reference types="vite-plugin-svgr/client" />
 import { Login } from "./pages/Login/Login";
 import { Home } from "./pages/Home/Home";
 

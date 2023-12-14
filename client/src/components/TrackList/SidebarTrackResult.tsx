@@ -1,11 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Track } from "../../types";
-import { useAppSelector } from "../../hooks";
 import { COLORS } from "../../constants";
-import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
-import { getAccessToken, getPlayingTrack } from "../../redux/slices/selectors";
 
 interface SidebarTrackResultProps {
   track: Track;

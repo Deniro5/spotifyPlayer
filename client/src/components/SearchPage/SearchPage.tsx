@@ -1,7 +1,5 @@
-import React from "react";
 import useFetchSearchSongs from "../../hooks/useFetchSearchSongs";
 import TrackList from "../TrackList";
-import styled from "styled-components";
 import EmptySearch from "./EmptySearch";
 import Placeholder from "./Placeholder";
 
