@@ -42,10 +42,6 @@ const PlaylistsList = () => {
     dispatch(setSelectedTracksHash({}));
   };
 
-  const hello = () => {
-    console.log("red");
-  };
-
   const handleRightClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: string
@@ -96,12 +92,11 @@ const Container = styled.div`
 `;
 
 const PlaylistList = styled.div`
-  height: calc(85vh - 260px);
+  height: calc(85vh - 312px);
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
-  padding-bottom: 10px;
 `;
 
 const MenuItemText = styled.div`

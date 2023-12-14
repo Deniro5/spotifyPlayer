@@ -61,6 +61,8 @@ export const Home = ({ code }: HomeProps) => {
   );
 };
 
+const Container = styled.div``;
+
 const Main = styled.div`
   padding-left: 250px;
   overflow: hidden;
@@ -78,16 +80,13 @@ const RightSidebar = styled.div`
 const Body = styled.div`
   display: flex;
   overflow-x: hidden;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 171px);
 `;
 
 const ViewContainer = styled.div`
   width: 100%;
   display: flex;
-  overflow: hidden;
 `;
-
-const Container = styled.div``;
 
 const PlayerContainer = styled.div`
   width: 100%;

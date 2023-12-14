@@ -71,7 +71,11 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     }
 
     return {
-      mainStyle: { top: `${adjustedY}px`, left: `${adjustedX}px`, zIndex: "10" },
+      mainStyle: {
+        top: `${adjustedY}px`,
+        left: `${adjustedX}px`,
+        zIndex: "10",
+      },
       submenuTop,
       submenuLeft,
     };
@@ -88,7 +92,9 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   };
 
   const addToLastPlaylistEnabled = useMemo(() => {
-    return !!lastPlaylistAddedTo && lastPlaylistAddedTo.id !== selectedPlaylistId;
+    return (
+      !!lastPlaylistAddedTo && lastPlaylistAddedTo.id !== selectedPlaylistId
+    );
   }, [lastPlaylistAddedTo]);
 
   const handleAddToLastPlaylist = () => {
@@ -100,7 +106,9 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
     if (!selectedPlaylistId) {
       //If we are on liked songs
       removeLikedSongs(
-        Array.from(new Set([contextMenuTrack?.uri || null, ...selectedTracksArray])),
+        Array.from(
+          new Set([contextMenuTrack?.uri || null, ...selectedTracksArray])
+        ),
         true
       );
     } else {
@@ -133,7 +141,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
           <StyledDropdownSubmenu
             adjustedTop={submenuTop}
             adjustedLeft={submenuLeft}
-            position='right'
+            position="right"
           >
             <PlaylistSubListContainer>
               {playlists.map(
