@@ -1,10 +1,14 @@
 import { useState } from "react";
-import SpotifyPlayer, { SpotifyTrack, State } from "react-spotify-web-playback";
+import SpotifyPlayer, {
+  SpotifyTrack,
+  State,
+  Type,
+} from "react-spotify-web-playback";
 import usePlayer from "../../hooks/usePlayer";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import ShuffleIcon from "../../assets/shuffle.svg?react";
-import ClockIcon  from "../../assets/clock.svg?react";
+import ClockIcon from "../../assets/clock.svg?react";
 import {
   popTracksManuallyAddedToQueue,
   setDeviceId,
@@ -12,7 +16,8 @@ import {
   setIsPlaying,
   setIsActive,
   setPlayingTrack,
-  setQueueTracks, 
+  setQueueTracks,
+  addSongsStatusHash,
 } from "../../redux/slices/playerSlice";
 import {
   getDeviceId,
@@ -29,6 +34,10 @@ interface PlayerProps {
   accessToken: string | null;
 }
 
+interface StateWithType extends State {
+  type: Type;
+}
+
 export const Player = ({ accessToken }: PlayerProps) => {
   const dispatch = useAppDispatch();
   const [isSleepModalOpen, setIsSleepModalOpen] = useState(false);
@@ -36,16 +45,25 @@ export const Player = ({ accessToken }: PlayerProps) => {
   const deviceId = useAppSelector(getDeviceId);
   const shuffle = useAppSelector(getShuffle);
   const dontPopQueue = useAppSelector(getDontPopQueue);
-  const tracksManuallyAddedToQueue = useAppSelector(getTracksManuallyAddedToQueue);
+  const tracksManuallyAddedToQueue = useAppSelector(
+    getTracksManuallyAddedToQueue
+  );
   const sleepTimerMinutes = useAppSelector(getSleepTimerMinutes);
+
   const { toggleShuffle } = usePlayer();
 
   if (!accessToken) return null;
 
-  const handlePlayerCallback = (state: State) => {
+  const handlePlayerCallback = (state: StateWithType) => {
     if (!isLoaded && state.deviceId) setIsLoaded(true);
     if (state.deviceId && state.deviceId !== deviceId) {
       dispatch(setDeviceId(state.deviceId));
+    }
+    if (state.type === "favorite_update" && state.progressMs >= 350) {
+      //update the songsStatusHash if updated in the player
+      //We need the condition because a favorite update is fired onPlay and we cant tell it apart from other favorite updates so we check the progress. Progress sometimes is non zero so we are using 350ms as a boundary
+      console.log(state);
+      dispatch(addSongsStatusHash({ [state.track.id]: state.isSaved }));
     }
     if (state.progressMs === 0 && state.isPlaying) {
       const { name, uri } = state.track;
@@ -80,7 +98,6 @@ export const Player = ({ accessToken }: PlayerProps) => {
     }
     dispatch(setIsPlaying(state.isPlaying));
     dispatch(setIsActive(state.isActive));
-    //dispatch(setShuffle(state.shuffle));
   };
 
   const handleQueueUpdate = (newUri: string) => {
@@ -98,15 +115,11 @@ export const Player = ({ accessToken }: PlayerProps) => {
     setIsSleepModalOpen(!isSleepModalOpen);
   };
 
-  const handleUpdateSavedStatus = (fn: (status: boolean) => any) => {
-    console.log(fn(true));
-  };
-
   return (
     <PlayerContainer>
       {isLoaded && (
         <>
-        <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
+          <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
             <ShuffleIcon height={24} width={24} />
           </ShuffleIconContainer>
           <ClockIconContainer
@@ -114,7 +127,9 @@ export const Player = ({ accessToken }: PlayerProps) => {
             isActive={!!sleepTimerMinutes}
           >
             <ClockIcon height={22} width={22} />
-            {!!sleepTimerMinutes && <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>}
+            {!!sleepTimerMinutes && (
+              <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>
+            )}
           </ClockIconContainer>
         </>
       )}
@@ -127,9 +142,6 @@ export const Player = ({ accessToken }: PlayerProps) => {
         styles={{
           activeColor: COLORS.primary,
           loaderSize: "20px",
-        }}
-        updateSavedStatus={(fn: (status: boolean) => any) => {
-          handleUpdateSavedStatus(fn);
         }}
       />
       {isSleepModalOpen && (

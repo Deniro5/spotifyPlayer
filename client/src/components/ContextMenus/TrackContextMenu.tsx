@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
 import { PopoverContentWrapper } from "./PopoverContentWrapper";
