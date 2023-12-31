@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
-import { getAccessToken, getSelectedPlaylistId } from "../redux/slices/selectors";
+import {
+  getAccessToken,
+  getSelectedPlaylistId,
+} from "../redux/slices/selectors";
 import useFetchLikedStatus from "./useFetchLikedStatus";
 import { uriToId } from "../utils";
 import useToast from "./useToast";
@@ -39,25 +42,33 @@ const useFetchPlaylistSongs = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.items) {
+          const filteredTracks = data.items.filter(
+            //If there is a non song item in the playlist we have to filter it out
+            (item: { track: SpotifyApi.TrackObjectFull }) => item.track?.uri
+          );
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.items.map((item: { track: SpotifyApi.TrackObjectFull }) => {
-                const { track } = item;
-                const { album, name, uri, duration_ms, artists } = track;
-                return {
-                  artist: artists[0]?.name,
-                  name,
-                  uri,
-                  albumUrl: album?.images[0]?.url,
-                  albumName: album?.name,
-                  duration_ms,
-                };
-              }),
+              tracks: filteredTracks.map(
+                (item: { track: SpotifyApi.TrackObjectFull }) => {
+                  const { track } = item;
+                  const { album, name, uri, duration_ms, artists } = track;
+
+                  return {
+                    artist: artists[0]?.name,
+                    name,
+                    uri,
+                    albumUrl: album?.images[0]?.url,
+                    albumName: album?.name,
+                    duration_ms,
+                  };
+                }
+              ),
               isInitialLoad: isFetchingInitial,
             })
           );
-          const trackIds = data.items.map((item: { track: SpotifyApi.TrackObjectFull }) =>
-            uriToId(item.track.uri)
+          const trackIds = filteredTracks.map(
+            (item: { track: SpotifyApi.TrackObjectFull }) =>
+              uriToId(item.track.uri)
           );
           getLikedStatus(trackIds);
           setFetchUrl(data.next);

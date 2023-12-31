@@ -59,7 +59,7 @@ export const Player = ({ accessToken }: PlayerProps) => {
     if (state.deviceId && state.deviceId !== deviceId) {
       dispatch(setDeviceId(state.deviceId));
     }
-    if (state.type === "favorite_update" && state.progressMs >= 350) {
+    if (state.type === "favorite_update" && state.progressMs >= 300) {
       //update the songsStatusHash if updated in the player
       //We need the condition because a favorite update is fired onPlay and we cant tell it apart from other favorite updates so we check the progress. Progress sometimes is non zero so we are using 350ms as a boundary
       console.log(state);
