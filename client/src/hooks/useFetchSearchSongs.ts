@@ -18,22 +18,22 @@ const useFetchSearchSongs = () => {
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const { getLikedStatus } = useFetchLikedStatus();
 
-  const [fetchUrl, setFetchUrl] = useState<string | null>(null);
+  const [nextFetchUrl, setNextFetchUrl] = useState<string | null>(null);
   const [isFetchingInitial, setIsFetchingInitial] = useState(false);
   const dispatch = useAppDispatch();
 
   //after we have a new search term we need to restart the fetch
   useEffect(() => {
-    if (search.length) {
-      setFetchUrl(
-        `https://api.spotify.com/v1/search?q=${search}&type=track&limit=${FETCH_LIMIT}`
-      );
-      setIsFetchingInitial(true);
-    }
-  }, [search]);
+    if (!accessToken || !search.length) return;
+    loadTracks({ isInitialLoad: true });
+    setIsFetchingInitial(true);
+  }, [search, accessToken]);
 
-  const loadMoreTracks = () => {
-    if (!fetchUrl || !accessToken || !search.length) return;
+  const loadTracks = ({ isInitialLoad }: { isInitialLoad: boolean }) => {
+    const fetchUrl = isInitialLoad
+      ? `https://api.spotify.com/v1/search?q=${search}&type=track&limit=${FETCH_LIMIT}`
+      : nextFetchUrl;
+    if (!accessToken || !fetchUrl) return;
 
     fetch(fetchUrl, {
       method: "GET",
@@ -46,25 +46,27 @@ const useFetchSearchSongs = () => {
         if (data.tracks?.items) {
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.tracks.items.map((track: SpotifyApi.TrackObjectFull) => {
-                const { album, name, uri, duration_ms, artists } = track;
-                return {
-                  artist: artists[0]?.name,
-                  name,
-                  uri,
-                  albumUrl: album?.images[0]?.url,
-                  albumName: album?.name,
-                  duration_ms,
-                };
-              }),
-              isInitialLoad: isFetchingInitial,
+              tracks: data.tracks.items.map(
+                (track: SpotifyApi.TrackObjectFull) => {
+                  const { album, name, uri, duration_ms, artists } = track;
+                  return {
+                    artist: artists[0]?.name,
+                    name,
+                    uri,
+                    albumUrl: album?.images[0]?.url,
+                    albumName: album?.name,
+                    duration_ms,
+                  };
+                }
+              ),
+              isInitialLoad,
             })
           );
-          const trackIds = data.tracks.items.map((track: SpotifyApi.TrackObjectFull) =>
-            uriToId(track?.uri || "")
+          const trackIds = data.tracks.items.map(
+            (track: SpotifyApi.TrackObjectFull) => uriToId(track?.uri || "")
           );
           getLikedStatus(trackIds);
-          setFetchUrl(data.tracks?.next);
+          setNextFetchUrl(data.tracks?.next);
         }
       })
       .catch((err) => {
@@ -74,12 +76,7 @@ const useFetchSearchSongs = () => {
       .finally(() => setIsFetchingInitial(false));
   };
 
-  //For the initial load after playlistId change
-  useEffect(() => {
-    if (!accessToken || !search.length || !isFetchingInitial) return;
-    loadMoreTracks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, isFetchingInitial]);
+  const loadMoreTracks = () => loadTracks({ isInitialLoad: false });
 
   const noSearchTermEntered = useMemo(() => !search.length, [search]);
 

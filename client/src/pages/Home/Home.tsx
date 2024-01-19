@@ -76,7 +76,7 @@ const RightSidebar = styled.div`
   flex-direction: column;
 `;
 
-//i35px is the height of the header + div
+//171px is the height of the header + div
 const Body = styled.div`
   display: flex;
   overflow-x: hidden;

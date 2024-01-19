@@ -32,7 +32,7 @@ const SearchBar: React.FC = () => {
         <SearchInput
           onChange={(e) => handleChange(e)}
           value={value}
-          placeholder='Search for Songs, Artists Etc...'
+          placeholder="Search for Songs, Artists Etc..."
         />
         <SearchIconContainer>
           <SearchIcon height={16} width={16} />
