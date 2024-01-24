@@ -37,7 +37,11 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
   error,
 }: IPlaylistModalProps) => {
   return (
-    <Modal isOpen={isOpen} onRequestClose={handleClose} style={customModalStyle}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={handleClose}
+      style={customModalStyle}
+    >
       <Title>{title}</Title>
       <Error> {error || ""} </Error>
       <Fields>
@@ -47,7 +51,10 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
         </FieldContainer>
         <FieldContainer>
           <FieldLabel>Description</FieldLabel>
-          <DescriptionField value={description} onChange={handleDescriptionChange} />
+          <DescriptionField
+            value={description}
+            onChange={handleDescriptionChange}
+          />
         </FieldContainer>
       </Fields>
       <ButtonContainer>
@@ -111,7 +118,8 @@ const DescriptionField = styled.textarea`
   resize: none;
   height: 85px;
   padding: 10px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu";
   font-size: 15px;
   &:focus {
     border: 1px solid ${COLORS.primary};
@@ -132,4 +140,4 @@ const ButtonContainer = styled.div`
   margin-top: 40px;
 `;
 
-export { PlaylistModal };
+export default PlaylistModal;

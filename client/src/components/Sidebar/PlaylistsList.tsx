@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { MenuItem, Title } from "./Menu";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { View } from "../../types";
-import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
-import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
+import NewPlaylistModal from "./PlaylistModals/NewPlaylistModal";
+import PlaylistContextMenu from "../ContextMenus/PlaylistContextMenu";
 import { getPlaylists, getSelectedPlaylistId } from "../../redux/selectors";
 import useFetchPlaylists from "../../hooks/useFetchPlaylists";
 import { setSelectedPlaylistId } from "../../redux/slices/PlaylistSlice/playlistSlice";
@@ -101,4 +101,4 @@ const MenuItemText = styled.div`
   overflow: hidden;
 `;
 
-export { PlaylistsList };
+export default PlaylistsList;

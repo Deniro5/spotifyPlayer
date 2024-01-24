@@ -1,4 +1,4 @@
-import { TrackListHeader } from "./TrackListHeader";
+import TrackListHeader from "./TrackListHeader";
 import LikedSongsAlbumImg from "../../assets/likedsongsalbum.png";
 import { useAppSelector } from "../../hooks";
 import { getTotalLikedSongs } from "../../redux/selectors";
@@ -18,4 +18,4 @@ const LikedSongsHeader = () => {
   );
 };
 
-export { LikedSongsHeader };
+export default LikedSongsHeader;

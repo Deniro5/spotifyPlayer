@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { getRecommendedTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import { COLORS } from "../../../constants";
 import { Track } from "../../../types";
-import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
+import TrackContextMenu from "../../ContextMenus/TrackContextMenu";
 import SkeletonLoader from "../../Common/Loaders/SkeletonLoader";
 import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
 
@@ -78,4 +78,4 @@ const SubTitle = styled.p`
   margin-top: 0px;
 `;
 
-export { Recommendations };
+export default Recommendations;

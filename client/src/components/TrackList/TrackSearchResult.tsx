@@ -37,7 +37,7 @@ interface TrackSearchResultProps {
   index: number;
 }
 
-export const TrackSearchResult = ({
+const TrackSearchResult = ({
   track,
   handleRightClick,
   isSelected,
@@ -283,3 +283,5 @@ const StyledCheckbox = styled.input`
 const RightColumn = styled.div`
   padding-right: 10px;
 `;
+
+export default TrackSearchResult;

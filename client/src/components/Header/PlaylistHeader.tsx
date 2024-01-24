@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../hooks";
 import { getSelectedPlaylist } from "../../redux/selectors";
-import { TrackListHeader } from "./TrackListHeader";
+import TrackListHeader from "./TrackListHeader";
 
 const PlaylistHeader = ({}) => {
   const selectedPlaylist = useAppSelector(getSelectedPlaylist);
@@ -16,4 +16,4 @@ const PlaylistHeader = ({}) => {
   );
 };
 
-export { PlaylistHeader };
+export default PlaylistHeader;

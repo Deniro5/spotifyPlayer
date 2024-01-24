@@ -7,7 +7,11 @@ export interface TrackListHeaderProps {
   trackCount: string;
 }
 
-const TrackListHeader = ({ imgSrc, name, trackCount }: TrackListHeaderProps) => {
+const TrackListHeader = ({
+  imgSrc,
+  name,
+  trackCount,
+}: TrackListHeaderProps) => {
   return (
     <Container>
       <PlaylistImage height={70} width={70} src={imgSrc} />
@@ -59,4 +63,4 @@ const PlaylistTrackCount = styled.p`
   margin: 0;
 `;
 
-export { TrackListHeader };
+export default TrackListHeader;

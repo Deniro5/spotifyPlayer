@@ -25,7 +25,7 @@ import {
   getTracksManuallyAddedToQueue,
   getSleepTimerMinutes,
 } from "../../redux/selectors";
-import { SleepModal } from "./SleepModal";
+import SleepModal from "./SleepModal";
 import { COLORS } from "../../constants";
 import { MinutesToDisplayTime } from "../../utils";
 import { addSongsStatusHash } from "../../redux/slices/TrackSlice/trackSlice";
@@ -38,7 +38,7 @@ interface StateWithType extends State {
   type: Type;
 }
 
-export const Player = ({ accessToken }: PlayerProps) => {
+const Player = ({ accessToken }: PlayerProps) => {
   const dispatch = useAppDispatch();
   const [isSleepModalOpen, setIsSleepModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -182,3 +182,5 @@ const ClockIconContainer = styled.div<{ isActive: boolean }>`
   }
   z-index: 10;
 `;
+
+export default Player;

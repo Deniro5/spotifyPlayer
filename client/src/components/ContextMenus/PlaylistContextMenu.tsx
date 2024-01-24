@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Popover } from "react-tiny-popover";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
-import { PopoverContentWrapper } from "./PopoverContentWrapper";
-import { EditPlaylistModal } from "../Sidebar/PlaylistModals/EditPlaylistModal";
+import PopoverContentWrapper from "./PopoverContentWrapper";
+import EditPlaylistModal from "../Sidebar/PlaylistModals/EditPlaylistModal";
 import Dropdown from "react-multilevel-dropdown";
 import { getAdjustedPopoverPosition } from "../../utils";
 
@@ -56,8 +56,14 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
 
   const content = (
     <PopoverContentWrapper>
-      <Dropdown.Item onClick={handleEditClick}> Edit Playlist Details </Dropdown.Item>
-      <Dropdown.Item onClick={handleDeleteClick}> Delete Playlist </Dropdown.Item>
+      <Dropdown.Item onClick={handleEditClick}>
+        {" "}
+        Edit Playlist Details{" "}
+      </Dropdown.Item>
+      <Dropdown.Item onClick={handleDeleteClick}>
+        {" "}
+        Delete Playlist{" "}
+      </Dropdown.Item>
     </PopoverContentWrapper>
   );
 
@@ -82,4 +88,4 @@ const PlaylistContextMenu: React.FC<IPlaylistContextMenuProps> = ({
   );
 };
 
-export { PlaylistContextMenu };
+export default PlaylistContextMenu;

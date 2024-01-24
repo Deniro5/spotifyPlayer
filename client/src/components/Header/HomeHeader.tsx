@@ -20,7 +20,7 @@ const HomeHeader: React.FC<IHomeSettingsProps> = ({}) => {
   return (
     <Container>
       <Label> Sort By: </Label>
-      {/* <Dropdown
+      <Dropdown
         options={[
           PlaylistSortOptions.MOST_RECENT,
           PlaylistSortOptions.ALPHABETICAL,
@@ -28,7 +28,7 @@ const HomeHeader: React.FC<IHomeSettingsProps> = ({}) => {
         onChange={onChange}
         value={playlistSortOption}
         placeholder="Select an option"
-      /> */}
+      />
     </Container>
   );
 };
@@ -49,4 +49,4 @@ const Label = styled.div`
   margin-right: 10px;
 `;
 
-export { HomeHeader };
+export default HomeHeader;

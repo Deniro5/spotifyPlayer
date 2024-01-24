@@ -185,4 +185,4 @@ const CancelButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-export { SleepModal };
+export default SleepModal;

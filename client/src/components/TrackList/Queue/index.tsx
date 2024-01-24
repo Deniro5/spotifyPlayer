@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks";
 import styled from "styled-components";
 import { getQueueTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import QueueResult from "./QueueResult";
-import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
+import TrackContextMenu from "../../ContextMenus/TrackContextMenu";
 import { Track } from "../../../types";
 import { COLORS } from "../../../constants";
 import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
@@ -84,4 +84,4 @@ const SubTitle = styled.p`
   margin-top: -10px;
 `;
 
-export { Queue };
+export default Queue;

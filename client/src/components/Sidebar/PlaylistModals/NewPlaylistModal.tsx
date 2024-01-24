@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlaylistModal } from "./PlaylistModal";
+import PlaylistModal from "./PlaylistModal";
 import usePlaylistActions from "../../../hooks/usePlaylistActions";
 import { isAlphaNumeric } from "../../../utils";
 
@@ -21,7 +21,9 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
     setName(e.target.value);
   };
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setDescription(e.target.value);
   };
 
@@ -50,7 +52,7 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
       handleConfirm={handleCreate}
       name={name}
       description={description}
-      title='Create Playlist'
+      title="Create Playlist"
       handleNameChange={handleNameChange}
       handleDescriptionChange={handleDescriptionChange}
       error={error}
@@ -58,4 +60,4 @@ const NewPlaylistModal: React.FC<INewPlaylistModalProps> = ({
   );
 };
 
-export { NewPlaylistModal };
+export default NewPlaylistModal;

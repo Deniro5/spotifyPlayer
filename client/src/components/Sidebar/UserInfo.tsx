@@ -40,4 +40,4 @@ const Email = styled.h3`
   margin-top: 4px;
 `;
 
-export { UserInfo };
+export default UserInfo;

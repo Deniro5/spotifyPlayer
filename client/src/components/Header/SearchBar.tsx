@@ -81,4 +81,4 @@ const SearchIconContainer = styled.div`
   top: 5px;
 `;
 
-export { SearchBar };
+export default SearchBar;

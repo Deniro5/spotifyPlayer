@@ -109,4 +109,4 @@ export const MenuItem = styled.div<{ isActive: boolean }>`
   padding: 8px 10px;
 `;
 
-export { Menu };
+export default Menu;

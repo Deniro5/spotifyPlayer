@@ -265,4 +265,4 @@ const SlidersContainer = styled.div<{ isDisabled: boolean }>`
   `}
 `;
 
-export { SettingsModal };
+export default SettingsModal;

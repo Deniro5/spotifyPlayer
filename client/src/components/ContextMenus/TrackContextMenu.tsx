@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { Popover } from "react-tiny-popover";
 import styled from "styled-components";
-import { PopoverContentWrapper } from "./PopoverContentWrapper";
+import PopoverContentWrapper from "./PopoverContentWrapper";
 import useTrackActions from "../../hooks/useTrackActions";
 import { useAppSelector } from "../../hooks";
 import Dropdown from "react-multilevel-dropdown";
@@ -199,4 +199,4 @@ const DisableWrapper = styled.div<{ isDisabled: boolean }>`
   text-overflow: ellipsis;
 `;
 
-export { TrackContextMenu };
+export default TrackContextMenu;

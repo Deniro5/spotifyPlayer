@@ -56,4 +56,4 @@ const Container = styled.div`
   }
 `;
 
-export { PlaylistSquare };
+export default PlaylistSquare;

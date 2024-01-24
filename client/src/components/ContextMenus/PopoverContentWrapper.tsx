@@ -24,4 +24,4 @@ const MenuContainer = styled.div<{ width: number }>`
   }
 `;
 
-export { PopoverContentWrapper };
+export default PopoverContentWrapper;

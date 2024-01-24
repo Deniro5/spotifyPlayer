@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../../hooks";
-import { PlaylistModal } from "./PlaylistModal";
+import PlaylistModal from "./PlaylistModal";
 import { getPlaylistById } from "../../../redux/selectors";
 import usePlaylistActions from "../../../hooks/usePlaylistActions";
 import { isAlphaNumeric } from "../../../utils";
@@ -67,4 +67,4 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
   );
 };
 
-export { EditPlaylistModal };
+export default EditPlaylistModal;
