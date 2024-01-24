@@ -17,18 +17,18 @@ import {
   setIsActive,
   setPlayingTrack,
   setQueueTracks,
-  addSongsStatusHash,
-} from "../../redux/slices/playerSlice";
+} from "../../redux/slices/PlayerSlice/playerSlice";
 import {
   getDeviceId,
   getDontPopQueue,
   getShuffle,
   getTracksManuallyAddedToQueue,
   getSleepTimerMinutes,
-} from "../../redux/slices/selectors";
+} from "../../redux/selectors";
 import { SleepModal } from "./SleepModal";
 import { COLORS } from "../../constants";
 import { MinutesToDisplayTime } from "../../utils";
+import { addSongsStatusHash } from "../../redux/slices/TrackSlice/trackSlice";
 
 interface PlayerProps {
   accessToken: string | null;

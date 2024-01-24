@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { MenuItem, Title } from "./Menu";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import {
-  setCurrentView,
-  setSelectedPlaylistId,
-  setSelectedTracksHash,
-} from "../../redux/slices/playerSlice";
 import { View } from "../../types";
 import { NewPlaylistModal } from "./PlaylistModals/NewPlaylistModal";
 import { PlaylistContextMenu } from "../ContextMenus/PlaylistContextMenu";
-import {
-  getPlaylists,
-  getSelectedPlaylistId,
-} from "../../redux/slices/selectors";
+import { getPlaylists, getSelectedPlaylistId } from "../../redux/selectors";
 import useFetchPlaylists from "../../hooks/useFetchPlaylists";
+import { setSelectedPlaylistId } from "../../redux/slices/PlaylistSlice/playlistSlice";
+import { setCurrentView } from "../../redux/slices/AppSlice/appSlice";
+import { setSelectedTracksHash } from "../../redux/slices/TrackSlice/trackSlice";
 
 export type PlaylistsProps = {};
 

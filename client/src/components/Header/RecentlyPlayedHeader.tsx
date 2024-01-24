@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../hooks";
 import { TrackListHeader } from "./TrackListHeader";
-import { getTotalRecentSongs } from "../../redux/slices/selectors";
+import { getTotalRecentSongs } from "../../redux/selectors";
 import RecentlyPlayedAlbumImg from "../../assets/recentlyplayedalbum.png";
 
 const RecentlyPlayedHeader = () => {

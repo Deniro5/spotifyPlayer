@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import SearchIcon from "../../assets/search.svg?react";
-import { setSearch } from "../../redux/slices/playerSlice";
+import { setSearch } from "../../redux/slices/AppSlice/appSlice";
 import { debounce } from "lodash";
+import { getSearch } from "../../redux/selectors";
 
 const SearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
-  const search = useAppSelector((state) => state.player.search);
+  const search = useAppSelector(getSearch);
   const [value, setValue] = useState<string>(search);
   const searchRef = useRef("");
 

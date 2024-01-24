@@ -3,9 +3,9 @@ import styled from "styled-components";
 import Dropdown, { Option } from "react-dropdown";
 import "react-dropdown/style.css";
 import { PlaylistSortOptions } from "../../types";
-import { setPlaylistSortOption } from "../../redux/slices/playerSlice";
+import { setPlaylistSortOption } from "../../redux/slices/PlaylistSlice/playlistSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getPlaylistSortOption } from "../../redux/slices/selectors";
+import { getPlaylistSortOption } from "../../redux/selectors";
 
 export type IHomeSettingsProps = {};
 
@@ -20,12 +20,15 @@ const HomeHeader: React.FC<IHomeSettingsProps> = ({}) => {
   return (
     <Container>
       <Label> Sort By: </Label>
-      <Dropdown
-        options={[PlaylistSortOptions.MOST_RECENT, PlaylistSortOptions.ALPHABETICAL]}
+      {/* <Dropdown
+        options={[
+          PlaylistSortOptions.MOST_RECENT,
+          PlaylistSortOptions.ALPHABETICAL,
+        ]}
         onChange={onChange}
         value={playlistSortOption}
-        placeholder='Select an option'
-      />
+        placeholder="Select an option"
+      /> */}
     </Container>
   );
 };

@@ -11,7 +11,7 @@ import {
   getPlaylists,
   getSelectedPlaylistId,
   getSelectedTracksArray,
-} from "../../redux/slices/selectors";
+} from "../../redux/selectors";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { Track } from "../../types";
 import { getAdjustedPopoverPosition } from "../../utils";

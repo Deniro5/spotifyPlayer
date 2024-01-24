@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { addSongsStatusHash } from "../redux/slices/playerSlice";
-import { getAccessToken } from "../redux/slices/selectors";
+import { getAccessToken } from "../redux/slices/PlayerSlice/selectors";
+import { addSongsStatusHash } from "../redux/slices/TrackSlice/trackSlice";
 
 const useFetchLikedStatus = () => {
   const accessToken = useAppSelector(getAccessToken);

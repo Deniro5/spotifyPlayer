@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setCurrentDisplayTracks, setTotalLikedSongs } from "../redux/slices/playerSlice";
 import useToast from "./useToast";
+import { setCurrentDisplayTracks } from "../redux/slices/TrackSlice/trackSlice";
+import { setTotalLikedSongs } from "../redux/slices/AppSlice/appSlice";
 
 const useFetchLikedSongs = () => {
   const accessToken = useAppSelector((state) => state.player.accessToken);
@@ -27,18 +28,20 @@ const useFetchLikedSongs = () => {
         if (data.items) {
           dispatch(
             setCurrentDisplayTracks({
-              tracks: data.items.map((item: { track: SpotifyApi.TrackObjectFull }) => {
-                const { track } = item;
-                const { album, name, uri, duration_ms, artists } = track;
-                return {
-                  artist: artists[0]?.name,
-                  name,
-                  uri,
-                  albumUrl: album?.images[0]?.url,
-                  albumName: album?.name,
-                  duration_ms,
-                };
-              }),
+              tracks: data.items.map(
+                (item: { track: SpotifyApi.TrackObjectFull }) => {
+                  const { track } = item;
+                  const { album, name, uri, duration_ms, artists } = track;
+                  return {
+                    artist: artists[0]?.name,
+                    name,
+                    uri,
+                    albumUrl: album?.images[0]?.url,
+                    albumName: album?.name,
+                    duration_ms,
+                  };
+                }
+              ),
               isInitialLoad: isFetchingInitial,
             })
           );

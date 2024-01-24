@@ -12,15 +12,16 @@ import {
   getSelectedTracksHashLength,
   getCurrentView,
   getIsRecommendationsView,
-} from "../../redux/slices/selectors";
-import {
-  moveTrackInDisplay,
-  setSelectedTracksHash,
-} from "../../redux/slices/playerSlice";
+  getCurrentDisplayTracks,
+} from "../../redux/selectors";
 import { DropResult } from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { Track, View } from "../../types";
 import SkeletonLoader from "../Common/Loaders/SkeletonLoader";
+import {
+  moveTrackInDisplay,
+  setSelectedTracksHash,
+} from "../../redux/slices/TrackSlice/trackSlice";
 
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
@@ -28,12 +29,13 @@ export type ITrackListProps = {
   isLoading: boolean;
 };
 
-const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks, isLoading }) => {
+const TrackList: React.FC<ITrackListProps> = ({
+  loadMoreTracks,
+  isLoading,
+}) => {
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const { handleMoveTrack } = usePlaylistActions(selectedPlaylistId);
-  const currentDisplayTracks = useAppSelector(
-    (state) => state.player.currentDisplayTracks
-  );
+  const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
   const dispatch = useAppDispatch();
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
@@ -85,13 +87,15 @@ const TrackList: React.FC<ITrackListProps> = ({ loadMoreTracks, isLoading }) => 
   };
 
   return (
-    <TrackListContainer isFullWidth={!showRecommendations || !isRecommendationsView}>
+    <TrackListContainer
+      isFullWidth={!showRecommendations || !isRecommendationsView}
+    >
       <TrackListBatchOptions>
         {selectedTracksHashLength > 1 && (
           <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
         )}
       </TrackListBatchOptions>
-      <ScrollContainer id='scrollContainer'>
+      <ScrollContainer id="scrollContainer">
         {isLoading ? (
           <SkeletonLoader count={25} height={50} />
         ) : (

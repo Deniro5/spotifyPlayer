@@ -4,9 +4,9 @@ import styled from "styled-components";
 import { COLORS, DEFAULT_TOAST_DURATION } from "../../constants";
 import CloseIcon from "../../assets/close.svg?react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { getToast } from "../../redux/slices/selectors";
-import { setToast } from "../../redux/slices/playerSlice";
+import { getToast } from "../../redux/selectors";
 import { ToastType } from "../../types";
+import { setToast } from "../../redux/slices/AppSlice/appSlice";
 
 const Toast = ({}) => {
   const toast = useAppSelector(getToast);
@@ -18,23 +18,23 @@ const Toast = ({}) => {
 
   useEffect(() => {
     if (!toast) return;
-    setTimeout(
-      () => closeToast(),
-      toast.duration || DEFAULT_TOAST_DURATION
-    );
+    setTimeout(() => closeToast(), toast.duration || DEFAULT_TOAST_DURATION);
   }, [toast, closeToast]);
 
   return (
     <ToastContainer show={!!toast} type={toast?.type}>
       {toast?.message}
       <CloseIconContainer onClick={closeToast}>
-      <CloseIcon height={18} width={18} fill={COLORS.white} />
+        <CloseIcon height={18} width={18} fill={COLORS.white} />
       </CloseIconContainer>
     </ToastContainer>
   );
 };
 
-export const ToastContainer = styled.div<{ show: boolean; type: ToastType | undefined }>`
+export const ToastContainer = styled.div<{
+  show: boolean;
+  type: ToastType | undefined;
+}>`
   position: absolute;
   top: ${({ show }) => (show ? "20px" : "-80px")};
   border-radius: 4px;

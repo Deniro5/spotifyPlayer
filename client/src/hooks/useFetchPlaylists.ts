@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { getAccessToken } from "../redux/slices/selectors";
-import { setPlaylists } from "../redux/slices/playerSlice";
+import { getAccessToken } from "../redux/slices/PlayerSlice/selectors";
 import { Playlist } from "../types";
 import useToast from "./useToast";
+import { setPlaylists } from "../redux/slices/PlaylistSlice/playlistSlice";
 
 const useFetchPlaylists = () => {
   const accessToken = useAppSelector(getAccessToken);

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setRecommendedTracks } from "../redux/slices/playerSlice";
+import { setRecommendedTracks } from "../redux/slices/PlayerSlice/playerSlice";
 import { uriToId } from "../utils";
 import {
   getAccessToken,
   getPlayingTrack,
   getRecommendationSettings,
   getShouldUseRecommendationSliders,
-} from "../redux/slices/selectors";
+} from "../redux/selectors";
 
 const useRecommendations = () => {
   const accessToken = useAppSelector(getAccessToken);
@@ -28,11 +28,13 @@ const useRecommendations = () => {
     const fetchUrl = shouldUseRecommendationSliders
       ? `https://api.spotify.com/v1/recommendations?limit=10&target_popularity=${
           recommendationSettings.popularity
-        }&target_tempo=${recommendationSettings.tempo}&target_instrumentalness=${
+        }&target_tempo=${
+          recommendationSettings.tempo
+        }&target_instrumentalness=${
           recommendationSettings.instrumentalness / 100
-        }&target_valence=${recommendationSettings.valence / 100}&seed_tracks=${uriToId(
-          playingTrack.uri
-        )}`
+        }&target_valence=${
+          recommendationSettings.valence / 100
+        }&seed_tracks=${uriToId(playingTrack.uri)}`
       : `https://api.spotify.com/v1/recommendations?limit=9&seed_tracks=${uriToId(
           playingTrack.uri
         )}`;
@@ -46,7 +48,10 @@ const useRecommendations = () => {
       .then((data) => {
         if (data.tracks) {
           const filteredTracks = data.tracks
-            .filter((track: SpotifyApi.TrackObjectFull) => track.uri !== playingTrack.uri)
+            .filter(
+              (track: SpotifyApi.TrackObjectFull) =>
+                track.uri !== playingTrack.uri
+            )
             .slice(0, 6);
           dispatch(
             setRecommendedTracks(

@@ -7,7 +7,10 @@ import PlayIcon from "../../../assets/play.svg?react";
 import PauseIcon from "../../../assets/pause.svg?react";
 import { COLORS } from "../../../constants";
 import { useAppSelector } from "../../../hooks";
-import { getIsPlaying, getPlayingTrack } from "../../../redux/slices/selectors";
+import {
+  getIsPlaying,
+  getPlayingTrack,
+} from "../../../redux/slices/PlayerSlice/selectors";
 
 export type ITrackTitleArtistAndImageProps = {
   track: Track;
@@ -27,11 +30,11 @@ const TrackTitleArtistAndImage: React.FC<ITrackTitleArtistAndImageProps> = ({
         <TrackImage src={albumUrl} />
         {isPlaying && playingTrack?.uri === track.uri && (
           <PlayStatus>
-            <img height={50} width={35} src={PlayingGif} alt='' />
+            <img height={50} width={35} src={PlayingGif} alt="" />
           </PlayStatus>
         )}
         <HiddenButton onClick={handlePlayOrPause}>
-        {isPlaying && playingTrack?.uri === uri ? (
+          {isPlaying && playingTrack?.uri === uri ? (
             <StyledPauseIcon height={18} width={18} />
           ) : (
             <StyledPlayIcon height={20} width={20} />

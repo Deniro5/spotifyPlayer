@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useAppSelector } from "../../hooks";
-import { getCurrentUser } from "../../redux/slices/selectors";
+import { getCurrentUser } from "../../redux/selectors";
 import { COLORS } from "../../constants";
 
 const UserInfo = ({}) => {

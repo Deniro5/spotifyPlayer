@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../hooks";
-import { getSelectedPlaylist } from "../../redux/slices/selectors";
+import { getSelectedPlaylist } from "../../redux/selectors";
 import { TrackListHeader } from "./TrackListHeader";
 
 const PlaylistHeader = ({}) => {

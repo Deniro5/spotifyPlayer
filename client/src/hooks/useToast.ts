@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../hooks";
-import { setToast } from "../redux/slices/playerSlice";
+import { setToast } from "../redux/slices/AppSlice/appSlice";
 import { ToastType } from "../types";
 
 const useToast = () => {

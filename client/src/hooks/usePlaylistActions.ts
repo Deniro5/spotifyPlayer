@@ -1,8 +1,12 @@
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { addPlaylist, deletePlaylist, updatePlaylist } from "../redux/slices/playerSlice";
 import { Playlist } from "../types";
-import { getAccessToken, getCurrentUser } from "../redux/slices/selectors";
+import { getAccessToken, getCurrentUser } from "../redux/selectors";
 import useToast from "./useToast";
+import {
+  addPlaylist,
+  deletePlaylist,
+  updatePlaylist,
+} from "../redux/slices/PlaylistSlice/playlistSlice";
 
 const usePlaylistActions = (playlistId: string | null) => {
   const accessToken = useAppSelector(getAccessToken);
@@ -74,7 +78,10 @@ const usePlaylistActions = (playlistId: string | null) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ name, ...(description.length ? { description } : {}) }),
+      body: JSON.stringify({
+        name,
+        ...(description.length ? { description } : {}),
+      }),
     })
       .then((res) => {
         if (res.status !== 200) return;
@@ -102,7 +109,10 @@ const usePlaylistActions = (playlistId: string | null) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ range_start: sourceIndex, insert_before: destinationIndex }),
+      body: JSON.stringify({
+        range_start: sourceIndex,
+        insert_before: destinationIndex,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {

@@ -1,20 +1,21 @@
-import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import {
-  removeTracksFromDisplay,
-  setLastPlaylistAddedTo,
   setQueueTracks,
-  setSelectedTracksHash,
   setTracksManuallyAddedToQueue,
-} from "../redux/slices/playerSlice";
+} from "../redux/slices/PlayerSlice/playerSlice";
 import {
   getAccessToken,
   getQueueTracks,
   getSelectedPlaylistId,
   getTracksManuallyAddedToQueue,
-} from "../redux/slices/selectors";
+} from "../redux/selectors";
 import useToast from "./useToast";
 import { Track } from "../types";
+import { setLastPlaylistAddedTo } from "../redux/slices/PlaylistSlice/playlistSlice";
+import {
+  removeTracksFromDisplay,
+  setSelectedTracksHash,
+} from "../redux/slices/TrackSlice/trackSlice";
 
 const useTrackActions = (trackIds: (string | null)[]) => {
   const accessToken = useAppSelector(getAccessToken);
@@ -22,7 +23,9 @@ const useTrackActions = (trackIds: (string | null)[]) => {
   const { setToastHelper, setErrorHelper } = useToast();
   const dispatch = useAppDispatch();
   const queue = useAppSelector(getQueueTracks);
-  const tracksManuallyAddedToQueue = useAppSelector(getTracksManuallyAddedToQueue);
+  const tracksManuallyAddedToQueue = useAppSelector(
+    getTracksManuallyAddedToQueue
+  );
 
   //Note that for add we are using the passed playlist and for remove we are using the selectedPlaylist
   const addTracks = (playlistId: string) => {
@@ -90,7 +93,9 @@ const useTrackActions = (trackIds: (string | null)[]) => {
           newQueueTracks.splice(1, 0, track);
           dispatch(setQueueTracks(newQueueTracks));
         }
-        dispatch(setTracksManuallyAddedToQueue([...tracksManuallyAddedToQueue, track]));
+        dispatch(
+          setTracksManuallyAddedToQueue([...tracksManuallyAddedToQueue, track])
+        );
         setToastHelper(`${track.name} added to queue`);
       })
       .catch((err) => {

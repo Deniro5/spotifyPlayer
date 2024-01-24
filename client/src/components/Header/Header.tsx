@@ -3,7 +3,7 @@ import { useAppSelector } from "../../hooks";
 import { SearchBar } from "./SearchBar";
 import { View } from "../../types";
 import { HomeHeader } from "./HomeHeader";
-import { getCurrentView } from "../../redux/slices/selectors";
+import { getCurrentView } from "../../redux/selectors";
 import { PlaylistHeader } from "./PlaylistHeader";
 import { RecentlyPlayedHeader } from "./RecentlyPlayedHeader";
 import { LikedSongsHeader } from "./LikedSongsHeader";

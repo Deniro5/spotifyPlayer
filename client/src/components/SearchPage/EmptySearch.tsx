@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../hooks";
-import { getSearch } from "../../redux/slices/selectors";
+import { getSearch } from "../../redux/selectors";
 import styled from "styled-components";
 
 const EmptySearch = () => {

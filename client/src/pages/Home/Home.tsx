@@ -7,11 +7,11 @@ import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Router from "../../components/Router";
-import { setAccessToken } from "../../redux/slices/playerSlice";
+import { setAccessToken } from "../../redux/slices/PlayerSlice/playerSlice";
 import {
   getIsRecommendationsView,
   getShowRecommendations,
-} from "../../redux/slices/selectors";
+} from "../../redux/slices/AppSlice/selectors";
 import Toast from "../../components/Toast";
 import { Recommendations } from "../../components/TrackList/Recommendations";
 import { Queue } from "../../components/TrackList/Queue";

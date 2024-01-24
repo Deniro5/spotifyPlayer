@@ -6,12 +6,10 @@ import HomeIcon from "../../assets/home.svg?react";
 import RecentIcon from "../../assets/recently-played.svg?react";
 import { View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  setCurrentView,
-  setSelectedPlaylistId,
-} from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
-import { getCurrentView } from "../../redux/slices/selectors";
+import { getCurrentView } from "../../redux/selectors";
+import { setCurrentView } from "../../redux/slices/AppSlice/appSlice";
+import { setSelectedPlaylistId } from "../../redux/slices/PlaylistSlice/playlistSlice";
 
 const Menu = ({}) => {
   const dispatch = useAppDispatch();

@@ -1,13 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { spotifyApi } from "react-spotify-web-playback";
-import { getAccessToken, getDeviceId, getIsPlaying } from "../redux/slices/selectors";
+import {
+  getAccessToken,
+  getDeviceId,
+  getIsPlaying,
+} from "../redux/slices/PlayerSlice/selectors";
+import { setDontPopQueue } from "../redux/slices/PlayerSlice/playerSlice";
+import { uriToId } from "../utils";
+import useToast from "./useToast";
 import {
   addSongsStatusHash,
   removeTracksFromDisplay,
-  setDontPopQueue,
-} from "../redux/slices/playerSlice";
-import { uriToId } from "../utils";
-import useToast from "./useToast";
+} from "../redux/slices/TrackSlice/trackSlice";
 
 const useSpotifyApiActions = () => {
   const dispatch = useAppDispatch();
@@ -69,7 +73,9 @@ const useSpotifyApiActions = () => {
     })
       .then((res) => {
         if (res.status !== 200) return;
-        const newSongStatuses = Object.fromEntries(idArray.map((id) => [id, true]));
+        const newSongStatuses = Object.fromEntries(
+          idArray.map((id) => [id, true])
+        );
         dispatch(addSongsStatusHash(newSongStatuses));
         if (isLikedSongs) return; // dispatch(addTracksToDisplay(uris));
       })
@@ -80,7 +86,10 @@ const useSpotifyApiActions = () => {
   };
 
   //probably makes more sense in track actions
-  const removeLikedSongs = (uris: (string | null)[], isLikedSongs?: boolean) => {
+  const removeLikedSongs = (
+    uris: (string | null)[],
+    isLikedSongs?: boolean
+  ) => {
     const idArray = uris.map((uri) => uriToId(uri));
     fetch(`	https://api.spotify.com/v1/me/tracks?ids=${idArray.join(",")}`, {
       method: "delete",
@@ -91,7 +100,9 @@ const useSpotifyApiActions = () => {
       .then((res) => {
         console.log(res);
         if (res.status !== 200) return;
-        const newSongStatuses = Object.fromEntries(idArray.map((id) => [id, false]));
+        const newSongStatuses = Object.fromEntries(
+          idArray.map((id) => [id, false])
+        );
         dispatch(addSongsStatusHash(newSongStatuses));
         if (isLikedSongs) dispatch(removeTracksFromDisplay(uris));
       })

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../../hooks";
 import { PlaylistModal } from "./PlaylistModal";
-import { getPlaylistById } from "../../../redux/slices/selectors";
+import { getPlaylistById } from "../../../redux/selectors";
 import usePlaylistActions from "../../../hooks/usePlaylistActions";
 import { isAlphaNumeric } from "../../../utils";
 
@@ -28,7 +28,9 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
     setName(e.target.value);
   };
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setDescription(e.target.value);
   };
 
@@ -55,7 +57,7 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
       isOpen={isOpen}
       handleClose={handleClose}
       handleConfirm={handleUpdatePlaylist}
-      title='Edit Playlist'
+      title="Edit Playlist"
       name={name}
       description={description}
       handleNameChange={handleNameChange}

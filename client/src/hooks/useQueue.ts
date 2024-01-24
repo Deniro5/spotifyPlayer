@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setQueueTracks } from "../redux/slices/playerSlice";
-import { getAccessToken, getPlayingTrack, getShuffle } from "../redux/slices/selectors";
+import { setQueueTracks } from "../redux/slices/PlayerSlice/playerSlice";
+import {
+  getAccessToken,
+  getPlayingTrack,
+  getShuffle,
+} from "../redux/slices/PlayerSlice/selectors";
 import useToast from "./useToast";
 
 const useQueue = () => {
@@ -28,7 +32,8 @@ const useQueue = () => {
       .then((data) => {
         if (data.queue) {
           const filteredQueue = data.queue.filter(
-            (track: SpotifyApi.TrackObjectFull) => track.uri !== playingTrack.uri
+            (track: SpotifyApi.TrackObjectFull) =>
+              track.uri !== playingTrack.uri
           );
           dispatch(
             setQueueTracks(

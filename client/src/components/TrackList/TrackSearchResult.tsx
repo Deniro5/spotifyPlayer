@@ -4,11 +4,6 @@ import styled from "styled-components";
 import { MillisecondsToMinutesAndSeconds } from "../../utils";
 import { Track, View } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  addSelectedTrack,
-  removeSelectedTrack,
-  setSelectedTracksHash,
-} from "../../redux/slices/playerSlice";
 import { COLORS } from "../../constants";
 import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { TrackTitleArtistAndImage } from "./TrackResultComponents/TrackTitleArtistAndImage";
@@ -23,13 +18,21 @@ import {
   getSelectedTracksHashLength,
   getSongsStatusHash,
   getCurrentView,
-} from "../../redux/slices/selectors";
+} from "../../redux/selectors";
 import HeartIcon from "../../assets/heart.svg?react";
 import { uriToId } from "../../utils";
+import {
+  addSelectedTrack,
+  removeSelectedTrack,
+  setSelectedTracksHash,
+} from "../../redux/slices/TrackSlice/trackSlice";
 
 interface TrackSearchResultProps {
   track: Track;
-  handleRightClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => void;
+  handleRightClick: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    id: string
+  ) => void;
   isSelected: boolean;
   index: number;
 }
@@ -40,15 +43,20 @@ export const TrackSearchResult = ({
   isSelected,
   index,
 }: TrackSearchResultProps) => {
-  const { seconds, minutes } = MillisecondsToMinutesAndSeconds(track.duration_ms);
-  const { pause, play, addLikedSongs, removeLikedSongs } = useSpotifyApiActions();
+  const { seconds, minutes } = MillisecondsToMinutesAndSeconds(
+    track.duration_ms
+  );
+  const { pause, play, addLikedSongs, removeLikedSongs } =
+    useSpotifyApiActions();
   const { uri, albumName } = track;
   const accessToken = useAppSelector(getAccessToken);
   const currentView = useAppSelector(getCurrentView);
   const playingTrack = useAppSelector(getPlayingTrack);
   const selectedTracksHash = useAppSelector(getSelectedTracksHash);
   const selectedTracksHashLength = useAppSelector(getSelectedTracksHashLength);
-  const earliestSelectedTrackIndex = useAppSelector(getEarliestSelectedTrackIndex);
+  const earliestSelectedTrackIndex = useAppSelector(
+    getEarliestSelectedTrackIndex
+  );
   const selectedPlaylistId = useAppSelector(getSelectedPlaylistId);
   const currentDisplayTracks = useAppSelector(getCurrentDisplayTracks);
   const songsStatusHash = useAppSelector(getSongsStatusHash);
@@ -93,7 +101,10 @@ export const TrackSearchResult = ({
       while (currentIndex < earliestSelectedTrackIndex) {
         const currentTrack = currentDisplayTracks[currentIndex];
         dispatch(
-          addSelectedTrack({ trackUri: currentTrack.uri, trackIndex: currentIndex })
+          addSelectedTrack({
+            trackUri: currentTrack.uri,
+            trackIndex: currentIndex,
+          })
         );
         currentIndex++;
       }
@@ -104,14 +115,19 @@ export const TrackSearchResult = ({
         const currentTrack = currentDisplayTracks[currentIndex];
         if (selectedTracksHash[currentTrack.uri]) break;
         dispatch(
-          addSelectedTrack({ trackUri: currentTrack.uri, trackIndex: currentIndex })
+          addSelectedTrack({
+            trackUri: currentTrack.uri,
+            trackIndex: currentIndex,
+          })
         );
         currentIndex--;
       }
     }
   };
 
-  const handleCheckboxClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  const handleCheckboxClick = (
+    e: React.MouseEvent<HTMLInputElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     handleToggleSelected();
   };
@@ -124,7 +140,9 @@ export const TrackSearchResult = ({
     }
   };
 
-  const handleSavedStatusClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleSavedStatusClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     if (isSaved) {
       removeLikedSongs([uri], currentView === View.LIKED_SONGS);
@@ -142,7 +160,10 @@ export const TrackSearchResult = ({
         onDoubleClick={handlePlayOrPause}
         onContextMenu={(e) => handleRightClick(e, uri)}
       >
-        <TrackTitleArtistAndImage track={track} handlePlayOrPause={handlePlayOrPause} />
+        <TrackTitleArtistAndImage
+          track={track}
+          handlePlayOrPause={handlePlayOrPause}
+        />
         <TrackAlbum>{albumName}</TrackAlbum>
         <TrackDuration>{`${minutes}:${seconds} `}</TrackDuration>
         <RightColumn>
@@ -150,15 +171,16 @@ export const TrackSearchResult = ({
             <SavedStatusContainer
               onClick={handleSavedStatusClick}
               isSaved={
-                songsStatusHash[uriToId(track.uri)] || currentView === View.LIKED_SONGS
+                songsStatusHash[uriToId(track.uri)] ||
+                currentView === View.LIKED_SONGS
               }
               isSelected={isSelected}
             >
-            <HeartIcon height={14} width={16} />
+              <HeartIcon height={14} width={16} />
             </SavedStatusContainer>
           ) : (
             <CheckboxContainer onClick={handleCheckboxClick}>
-              <StyledCheckbox type='checkbox' checked={isSelected} readOnly />
+              <StyledCheckbox type="checkbox" checked={isSelected} readOnly />
             </CheckboxContainer>
           )}
         </RightColumn>
@@ -185,7 +207,8 @@ const Container = styled.div<{ isSelected: boolean; isFirst: boolean }>`
   border: 1px solid ${COLORS.whitesmoke};
   color: ${({ isSelected }) => (isSelected ? COLORS.white : COLORS.lightFont)};
   &:hover {
-    background: ${({ isSelected }) => (isSelected ? COLORS.primary : COLORS.whitesmoke)};
+    background: ${({ isSelected }) =>
+      isSelected ? COLORS.primary : COLORS.whitesmoke};
   }
   border-radius: 4px;
   -webkit-touch-callout: none;
@@ -223,7 +246,10 @@ const TrackAlbum = styled.div`
   text-overflow: ellipsis;
 `;
 
-const SavedStatusContainer = styled.div<{ isSaved: boolean; isSelected: boolean }>`
+const SavedStatusContainer = styled.div<{
+  isSaved: boolean;
+  isSelected: boolean;
+}>`
   padding: 7px;
   display: flex;
   align-items: center;

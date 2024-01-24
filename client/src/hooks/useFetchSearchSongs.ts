@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
+import { setCurrentDisplayTracks } from "../redux/slices/TrackSlice/trackSlice";
 import {
   getAccessToken,
   getCurrentDisplayTracks,
   getSearch,
-} from "../redux/slices/selectors";
+} from "../redux/selectors";
 import { uriToId } from "../utils";
 import useFetchLikedStatus from "./useFetchLikedStatus";
 import useToast from "./useToast";

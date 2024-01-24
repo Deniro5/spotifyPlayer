@@ -7,15 +7,15 @@ import { useAppSelector } from "../../../hooks";
 import { useState } from "react";
 import { batch, useDispatch } from "react-redux";
 import {
-  setShowRecommendations,
-  setShouldUseRecommendationSliders,
-  setRecommendationSettings,
-} from "../../../redux/slices/playerSlice";
-import {
   getRecommendationSettings,
   getShouldUseRecommendationSliders,
   getShowRecommendations,
-} from "../../../redux/slices/selectors";
+} from "../../../redux/selectors";
+import {
+  setRecommendationSettings,
+  setShouldUseRecommendationSliders,
+  setShowRecommendations,
+} from "../../../redux/slices/AppSlice/appSlice";
 
 export type ISettingsModalProps = {
   handleCloseSettingsModal: () => void;
@@ -36,14 +36,20 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
 
   const [tempShowRecommendations, setTempShowRecommendations] =
     useState(showRecommendations);
-  const [tempShouldUseRecommendationSliders, setTempShouldUseRecommendationSliders] =
-    useState(shouldUseRecommendationSliders);
-  const [tempPopularity, setTempPopularity] = useState(recommendationSettings.popularity);
+  const [
+    tempShouldUseRecommendationSliders,
+    setTempShouldUseRecommendationSliders,
+  ] = useState(shouldUseRecommendationSliders);
+  const [tempPopularity, setTempPopularity] = useState(
+    recommendationSettings.popularity
+  );
   const [tempTempo, setTempTempo] = useState(recommendationSettings.tempo);
   const [tempInstrumentalness, setTempInstrumentalness] = useState(
     recommendationSettings.instrumentalness
   );
-  const [tempValence, setTempValence] = useState(recommendationSettings.valence);
+  const [tempValence, setTempValence] = useState(
+    recommendationSettings.valence
+  );
   const customModalStyle = {
     content: {
       width: "350px",
@@ -56,7 +62,9 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
   const handleConfirm = () => {
     batch(() => {
       dispatch(setShowRecommendations(tempShowRecommendations));
-      dispatch(setShouldUseRecommendationSliders(tempShouldUseRecommendationSliders));
+      dispatch(
+        setShouldUseRecommendationSliders(tempShouldUseRecommendationSliders)
+      );
       if (tempShouldUseRecommendationSliders) {
         dispatch(
           setRecommendationSettings({
@@ -91,7 +99,9 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
     setTempTempo(Number.parseInt(e.target.value));
   };
 
-  const handleInstrumentalnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInstrumentalnessChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setTempInstrumentalness(Number.parseInt(e.target.value));
   };
 
@@ -110,7 +120,7 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
         <SettingsLabel> Show Recommendations</SettingsLabel>
         <CheckboxContainer>
           <StyledCheckbox
-            type='checkbox'
+            type="checkbox"
             checked={tempShowRecommendations}
             onChange={handleChangeRecommendations}
           />
@@ -120,7 +130,7 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
         <SettingsLabel> Use Recommendation Sliders</SettingsLabel>
         <CheckboxContainer>
           <StyledCheckbox
-            type='checkbox'
+            type="checkbox"
             checked={tempShouldUseRecommendationSliders}
             onChange={handleChangeShouldUseRecommendationSliders}
           />
@@ -131,44 +141,44 @@ const SettingsModal: React.FC<ISettingsModalProps> = ({
           <SettingsLabel>Popularity </SettingsLabel>
           <input
             onChange={handlePopularityChange}
-            type='range'
-            min='1'
-            max='100'
+            type="range"
+            min="1"
+            max="100"
             value={tempPopularity}
-            id='myRange'
+            id="myRange"
           />
         </SettingsRow>
         <SettingsRow>
           <SettingsLabel> Tempo </SettingsLabel>
           <input
             onChange={handleTempoChange}
-            type='range'
-            min='1'
-            max='140'
+            type="range"
+            min="1"
+            max="140"
             value={tempTempo}
-            id='myRange'
+            id="myRange"
           />
         </SettingsRow>
         <SettingsRow>
           <SettingsLabel> Happiness </SettingsLabel>
           <input
             onChange={handleValenceChange}
-            type='range'
-            min='1'
-            max='100'
+            type="range"
+            min="1"
+            max="100"
             value={tempValence}
-            id='myRange'
+            id="myRange"
           />
         </SettingsRow>
         <SettingsRow>
           <SettingsLabel> Instrumentalness </SettingsLabel>
           <input
             onChange={handleInstrumentalnessChange}
-            type='range'
-            min='1'
-            max='100'
+            type="range"
+            min="1"
+            max="100"
             value={tempInstrumentalness}
-            id='myRange'
+            id="myRange"
           />
         </SettingsRow>
       </SlidersContainer>

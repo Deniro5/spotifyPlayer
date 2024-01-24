@@ -1,6 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { setShuffle } from "../redux/slices/playerSlice";
-import { getAccessToken, getShuffle } from "../redux/slices/selectors";
+import { setShuffle } from "../redux/slices/PlayerSlice/playerSlice";
+import {
+  getAccessToken,
+  getShuffle,
+} from "../redux/slices/PlayerSlice/selectors";
 
 const usePlayer = () => {
   const accessToken = useAppSelector(getAccessToken);

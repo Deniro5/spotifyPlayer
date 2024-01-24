@@ -3,8 +3,9 @@ import { Playlist, View } from "../../types";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
 import { useAppDispatch } from "../../hooks";
-import { setCurrentView, setSelectedPlaylistId } from "../../redux/slices/playerSlice";
 import QuestionImg from "../../assets/question.png";
+import { setSelectedPlaylistId } from "../../redux/slices/PlaylistSlice/playlistSlice";
+import { setCurrentView } from "../../redux/slices/AppSlice/appSlice";
 export type IPlaylistSquareProps = {
   playlist: Playlist;
 };
@@ -19,7 +20,10 @@ const PlaylistSquare: React.FC<IPlaylistSquareProps> = ({ playlist }) => {
 
   return (
     <Container onClick={handleClick}>
-      <PlaylistImage src={playlist.images[1]?.url || QuestionImg} alt={"Unknown"} />
+      <PlaylistImage
+        src={playlist.images[1]?.url || QuestionImg}
+        alt={"Unknown"}
+      />
       <PlaylistName> {playlist.name} </PlaylistName>
     </Container>
   );
@@ -45,7 +49,8 @@ const Container = styled.div`
   text-align: center;
   &:hover {
     ${PlaylistImage} {
-      box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+      box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+        rgba(0, 0, 0, 0.23) 0px 6px 6px;
     }
     color: ${COLORS.darkPrimary};
   }

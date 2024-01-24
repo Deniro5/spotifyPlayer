@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import styled from "styled-components";
-import { getQueueTracks } from "../../../redux/slices/selectors";
+import { getQueueTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import QueueResult from "./QueueResult";
 import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
 import { Track } from "../../../types";
-import { setSelectedTracksHash } from "../../../redux/slices/playerSlice";
 import { COLORS } from "../../../constants";
+import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
 
 const Queue = () => {
-
   const dispatch = useAppDispatch();
 
   const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);

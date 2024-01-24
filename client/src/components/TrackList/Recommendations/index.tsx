@@ -3,12 +3,12 @@ import useRecommendations from "../../../hooks/useRecommendations";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import RecommendationResult from "./RecommendationResult";
 import styled from "styled-components";
-import { getRecommendedTracks } from "../../../redux/slices/selectors";
+import { getRecommendedTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import { COLORS } from "../../../constants";
 import { Track } from "../../../types";
 import { TrackContextMenu } from "../../ContextMenus/TrackContextMenu";
-import { setSelectedTracksHash } from "../../../redux/slices/playerSlice";
 import SkeletonLoader from "../../Common/Loaders/SkeletonLoader";
+import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
 
 const Recommendations = () => {
   const { isFetching } = useRecommendations();

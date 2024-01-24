@@ -4,7 +4,7 @@ import LikedSongs from "../LikedSongs";
 import SearchPage from "../SearchPage";
 import Home from "../Home";
 import { View } from "../../types";
-import { getCurrentView } from "../../redux/slices/selectors";
+import { getCurrentView } from "../../redux/selectors";
 import RecentSongs from "../RecentSongs";
 
 const routerMap = {

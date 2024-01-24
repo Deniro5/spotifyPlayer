@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { FETCH_LIMIT } from "../constants";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { setCurrentDisplayTracks } from "../redux/slices/playerSlice";
-import {
-  getAccessToken,
-  getSelectedPlaylistId,
-} from "../redux/slices/selectors";
+import { getAccessToken, getSelectedPlaylistId } from "../redux/selectors";
 import useFetchLikedStatus from "./useFetchLikedStatus";
 import { uriToId } from "../utils";
 import useToast from "./useToast";
+import { setCurrentDisplayTracks } from "../redux/slices/TrackSlice/trackSlice";
 
 const useFetchPlaylistSongs = () => {
   const accessToken = useAppSelector(getAccessToken);

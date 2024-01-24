@@ -9,16 +9,19 @@ import {
   decrementSleepTimerMinutes,
   setSleepTimer,
   setSleepTimerMinutes,
-} from "../../../redux/slices/playerSlice";
+} from "../../../redux/slices/PlayerSlice/playerSlice";
 import { useAppSelector } from "../../../hooks";
-import { getSleepTimer } from "../../../redux/slices/selectors";
+import { getSleepTimer } from "../../../redux/slices/PlayerSlice/selectors";
 
 export type ISleepModalProps = {
   handleCloseSleepModal: () => void;
   isOpen: boolean;
 };
 
-const SleepModal: React.FC<ISleepModalProps> = ({ handleCloseSleepModal, isOpen }) => {
+const SleepModal: React.FC<ISleepModalProps> = ({
+  handleCloseSleepModal,
+  isOpen,
+}) => {
   const dispatch = useDispatch();
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -74,21 +77,21 @@ const SleepModal: React.FC<ISleepModalProps> = ({ handleCloseSleepModal, isOpen 
       <Title> Sleep Timer </Title>
       <FormContainer>
         <FieldContainer>
-          <label htmlFor='hours'>Hours:</label>
+          <label htmlFor="hours">Hours:</label>
           <input
-            type='number'
-            id='hours'
-            name='hours'
+            type="number"
+            id="hours"
+            name="hours"
             value={hours}
             onChange={handleHoursChange}
           />
         </FieldContainer>
         <FieldContainer>
-          <label htmlFor='minutes'>Minutes:</label>
+          <label htmlFor="minutes">Minutes:</label>
           <input
-            type='number'
-            id='minutes'
-            name='minutes'
+            type="number"
+            id="minutes"
+            name="minutes"
             value={minutes}
             onChange={handleMinutesChange}
           />

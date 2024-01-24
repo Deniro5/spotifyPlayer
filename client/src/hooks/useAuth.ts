@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch } from "../hooks";
-import { setCurrentUser } from "../redux/slices/playerSlice";
 import { User } from "../types";
+import { setCurrentUser } from "../redux/slices/AppSlice/appSlice";
 
 export default function useAuth(code: string) {
   const dispatch = useAppDispatch();
