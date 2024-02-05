@@ -16,12 +16,10 @@ import {
 } from "../../redux/selectors";
 import { DropResult } from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
-import { Track, View } from "../../types";
+import { View } from "../../types";
 import SkeletonLoader from "../Common/Loaders/SkeletonLoader";
-import {
-  moveTrackInDisplay,
-  setSelectedTracksHash,
-} from "../../redux/slices/TrackSlice/trackSlice";
+import { setSelectedTracksHash } from "../../redux/slices/TrackSlice/trackSlice";
+import useTrackContextMenu from "../../hooks/useTrackContextMenu";
 
 export type ITrackListProps = {
   isUserTracks: boolean; //determines which type of listItem we want (with/without user operations);
@@ -43,14 +41,16 @@ const TrackList: React.FC<ITrackListProps> = ({
   const showRecommendations = useAppSelector(getShowRecommendations);
   const isRecommendationsView = useAppSelector(getIsRecommendationsView);
 
+  const {
+    contextMenu: TrackContextMenu,
+    handleRightClick,
+    contextMenuTrack,
+  } = useTrackContextMenu({ hideRemoveSong: currentView === View.BROWSE });
+
   useEffect(() => {
     const container = document.getElementById("scrollContainer");
     if (container) setTimeout(() => (container.scrollTop = 0), 300);
   }, [selectedPlaylistId]);
-
-  const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);
-  const [contextMenuX, setContextMenuX] = useState<number>(0);
-  const [contextMenuY, setContextMenuY] = useState<number>(0);
 
   const handleLoadMoreTracks = () => {
     //We dont want to attempt to load more via waypoint if there are no songs
@@ -59,32 +59,22 @@ const TrackList: React.FC<ITrackListProps> = ({
     }
   };
 
-  const handleRightClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    track: Track
-  ) => {
-    e.preventDefault();
-    setContextMenuX(Math.min(e.clientX, window.innerWidth));
-    setContextMenuY(Math.min(e.clientY, window.innerHeight));
-    setContextMenuTrack(track);
-  };
-
   const handleBatchSelectClear = () => {
     dispatch(setSelectedTracksHash({}));
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
-    if (!destination) return;
+  // const onDragEnd = (result: DropResult) => {   // what us happening here
+  //   const { destination, source } = result;
+  //   if (!destination) return;
 
-    handleMoveTrack(source.index, destination.index);
-    dispatch(
-      moveTrackInDisplay({
-        sourceIndex: source.index,
-        destinationIndex: destination.index,
-      })
-    );
-  };
+  //   handleMoveTrack(source.index, destination.index);
+  //   dispatch(
+  //     moveTrackInDisplay({
+  //       sourceIndex: source.index,
+  //       destinationIndex: destination.index,
+  //     })
+  //   );
+  // };
 
   return (
     <TrackListContainer
@@ -112,15 +102,7 @@ const TrackList: React.FC<ITrackListProps> = ({
         <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
       </ScrollContainer>
 
-      {contextMenuTrack && (
-        <TrackContextMenu
-          contextMenuTrack={contextMenuTrack}
-          setContextMenuTrack={setContextMenuTrack}
-          contextMenuX={contextMenuX}
-          contextMenuY={contextMenuY}
-          hideRemoveSong={currentView === View.BROWSE}
-        />
-      )}
+      {contextMenuTrack && TrackContextMenu}
     </TrackListContainer>
   );
 };

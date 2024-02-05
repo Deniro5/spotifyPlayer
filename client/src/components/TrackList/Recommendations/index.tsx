@@ -1,35 +1,17 @@
-import React, { useState } from "react";
 import useRecommendations from "../../../hooks/useRecommendations";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { useAppSelector } from "../../../hooks";
 import RecommendationResult from "./RecommendationResult";
 import styled from "styled-components";
 import { getRecommendedTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import { COLORS } from "../../../constants";
-import { Track } from "../../../types";
-import TrackContextMenu from "../../ContextMenus/TrackContextMenu";
 import SkeletonLoader from "../../Common/Loaders/SkeletonLoader";
-import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
+import useTrackContextMenu from "../../../hooks/useTrackContextMenu";
 
 const Recommendations = () => {
+  const { contextMenu: TrackContextMenu, handleRightClick } =
+    useTrackContextMenu({ hideRemoveSong: true });
   const { isFetching } = useRecommendations();
-  const dispatch = useAppDispatch();
-
-  const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);
-  const [contextMenuX, setContextMenuX] = useState<number>(0);
-  const [contextMenuY, setContextMenuY] = useState<number>(0);
   const recommendedTracks = useAppSelector(getRecommendedTracks);
-
-  const handleRightClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    track: Track
-  ) => {
-    e.preventDefault();
-    dispatch(setSelectedTracksHash({}));
-    setContextMenuX(Math.min(e.clientX, window.innerWidth));
-    setContextMenuY(Math.min(e.clientY, window.innerHeight));
-    setContextMenuTrack(track);
-  };
-
   return (
     <Container>
       <Title> Recommended Songs </Title>
@@ -48,13 +30,7 @@ const Recommendations = () => {
       ) : (
         <SubTitle> Start playing a song to see Recommendations</SubTitle>
       )}
-      <TrackContextMenu
-        setContextMenuTrack={setContextMenuTrack}
-        contextMenuX={contextMenuX}
-        contextMenuY={contextMenuY}
-        contextMenuTrack={contextMenuTrack}
-        hideRemoveSong
-      />
+      {TrackContextMenu}
     </Container>
   );
 };

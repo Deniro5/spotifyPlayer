@@ -1,31 +1,14 @@
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { useAppSelector } from "../../../hooks";
 import styled from "styled-components";
 import { getQueueTracks } from "../../../redux/slices/PlayerSlice/selectors";
 import QueueResult from "./QueueResult";
-import TrackContextMenu from "../../ContextMenus/TrackContextMenu";
-import { Track } from "../../../types";
 import { COLORS } from "../../../constants";
-import { setSelectedTracksHash } from "../../../redux/slices/TrackSlice/trackSlice";
+import useTrackContextMenu from "../../../hooks/useTrackContextMenu";
 
 const Queue = () => {
-  const dispatch = useAppDispatch();
-
-  const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);
-  const [contextMenuX, setContextMenuX] = useState<number>(0);
-  const [contextMenuY, setContextMenuY] = useState<number>(0);
+  const { contextMenu: TrackContextMenu, handleRightClick } =
+    useTrackContextMenu({ hideRemoveSong: true, hideAddToQueue: true });
   const queueTracks = useAppSelector(getQueueTracks);
-
-  const handleRightClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    track: Track
-  ) => {
-    e.preventDefault();
-    dispatch(setSelectedTracksHash({}));
-    setContextMenuX(Math.min(e.clientX, window.innerWidth));
-    setContextMenuY(Math.min(e.clientY, window.innerHeight));
-    setContextMenuTrack(track);
-  };
 
   return (
     <Container>
@@ -42,15 +25,7 @@ const Queue = () => {
               index={index}
             />
           ))}
-
-          <TrackContextMenu
-            setContextMenuTrack={setContextMenuTrack}
-            contextMenuX={contextMenuX}
-            contextMenuY={contextMenuY}
-            contextMenuTrack={contextMenuTrack}
-            hideAddToQueue
-            hideRemoveSong
-          />
+          {TrackContextMenu}
         </>
       ) : (
         <SubTitle> No tracks currently in the queue</SubTitle>
