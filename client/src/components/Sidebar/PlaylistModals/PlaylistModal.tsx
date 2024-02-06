@@ -1,19 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import styled from "styled-components";
 import { COLORS } from "../../../constants";
 import Button from "../../Common/Button";
-
+import { isAlphaNumeric } from "../../../utils";
 export type IPlaylistModalProps = {
   isOpen: boolean;
-  name: string;
-  description: string;
+  initialName?: string;
+  initialDescription?: string;
   title: string;
   handleClose: () => void;
-  handleConfirm: () => void;
-  handleNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  error: string | null;
+  onSubmit: (name: string, description: string) => void;
 };
 
 const customModalStyle = {
@@ -27,15 +24,44 @@ const customModalStyle = {
 
 const PlaylistModal: React.FC<IPlaylistModalProps> = ({
   isOpen,
-  name,
-  description,
+  initialName,
+  initialDescription,
   title,
   handleClose,
-  handleConfirm,
-  handleNameChange,
-  handleDescriptionChange,
-  error,
+  onSubmit,
 }: IPlaylistModalProps) => {
+  const [name, setName] = useState(initialName || "");
+  const [description, setDescription] = useState(initialDescription || "");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setDescription(e.target.value);
+  };
+
+  const isValid = () => {
+    if (!name.length) {
+      setError("Name field cannot be blank");
+      return false;
+    } else if (!isAlphaNumeric(name) || !isAlphaNumeric(description)) {
+      setError("Invalid characters in name/description field");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  const handleSubmit = () => {
+    console.log(name, description);
+    if (!isValid()) return;
+    onSubmit(name, description);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -62,7 +88,7 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
           width={120}
           height={40}
           hoverColor={COLORS.darkPrimary}
-          onClick={handleConfirm}
+          onClick={handleSubmit}
         >
           Confirm
         </Button>

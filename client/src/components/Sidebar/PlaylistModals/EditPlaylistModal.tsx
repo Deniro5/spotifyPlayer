@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../../hooks";
 import PlaylistModal from "./PlaylistModal";
 import { getPlaylistById } from "../../../redux/selectors";
 import usePlaylistActions from "../../../hooks/usePlaylistActions";
-import { isAlphaNumeric } from "../../../utils";
 
 export type IEditPlaylistModalProps = {
   isOpen: boolean;
@@ -20,34 +19,8 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
 
   const playlist = useAppSelector(getPlaylistById(playlistId));
 
-  const [name, setName] = useState(playlist?.name || "");
-  const [description, setDescription] = useState(playlist?.description || "");
-  const [error, setError] = useState<string | null>(null);
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setDescription(e.target.value);
-  };
-
-  const isValid = () => {
-    if (!name.length) {
-      setError("Name field cannot be blank");
-      return false;
-    } else if (!isAlphaNumeric(name) || !isAlphaNumeric(description)) {
-      setError("Invalid characters in name/description field");
-      return false;
-    }
-    setError(null);
-    return true;
-  };
-
-  const handleUpdatePlaylist = () => {
-    if (!playlist || !isValid()) return;
+  const handleUpdatePlaylist = (name: string, description: string) => {
+    if (!playlist) return;
     handlePlaylistUpdate(playlist, name, description);
     handleClose();
   };
@@ -56,13 +29,10 @@ const EditPlaylistModal: React.FC<IEditPlaylistModalProps> = ({
     <PlaylistModal
       isOpen={isOpen}
       handleClose={handleClose}
-      handleConfirm={handleUpdatePlaylist}
+      onSubmit={handleUpdatePlaylist}
       title="Edit Playlist"
-      name={name}
-      description={description}
-      handleNameChange={handleNameChange}
-      handleDescriptionChange={handleDescriptionChange}
-      error={error}
+      initialName={playlist?.name}
+      initialDescription={playlist?.description}
     />
   );
 };
