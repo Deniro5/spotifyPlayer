@@ -36,6 +36,7 @@ const Queue = () => {
 
 const Container = styled.div`
   padding: 0px 20px;
+  max-width: 305px;
 `;
 const Title = styled.div`
   font-weight: 500;

@@ -46,6 +46,7 @@ const SearchBar: React.FC = () => {
 const SearchRowContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   padding-top: 20px;
   padding-bottom: 21px;
   padding-left: 30px;
@@ -53,6 +54,7 @@ const SearchRowContainer = styled.div`
 
 const Container = styled.div`
   position: relative;
+  margin: auto;
 `;
 
 const SearchInput = styled.input`

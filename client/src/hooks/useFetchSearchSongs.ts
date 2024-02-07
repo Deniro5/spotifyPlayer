@@ -81,7 +81,10 @@ const useFetchSearchSongs = () => {
   const noSearchTermEntered = useMemo(() => !search.length, [search]);
 
   const noResults = useMemo(
-    () => !noSearchTermEntered && currentDisplayTracks.length === 0,
+    () =>
+      !noSearchTermEntered &&
+      currentDisplayTracks.length === 0 &&
+      !isFetchingInitial,
     [noSearchTermEntered, currentDisplayTracks]
   );
 

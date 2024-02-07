@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import TrackSearchResult from "./TrackSearchResult";
 import { Waypoint } from "react-waypoint";
-import TrackContextMenu from "../ContextMenus/TrackContextMenu";
 import { COLORS } from "../../constants";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -89,15 +88,23 @@ const TrackList: React.FC<ITrackListProps> = ({
         {isLoading ? (
           <SkeletonLoader count={25} height={50} />
         ) : (
-          currentDisplayTracks.map((track, index) => (
-            <TrackSearchResult
-              handleRightClick={(e) => handleRightClick(e, track)}
-              track={track}
-              key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-              isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-              index={index}
-            />
-          ))
+          <>
+            {currentDisplayTracks.length ? (
+              currentDisplayTracks.map((track, index) => (
+                <TrackSearchResult
+                  handleRightClick={(e) => handleRightClick(e, track)}
+                  track={track}
+                  key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
+                  isSelected={Number.isInteger(selectedTracksHash[track.uri])}
+                  index={index}
+                />
+              ))
+            ) : (
+              <EmptyMessage>
+                There are no tracks currently in this playlist...
+              </EmptyMessage>
+            )}
+          </>
         )}
         <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
       </ScrollContainer>
@@ -139,6 +146,12 @@ const ScrollContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const EmptyMessage = styled.p`
+  font-weight: 400;
+  color: ${COLORS.lightFont};
+  padding: 16px;
 `;
 
 export default TrackList;

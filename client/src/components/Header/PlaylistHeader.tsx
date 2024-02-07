@@ -1,6 +1,7 @@
 import { useAppSelector } from "../../hooks";
 import { getSelectedPlaylist } from "../../redux/selectors";
 import TrackListHeader from "./TrackListHeader";
+import RecentlyPlayedAlbumImg from "../../assets/question.png";
 
 const PlaylistHeader = ({}) => {
   const selectedPlaylist = useAppSelector(getSelectedPlaylist);
@@ -9,7 +10,7 @@ const PlaylistHeader = ({}) => {
     <TrackListHeader
       name={selectedPlaylist.name}
       trackCount={selectedPlaylist.tracks.total}
-      imgSrc={selectedPlaylist.images[0].url}
+      imgSrc={selectedPlaylist.images[0]?.url || RecentlyPlayedAlbumImg}
     />
   ) : (
     <></>

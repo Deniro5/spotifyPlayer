@@ -59,5 +59,6 @@ export const getIsRecommendationsView = createSelector(
   (state) =>
     state.app.currentView === View.LIKED_SONGS ||
     state.app.currentView === View.RECENT_SONGS ||
-    state.app.currentView === View.PLAYLIST
+    state.app.currentView === View.PLAYLIST ||
+    state.app.currentView === View.BROWSE
 );

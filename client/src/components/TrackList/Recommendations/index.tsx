@@ -38,6 +38,7 @@ const Recommendations = () => {
 const Container = styled.div`
   padding: 0px 20px;
   height: 355px;
+  max-width: 305px;
 `;
 
 const Title = styled.div`

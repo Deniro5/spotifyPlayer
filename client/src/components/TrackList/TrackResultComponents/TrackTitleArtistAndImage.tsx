@@ -63,7 +63,7 @@ const TrackArtist = styled.div`
 
 export const TrackTitle = styled.div<{ isActive: boolean }>`
   font-size: 14px;
-  width: 250px;
+  width: 245px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
