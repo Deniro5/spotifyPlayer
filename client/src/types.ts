@@ -22,6 +22,9 @@ export interface Playlist {
   description: string;
   tracks: { href: string; total: string };
   images: Image[];
+  owner: {
+    uri: string;
+  };
 }
 
 export interface Track {

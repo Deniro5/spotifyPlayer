@@ -7,6 +7,7 @@ import {
   deletePlaylist,
   updatePlaylist,
 } from "../redux/slices/PlaylistSlice/playlistSlice";
+import { moveTrackInDisplay } from "../redux/slices/TrackSlice/trackSlice";
 
 const usePlaylistActions = (playlistId: string | null) => {
   const accessToken = useAppSelector(getAccessToken);
@@ -115,8 +116,13 @@ const usePlaylistActions = (playlistId: string | null) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        dispatch(
+          moveTrackInDisplay({
+            sourceIndex,
+            destinationIndex,
+          })
+        );
       })
       .catch((err) => {
         console.log(err);

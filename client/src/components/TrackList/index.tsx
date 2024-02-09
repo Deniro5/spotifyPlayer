@@ -12,8 +12,15 @@ import {
   getCurrentView,
   getIsRecommendationsView,
   getCurrentDisplayTracks,
+  getSelectedPlaylist,
+  getCurrentUser,
 } from "../../redux/selectors";
-import { DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import usePlaylistActions from "../../hooks/usePlaylistActions";
 import { View } from "../../types";
 import SkeletonLoader from "../Common/Loaders/SkeletonLoader";
@@ -39,6 +46,8 @@ const TrackList: React.FC<ITrackListProps> = ({
   const currentView = useAppSelector(getCurrentView);
   const showRecommendations = useAppSelector(getShowRecommendations);
   const isRecommendationsView = useAppSelector(getIsRecommendationsView);
+  const selectedPlaylist = useAppSelector(getSelectedPlaylist);
+  const currentUser = useAppSelector(getCurrentUser);
 
   const {
     contextMenu: TrackContextMenu,
@@ -62,18 +71,20 @@ const TrackList: React.FC<ITrackListProps> = ({
     dispatch(setSelectedTracksHash({}));
   };
 
-  // const onDragEnd = (result: DropResult) => {   // what us happening here
-  //   const { destination, source } = result;
-  //   if (!destination) return;
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+    if (!destination) return;
 
-  //   handleMoveTrack(source.index, destination.index);
-  //   dispatch(
-  //     moveTrackInDisplay({
-  //       sourceIndex: source.index,
-  //       destinationIndex: destination.index,
-  //     })
-  //   );
-  // };
+    handleMoveTrack(source.index, destination.index);
+  };
+
+  const getIsDragEnabled = () => {
+    console.log("he");
+    if (currentView !== View.PLAYLIST || !selectedPlaylist) return false;
+    return selectedPlaylist.owner.uri === currentUser?.uri;
+  };
+
+  const isDragEnabled = getIsDragEnabled();
 
   return (
     <TrackListContainer
@@ -84,30 +95,61 @@ const TrackList: React.FC<ITrackListProps> = ({
           <BatchClear onClick={handleBatchSelectClear}> Clear </BatchClear>
         )}
       </TrackListBatchOptions>
-      <ScrollContainer id="scrollContainer">
-        {isLoading ? (
-          <SkeletonLoader count={25} height={50} />
-        ) : (
-          <>
-            {currentDisplayTracks.length ? (
-              currentDisplayTracks.map((track, index) => (
-                <TrackSearchResult
-                  handleRightClick={(e) => handleRightClick(e, track)}
-                  track={track}
-                  key={`${selectedPlaylistId || "likedsongs"}/${track.uri}`}
-                  isSelected={Number.isInteger(selectedTracksHash[track.uri])}
-                  index={index}
-                />
-              ))
-            ) : (
-              <EmptyMessage>
-                There are no tracks currently in this playlist...
-              </EmptyMessage>
-            )}
-          </>
-        )}
-        <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
-      </ScrollContainer>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <ScrollContainer
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              id="scrollContainer"
+            >
+              {isLoading ? (
+                <SkeletonLoader count={25} height={50} />
+              ) : (
+                <>
+                  {currentDisplayTracks.length ? (
+                    currentDisplayTracks.map((track, index) => (
+                      <Draggable
+                        key={track.uri}
+                        draggableId={track.uri}
+                        index={index}
+                        isDragDisabled={!isDragEnabled}
+                      >
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <TrackSearchResult
+                              handleRightClick={(e) =>
+                                handleRightClick(e, track)
+                              }
+                              track={track}
+                              key={`${selectedPlaylistId || "likedsongs"}/${
+                                track.uri
+                              }`}
+                              isSelected={Number.isInteger(
+                                selectedTracksHash[track.uri]
+                              )}
+                              index={index}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  ) : (
+                    <EmptyMessage>
+                      There are no tracks currently in this playlist...
+                    </EmptyMessage>
+                  )}
+                </>
+              )}
+              <Waypoint bottomOffset={"-25%"} onEnter={handleLoadMoreTracks} />
+            </ScrollContainer>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {contextMenuTrack && TrackContextMenu}
     </TrackListContainer>

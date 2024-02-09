@@ -31,6 +31,7 @@ const useFetchPlaylists = () => {
                   tracks: playlist.tracks,
                   description: playlist.description,
                   images: playlist.images,
+                  owner: playlist.owner,
                 };
               })
             )
