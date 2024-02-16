@@ -20,10 +20,7 @@ const PlaylistSquare: React.FC<IPlaylistSquareProps> = ({ playlist }) => {
 
   return (
     <Container onClick={handleClick}>
-      <PlaylistImage
-        src={playlist.images[1]?.url || QuestionImg}
-        alt={"Unknown"}
-      />
+      <PlaylistImage src={playlist.images[0]?.url || QuestionImg} alt={""} />
       <PlaylistName> {playlist.name} </PlaylistName>
     </Container>
   );

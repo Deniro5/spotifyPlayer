@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../constants";
 import Button from "../../components/Common/Button";
@@ -7,16 +6,6 @@ const AUTH_URL =
   "https://accounts.spotify.com/authorize?client_id=5eb951bf5718469eb4f17c4a09156d75&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public%20user-read-recently-played";
 
 const Login = () => {
-  //DO NOT INCLUDE THIS IN THE FINAL VERSION. ITS JUST TO SPEED UP DEVELOPMENT
-  useEffect(() => {
-    // let a = document.getElementById("login");
-    // console.log(a);
-    // if (a) {
-    //   console.log(a);
-    //   a.click();
-    // }
-  }, []);
-
   return (
     <Container>
       <LoginCardContainer>
