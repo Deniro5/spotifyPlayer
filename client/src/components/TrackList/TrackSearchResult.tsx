@@ -80,7 +80,6 @@ const TrackSearchResult = ({
     playingTrack?.uri === track.uri ? handlePause() : handlePlay();
 
   const handlePlay = async () => {
-    //TODO figure out how to handle 'liked songs' because that isnt a playlist but we still want sequential play
     if (!accessToken) return;
     //if we are on a playlist we want to send the playlist and an offset. If not send the track
     if (selectedPlaylistId) {

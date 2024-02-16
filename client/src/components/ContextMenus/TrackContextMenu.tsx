@@ -16,6 +16,12 @@ import useSpotifyApiActions from "../../hooks/useSpotifyApiActions";
 import { Track } from "../../types";
 import { getAdjustedPopoverPosition } from "../../utils";
 
+const POPOVER_WIDTH = 225;
+const POPOVER_HEIGHT = 142;
+const MENU_ITEM_HEIGHT = 36;
+const SUBMENU_WIDTH = 180;
+const SUBMENU_ON_LEFT = -211;
+
 export type ITrackContextMenuProps = {
   contextMenuTrack: Track | null;
   setContextMenuTrack: React.Dispatch<React.SetStateAction<Track | null>>;
@@ -46,35 +52,43 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   );
 
   const getStyles = useCallback(() => {
-    //TODO: Clean this up. At least use constants rather than 'magic numbers'
-    const popoverWidth = 225;
-    const popoverHeight = 142;
     const { adjustedX, adjustedY } = getAdjustedPopoverPosition(
       contextMenuX,
       contextMenuY,
-      popoverHeight,
-      popoverWidth
+      POPOVER_WIDTH,
+      POPOVER_HEIGHT
     );
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-    const submenuWidth = 180;
-    //36 is the height of a menu item
-    const submenuHeight = Math.min(playlists.length * 36, 259);
-    let submenuLeft = 225;
+    const submenuHeight = Math.min(playlists.length * MENU_ITEM_HEIGHT, 259);
+    let submenuLeft = POPOVER_WIDTH;
     let submenuTop = 0;
-    if (adjustedX + popoverWidth > screenWidth - submenuWidth) {
-      submenuLeft = -211;
+
+    //if the submenu would show off the screen then show it on the left
+    if (adjustedX + POPOVER_WIDTH > screenWidth - SUBMENU_WIDTH) {
+      submenuLeft = SUBMENU_ON_LEFT;
     }
-    if (adjustedY + popoverHeight > screenHeight - submenuHeight) {
-      submenuTop = -Math.min(playlists.length * 36, 223);
+
+    if (adjustedY + POPOVER_HEIGHT > screenHeight - submenuHeight) {
+      submenuTop = -Math.min(playlists.length * MENU_ITEM_HEIGHT, 223);
     }
+
+    console.log({
+      mainStyle: {
+        top: `${adjustedY}px`,
+        left: `${adjustedX}px`,
+        zIndex: "100",
+      },
+      submenuTop,
+      submenuLeft,
+    });
 
     return {
       mainStyle: {
         top: `${adjustedY}px`,
         left: `${adjustedX}px`,
-        zIndex: "10",
+        zIndex: "100",
       },
       submenuTop,
       submenuLeft,
@@ -120,7 +134,7 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
   const { mainStyle, submenuTop, submenuLeft } = getStyles();
 
   const content = (
-    <PopoverContentWrapper width={225}>
+    <PopoverContentWrapper width={POPOVER_WIDTH}>
       <div>
         {!hideAddToQueue && (
           <Dropdown.Item onClick={handleAddToQueue}>

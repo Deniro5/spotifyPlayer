@@ -24,11 +24,14 @@ import {
   getShuffle,
   getTracksManuallyAddedToQueue,
   getSleepTimerMinutes,
+  getPlayingTrack,
+  getIsPlaying,
 } from "../../redux/selectors";
 import SleepModal from "./SleepModal";
 import { COLORS } from "../../constants";
 import { MinutesToDisplayTime } from "../../utils";
 import { addSongsStatusHash } from "../../redux/slices/TrackSlice/trackSlice";
+import useTrackContextMenu from "../../hooks/useTrackContextMenu";
 
 interface PlayerProps {
   accessToken: string | null;
@@ -49,6 +52,12 @@ const Player = ({ accessToken }: PlayerProps) => {
     getTracksManuallyAddedToQueue
   );
   const sleepTimerMinutes = useAppSelector(getSleepTimerMinutes);
+  const { contextMenu: TrackContextMenu, handleRightClick } =
+    useTrackContextMenu({
+      hideRemoveSong: true,
+      hideAddToQueue: true,
+    });
+  const playingTrack = useAppSelector(getPlayingTrack);
 
   const { toggleShuffle } = usePlayer();
 
@@ -62,7 +71,6 @@ const Player = ({ accessToken }: PlayerProps) => {
     if (state.type === "favorite_update" && state.progressMs >= 300) {
       //update the songsStatusHash if updated in the player
       //We need the condition because a favorite update is fired onPlay and we cant tell it apart from other favorite updates so we check the progress. Progress sometimes is non zero so we are using 350ms as a boundary
-      console.log(state);
       dispatch(addSongsStatusHash({ [state.track.id]: state.isSaved }));
     }
     if (state.progressMs === 0 && state.isPlaying) {
@@ -115,24 +123,30 @@ const Player = ({ accessToken }: PlayerProps) => {
     setIsSleepModalOpen(!isSleepModalOpen);
   };
 
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!playingTrack || !isLoaded) return;
+
+    handleRightClick(e, playingTrack);
+  };
+
+  const shuffleButton = (
+    <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
+      <ShuffleIcon height={24} width={24} />
+    </ShuffleIconContainer>
+  );
+
   return (
     <PlayerContainer>
-      {isLoaded && (
-        <>
-          <ShuffleIconContainer onClick={toggleShuffle} isActive={shuffle}>
-            <ShuffleIcon height={24} width={24} />
-          </ShuffleIconContainer>
-          <ClockIconContainer
-            onClick={handleToggleSleepModal}
-            isActive={!!sleepTimerMinutes}
-          >
-            <ClockIcon height={22} width={22} />
-            {!!sleepTimerMinutes && (
-              <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>
-            )}
-          </ClockIconContainer>
-        </>
-      )}
+      {isLoaded && <></>}
+      <ClockIconContainer
+        onClick={handleToggleSleepModal}
+        isActive={!!sleepTimerMinutes}
+      >
+        <ClockIcon height={22} width={22} />
+        {!!sleepTimerMinutes && (
+          <p> {MinutesToDisplayTime(sleepTimerMinutes)}</p>
+        )}
+      </ClockIconContainer>
       <SpotifyPlayer
         token={accessToken}
         showSaveIcon
@@ -143,10 +157,13 @@ const Player = ({ accessToken }: PlayerProps) => {
           activeColor: COLORS.primary,
           loaderSize: "20px",
         }}
+        components={{ leftButton: shuffleButton }}
       />
       {isSleepModalOpen && (
         <SleepModal isOpen handleCloseSleepModal={handleToggleSleepModal} />
       )}
+      <TrackClickArea onContextMenu={handleContextMenu}></TrackClickArea>
+      {TrackContextMenu}
     </PlayerContainer>
   );
 };
@@ -157,9 +174,6 @@ const PlayerContainer = styled.div`
 `;
 
 const ShuffleIconContainer = styled.div<{ isActive: boolean }>`
-  position: absolute;
-  top: 19px;
-  left: calc(50% - 90px);
   cursor: pointer;
   path {
     stroke: ${({ isActive }) => (isActive ? COLORS.primary : "lightgrey")};
@@ -181,6 +195,19 @@ const ClockIconContainer = styled.div<{ isActive: boolean }>`
     color: ${COLORS.primary};
   }
   z-index: 10;
+
+  @media (max-width: 767px) {
+    top: 20px;
+    right: 50px;
+  }
+`;
+
+const TrackClickArea = styled.div`
+  position: absolute;
+  top: 0px;
+  left: 80px;
+  width: 150px;
+  height: 40px;
 `;
 
 export default Player;
