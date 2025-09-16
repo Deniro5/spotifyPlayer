@@ -79,7 +79,6 @@ const TrackList: React.FC<ITrackListProps> = ({
   };
 
   const getIsDragEnabled = () => {
-    console.log("he");
     if (currentView !== View.PLAYLIST || !selectedPlaylist) return false;
     return selectedPlaylist.owner.uri === currentUser?.uri;
   };

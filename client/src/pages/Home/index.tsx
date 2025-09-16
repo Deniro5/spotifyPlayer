@@ -47,7 +47,7 @@ const Home = ({ code }: HomeProps) => {
             <Router />
             {showRecommendations && isRecommendationsView && (
               <RightSidebar>
-                <Recommendations />
+                {/* <Recommendations /> Deprecated by spotify as of late 2024 */}
                 <Queue />
               </RightSidebar>
             )}

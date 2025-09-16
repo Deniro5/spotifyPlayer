@@ -74,16 +74,6 @@ const TrackContextMenu: React.FC<ITrackContextMenuProps> = ({
       submenuTop = -Math.min(playlists.length * MENU_ITEM_HEIGHT, 223);
     }
 
-    console.log({
-      mainStyle: {
-        top: `${adjustedY}px`,
-        left: `${adjustedX}px`,
-        zIndex: "100",
-      },
-      submenuTop,
-      submenuLeft,
-    });
-
     return {
       mainStyle: {
         top: `${adjustedY}px`,

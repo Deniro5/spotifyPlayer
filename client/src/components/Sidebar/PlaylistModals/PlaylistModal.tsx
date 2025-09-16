@@ -57,7 +57,6 @@ const PlaylistModal: React.FC<IPlaylistModalProps> = ({
   };
 
   const handleSubmit = () => {
-    console.log(name, description);
     if (!isValid()) return;
     onSubmit(name, description);
   };

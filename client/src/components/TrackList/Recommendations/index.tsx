@@ -12,6 +12,8 @@ const Recommendations = () => {
     useTrackContextMenu({ hideRemoveSong: true });
   const { isFetching } = useRecommendations();
   const recommendedTracks = useAppSelector(getRecommendedTracks);
+
+  console.log(recommendedTracks);
   return (
     <Container>
       <Title> Recommended Songs </Title>

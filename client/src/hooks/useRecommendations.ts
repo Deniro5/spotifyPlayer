@@ -46,8 +46,8 @@ const useRecommendations = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.tracks) {
-          console.log(playingTrack.uri, data.tracks);
           const filteredTracks = data.tracks
             .filter(
               (track: SpotifyApi.TrackObjectFull) =>
